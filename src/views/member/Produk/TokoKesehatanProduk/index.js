@@ -12,16 +12,16 @@ import {
 import StatusBarComponent from '../../../../components/StatusBar/StatusBarComponent';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Navigasi from '../../../../partials/navigasi';
-import {getData, baseUrl, colors, storeData} from '../../../../utils';
+import {getData, baseUrl, colors, storeData, showSuccess} from '../../../../utils';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Keranjang from './Keranjang';
 
 const TokoKesehatanProduk = ({navigation}) => {
   const [dataPribadi, setDataPribadi] = useState({});
   const [kategoriProduk, setKategoriProduk] = useState({});
   const [showIndicator, setShowIndicator] = useState(false);
   const [produk, setProduk] = useState([]);
-  const [totalKeranjang, setTotalKeranjang] = useState(0);
 
   useEffect(() => {
     const debounceTimeout = setTimeout(async () => {
@@ -96,38 +96,49 @@ const TokoKesehatanProduk = ({navigation}) => {
 
     try {
       const jsonValue = await AsyncStorage.getItem(`produk_${dataPribadi.idx}`);
-    if (jsonValue !== null) {
-      const oldProductList = JSON.parse(jsonValue);
-      const existingProductIndex = oldProductList.findIndex(
-        p => p.id === newProductList[productIndex].id,
-      );
-      if (existingProductIndex >= 0) {
-        oldProductList[existingProductIndex].count += 1;
-        await AsyncStorage.setItem(`produk_${dataPribadi.idx}`, JSON.stringify(oldProductList));
+      if (jsonValue !== null) {
+        const oldProductList = JSON.parse(jsonValue);
+        const existingProductIndex = oldProductList.findIndex(
+          p => p.id === newProductList[productIndex].id,
+        );
+        if (existingProductIndex >= 0) {
+          oldProductList[existingProductIndex].count += 1;
+          await AsyncStorage.setItem(
+            `produk_${dataPribadi.idx}`,
+            JSON.stringify(oldProductList),
+          );
+        } else {
+          const mergedProductList = [
+            ...oldProductList,
+            newProductList[productIndex],
+          ];
+          await AsyncStorage.setItem(
+            `produk_${dataPribadi.idx}`,
+            JSON.stringify(mergedProductList),
+          );
+        }
       } else {
-        const mergedProductList = [
-          ...oldProductList,
-          newProductList[productIndex],
-        ];
         await AsyncStorage.setItem(
           `produk_${dataPribadi.idx}`,
-          JSON.stringify(mergedProductList),
+          JSON.stringify([newProductList[productIndex]]),
         );
       }
-    } else {
-      await AsyncStorage.setItem(
-        `produk_${dataPribadi.idx}`,
-        JSON.stringify([newProductList[productIndex]]),
-      );
-    }
 
-    const produkKeys = Object.keys(produk);
-    for (const key of produkKeys) {
-      const jsonValue = await AsyncStorage.getItem(`produk_${dataPribadi.idx}_${key}`);
-      const oldProduct = JSON.parse(jsonValue);
-      const newProduct = newProductList.find(p => p.id === product);
-      await AsyncStorage.setItem(`produk_${dataPribadi.idx}_${key}`, JSON.stringify(newProduct));
-    }
+      const produkKeys = Object.keys(produk);
+      for (const key of produkKeys) {
+        const jsonValue = await AsyncStorage.getItem(
+          `produk_${dataPribadi.idx}_${key}`,
+        );
+        const oldProduct = JSON.parse(jsonValue);
+        const newProduct = newProductList.find(p => p.id === product);
+        await AsyncStorage.setItem(
+          `produk_${dataPribadi.idx}_${key}`,
+          JSON.stringify(newProduct),
+        );
+      }
+      
+      showSuccess('Berhasil', 'Data Produk Berhasil Masuk Ke Keranjang');
+
     } catch (error) {
       console.log(error);
     }
@@ -182,12 +193,6 @@ const TokoKesehatanProduk = ({navigation}) => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <View style={styles.viewLingkaran}>
-                <Text
-                  style={{color: 'white', fontSize: 10, fontWeight: 'bold'}}>
-                  {totalKeranjang}
-                </Text>
-              </View>
               <Icon name="cart-sharp" style={{color: 'red', fontSize: 20}} />
             </View>
           </TouchableOpacity>
