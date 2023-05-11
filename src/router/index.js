@@ -1,6 +1,10 @@
 import React, {useEffect, useState} from 'react';
 
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  TransitionSpecs,
+  CardStyleInterpolators,
+} from '@react-navigation/stack';
 import Splash from '../views/public/SplashScreen';
 import OptionsAutentikasi from '../views/public/OptionsAutentikasi';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -33,6 +37,8 @@ import AlamatTersimpan from '../views/member/ProfileAkun/AlamatTersimpan';
 import KeahlianDokter from '../views/member/DashboardMember/KeahlianDokter';
 import RingkasanPembayaran from '../views/member/DashboardMember/KeahlianDokter/RingkasanPembayaran';
 import AllData from '../views/member/FiturUnggulan/BuatJanji/AllData';
+import AllDataProduk from '../views/member/Produk/TokoKesehatanProduk/AllData';
+import RingkasanPembayaranProduk from '../views/member/Produk/TokoKesehatanProduk/RingkasanPembayaranProduk';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -147,7 +153,9 @@ const MainDokter = () => {
 
 const Router = () => {
   return (
-    <Stack.Navigator initialRouteName={Navigasi.SPLASH}>
+    <Stack.Navigator
+      initialRouteName={Navigasi.SPLASH}
+      screenOptions={{gestureEnabled: true, gestureDirection: 'horizontal'}}>
       <Stack.Screen
         name={Navigasi.SPLASH}
         component={Splash}
@@ -176,12 +184,20 @@ const Router = () => {
       <Stack.Screen
         name={Navigasi.LOGIN}
         component={Login}
-        options={{headerShown: false}}
+        options={{
+          headerShown: false, 
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          gestureDirection: 'horizontal-inverted'
+        }}
       />
       <Stack.Screen
         name={Navigasi.DAFTAR}
         component={Daftar}
-        options={{headerShown: false}}
+        options={{
+          headerShown: false,
+          cardStyleInterpolator:
+            CardStyleInterpolators.forHorizontalIOS,
+        }}
       />
       <Stack.Screen
         name={Navigasi.CHAT_DOKTER}
@@ -196,6 +212,16 @@ const Router = () => {
       <Stack.Screen
         name={Navigasi.All_DATA_RS}
         component={AllData}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Navigasi.All_DATA_PRODUK}
+        component={AllDataProduk}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Navigasi.RINGKASAN_PEMBAYARAN_PRODUK}
+        component={RingkasanPembayaranProduk}
         options={{headerShown: false}}
       />
       <Stack.Screen
