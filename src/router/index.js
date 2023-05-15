@@ -39,6 +39,9 @@ import RingkasanPembayaran from '../views/member/DashboardMember/KeahlianDokter/
 import AllData from '../views/member/FiturUnggulan/BuatJanji/AllData';
 import AllDataProduk from '../views/member/Produk/TokoKesehatanProduk/AllData';
 import RingkasanPembayaranProduk from '../views/member/Produk/TokoKesehatanProduk/RingkasanPembayaranProduk';
+import Cash from '../views/member/Produk/TokoKesehatanProduk/RingkasanPembayaranProduk/Cash';
+import Banks from '../views/member/Produk/TokoKesehatanProduk/RingkasanPembayaranProduk/Banks';
+import EWallet from '../views/member/Produk/TokoKesehatanProduk/RingkasanPembayaranProduk/E-Wallet';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -185,9 +188,9 @@ const Router = () => {
         name={Navigasi.LOGIN}
         component={Login}
         options={{
-          headerShown: false, 
+          headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-          gestureDirection: 'horizontal-inverted'
+          gestureDirection: 'horizontal-inverted',
         }}
       />
       <Stack.Screen
@@ -195,14 +198,16 @@ const Router = () => {
         component={Daftar}
         options={{
           headerShown: false,
-          cardStyleInterpolator:
-            CardStyleInterpolators.forHorizontalIOS,
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
       />
       <Stack.Screen
         name={Navigasi.CHAT_DOKTER}
         component={ChatDokter}
-        options={{headerShown: false}}
+        options={{
+          headerShown: false,
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        }}
       />
       <Stack.Screen
         name={Navigasi.BUAT_JANJI}
@@ -222,6 +227,21 @@ const Router = () => {
       <Stack.Screen
         name={Navigasi.RINGKASAN_PEMBAYARAN_PRODUK}
         component={RingkasanPembayaranProduk}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Navigasi.BANKS}
+        component={Banks}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Navigasi.EWallet}
+        component={EWallet}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Navigasi.CASH}
+        component={Cash}
         options={{headerShown: false}}
       />
       <Stack.Screen

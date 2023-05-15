@@ -6,9 +6,12 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
+  StatusBar,
 } from 'react-native';
 import {colors, baseUrl, getData} from '../../../utils';
 import axios from 'axios';
+import {WebView} from "react-native-webview";
+import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
 
 const Transaksi = () => {
   // const [countdown, setCountdown] = useState(1800);
@@ -143,13 +146,17 @@ const Transaksi = () => {
   }
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
-      <FlatList
-        data={dataRole}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        renderItem={({item}) => <Text style={{color: 'black'}}>Hamdan</Text>}
-      />
+    // <View style={{flex: 1, backgroundColor: 'white'}}>
+    //   <FlatList
+    //     data={dataRole}
+    //     horizontal
+    //     showsHorizontalScrollIndicator={false}
+    //     renderItem={({item}) => <Text style={{color: 'black'}}>Hamdan</Text>}
+    //   />
+    // </View>
+    <View style={{flex: 1}}>
+      <StatusBarComponent/>
+      <WebView source={{uri: 'https://rtqulilalbab.com/'}} />
     </View>
   );
 };

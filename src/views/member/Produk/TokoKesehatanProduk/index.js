@@ -270,7 +270,9 @@ const TokoKesehatanProduk = ({navigation}) => {
           <Text style={styles.judulTextMenu}>Produk Terlaris</Text>
         </View>
         <View style={styles.viewButton}>
-          <TouchableOpacity style={styles.designButton}>
+          <TouchableOpacity style={styles.designButton} onPress={() => {
+            navigation.navigate(Navigasi.All_DATA_PRODUK)
+          }}>
             <Text style={styles.textButton}>Lihat Semua</Text>
           </TouchableOpacity>
         </View>

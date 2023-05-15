@@ -31,42 +31,42 @@ const Daftar = ({navigation}) => {
   const daftarAkun = async () => {
     try {
       const {dataUser} = await axios.post(`${baseUrl.url}/akun/konsumen`, {
+    nik: form.nik,
+    nama: form.nama,
+    email: form.email,
+    password: form.password,
+    nomor_hp: form.nomor_hp,
+  });
+  dispatch({type: 'SET_LOADING', value: true});
+  Firebase.auth()
+    .createUserWithEmailAndPassword(form.email, form.password)
+    .then(success => {
+      dispatch({type: 'SET_LOADING', value: false});
+      setForm('reset');
+      const data = {
         nik: form.nik,
-        nama: form.nama,
-        email: form.email,
-        password: form.password,
         nomor_hp: form.nomor_hp,
-      });
-      dispatch({type: 'SET_LOADING', value: true});
-      Firebase.auth()
-        .createUserWithEmailAndPassword(form.email, form.password)
-        .then(success => {
-          dispatch({type: 'SET_LOADING', value: false});
-          setForm('reset');
-          const data = {
-            nik: form.nik,
-            nomor_hp: form.nomor_hp,
-            email: form.email,
-            nama: form.nama,
-            uid: success.user.uid,
-          };
-          Firebase.database()
-            .ref('users/' + success.user.uid + '/')
-            .set(data);
-          storeData('user', data);
-          navigation.navigate(Navigasi.LOGIN);
-        })
-        .catch(error => {
-          const pesanError = error.message;
-          dispatch({type: 'SET_LOADING', value: false});
-          // showMessage({
-          //   message: pesanError,
-          //   type: 'default',
-          //   backgroundColor: colors.error,
-          //   color: colors.textWhite,
-          // });
-          console.log(pesanError);
-        });
+        email: form.email,
+        nama: form.nama,
+        uid: success.user.uid,
+      };
+      Firebase.database()
+        .ref('users/' + success.user.uid + '/')
+        .set(data);
+      storeData('user', data);
+      navigation.navigate(Navigasi.LOGIN);
+    })
+    .catch(error => {
+      const pesanError = error.message;
+      dispatch({type: 'SET_LOADING', value: false});
+      // showMessage({
+      //   message: pesanError,
+      //   type: 'default',
+      //   backgroundColor: colors.error,
+      //   color: colors.textWhite,
+      // });
+      console.log(pesanError);
+    });
     } catch (error) {
       //   const pesanError = error.message;
       //   setLoading(false);

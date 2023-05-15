@@ -28,7 +28,12 @@ export default {
   KEAHLIAN_DOKTER: 'KeahlianDokter',
   RINGKASAN_PEMBAYARAN: 'RingkasanPembayaran',
   All_DATA_RS: 'AllDataRs',
-
+  All_DATA_PRODUK: 'AllDataProduk',
+  RINGKASAN_PEMBAYARAN_PRODUK: "RingkasanPembayaranProduk",
+  CASH: "CashPembayaran",
+  BANKS: "ListBank",
+  EWallet: "EWallet",
+  
   // Dokter
   DASHBOARD_DOKTER: 'DashboardDokter',
   MAIN_DOKTER: 'MainDokter',

@@ -2,10 +2,11 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
 import Navigasi from '../../../partials/navigasi';
+import {colors} from "../../../utils/colors"
 
 const OptionsAutentikasi = ({navigation}) => {
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, backgroundColor: colors.backgroundDasarBelakang }}>
       <StatusBarComponent />
       <View style={{flex: 4, justifyContent: 'center', alignItems: 'center'}}>
         <Image

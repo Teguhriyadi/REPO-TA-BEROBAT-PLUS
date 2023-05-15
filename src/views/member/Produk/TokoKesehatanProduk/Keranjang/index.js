@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import StatusBarComponent from '../../../../../components/StatusBar/StatusBarComponent';
-import {colors, getData} from '../../../../../utils';
+import {colors, getData, showSuccess} from '../../../../../utils';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Navigasi from '../../../../../partials/navigasi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -35,7 +35,6 @@ const Keranjang = ({navigation}) => {
 
   const getDataUserLocal = () => {
     getData('dataUser').then(res => {
-      // console.log(res);
       setDataPribadi(res);
     });
   };
@@ -116,6 +115,8 @@ const Keranjang = ({navigation}) => {
           `produk_${dataPribadi.idx}`,
           JSON.stringify(updateArray),
         );
+        
+        showSuccess("Berhasil", "Data Keranjang Telah di Hapus");
         setKeranjang(updateArray);
         getTotalHarga();
       }
@@ -129,7 +130,8 @@ const Keranjang = ({navigation}) => {
       const keys = await AsyncStorage.getAllKeys();
       const produkKeys = keys.filter(key => key.includes('produk_'));
       await AsyncStorage.multiRemove(produkKeys);
-      console.log('Data Produk di Async Storage berhasil dihapus');
+
+      showSuccess("Berhasil", "Data Keranjang Anda Telah di Hapus Semua");
 
       navigation.navigate(Navigasi.TOKO_KESEHATAN_PRODUK);
     } catch (error) {
@@ -343,7 +345,9 @@ const Keranjang = ({navigation}) => {
           </View>
           <View style={{flex: 1}}>
             <TouchableOpacity
-              style={{backgroundColor: 'purple', borderRadius: 5}}>
+              style={{backgroundColor: 'purple', borderRadius: 5}} onPress={() => {
+                navigation.navigate(Navigasi.RINGKASAN_PEMBAYARAN_PRODUK)
+              }} >
               <Text
                 style={{
                   color: 'white',
