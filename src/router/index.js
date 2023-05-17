@@ -30,7 +30,6 @@ import TokoKesehatanProduk from '../views/member/Produk/TokoKesehatanProduk';
 import SpesialisDokter from '../views/member/FiturUnggulan/Spesialis/DokterRumahSakit';
 import LanjutkanPembayaran from '../views/member/FiturUnggulan/LanjutkanPembayaran';
 import DetailProduk from '../views/member/Produk/DetailProduk';
-import Saldo from '../views/member/ProfileAkun/Saldo';
 import Keranjang from '../views/member/Produk/TokoKesehatanProduk/Keranjang';
 import UpdatePassword from '../views/member/ProfileAkun/UpdatePassword';
 import AlamatTersimpan from '../views/member/ProfileAkun/AlamatTersimpan';
@@ -42,6 +41,7 @@ import RingkasanPembayaranProduk from '../views/member/Produk/TokoKesehatanProdu
 import Cash from '../views/member/Produk/TokoKesehatanProduk/RingkasanPembayaranProduk/Cash';
 import Banks from '../views/member/Produk/TokoKesehatanProduk/RingkasanPembayaranProduk/Banks';
 import EWallet from '../views/member/Produk/TokoKesehatanProduk/RingkasanPembayaranProduk/E-Wallet';
+import LoadingScreen from '../views/member/LoadingScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -172,7 +172,11 @@ const Router = () => {
       <Stack.Screen
         name={Navigasi.MAIN_APP}
         component={MainApp}
-        options={{headerShown: false}}
+        options={{
+          headerShown: false,
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          gestureDirection: 'horizontal-inverted',
+        }}
       />
       <Stack.Screen
         name={Navigasi.MAIN_DOKTER}
@@ -260,11 +264,6 @@ const Router = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name={Navigasi.SALDO_MEMBER}
-        component={Saldo}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
         name={Navigasi.UPDATE_PASSWORD_MEMBER}
         component={UpdatePassword}
         options={{headerShown: false}}
@@ -287,7 +286,10 @@ const Router = () => {
       <Stack.Screen
         name={Navigasi.TOKO_KESEHATAN_PRODUK}
         component={TokoKesehatanProduk}
-        options={{headerShown: false}}
+        options={{
+          headerShown: false,
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        }}
       />
       <Stack.Screen
         name={Navigasi.KERANJANG}
@@ -317,6 +319,11 @@ const Router = () => {
       <Stack.Screen
         name={Navigasi.CHATING}
         component={Chating}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Navigasi.LoadingScreen}
+        component={LoadingScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

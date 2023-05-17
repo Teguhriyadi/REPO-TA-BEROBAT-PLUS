@@ -8,7 +8,6 @@ import Navigasi from '../../../partials/navigasi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {baseUrl} from '../../../utils';
-import navigasi from '../../../partials/navigasi';
 
 const ProfileAkun = ({navigation}) => {
   const [user, setUser] = useState({});
@@ -21,7 +20,7 @@ const ProfileAkun = ({navigation}) => {
     }, 300);
 
     return () => clearTimeout(debounceTimeout);
-  }, [dataPribadi.nama, dataPribadi.token]);
+  }, [dataPribadi.nama, dataPribadi.token, dataPribadi.nomor_hp]);
 
   const getDataUserLocal = () => {
     getData('user').then(res => {
@@ -101,9 +100,9 @@ const ProfileAkun = ({navigation}) => {
                     fontWeight: 'bold',
                     fontSize: 14,
                   }}>
-                  Mohammad Ilham Teguh ...
+                  {dataPribadi.nama}
                 </Text>
-                <Text style={{color: 'black', fontSize: 14}}>085324237299</Text>
+                <Text style={{color: 'black', fontSize: 14}}>{dataPribadi.nomor_hp}</Text>
                 <TouchableOpacity
                   onPress={() => {
                     navigation.replace(Navigasi.EDIT_PROFILE);
@@ -207,22 +206,6 @@ const ProfileAkun = ({navigation}) => {
             <View style={styles.buttonListMenu}>
               <View style={styles.viewButtonListMenu}>
                 <Text style={{color: 'black'}}>Alamat Tersimpan</Text>
-              </View>
-              <View style={styles.iconButtonListMenu}>
-                <Icon
-                  name="arrow-forward"
-                  style={{fontSize: 20, color: 'black'}}
-                />
-              </View>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate(navigasi.SALDO_MEMBER);
-            }}>
-            <View style={styles.buttonListMenu}>
-              <View style={styles.viewButtonListMenu}>
-                <Text style={{color: 'black'}}>Saldo Anda</Text>
               </View>
               <View style={styles.iconButtonListMenu}>
                 <Icon

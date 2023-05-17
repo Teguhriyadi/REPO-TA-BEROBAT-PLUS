@@ -12,3 +12,4 @@ export * from './ProfileAkun/UpdatePassword';
 export * from './ProfileAkun/AlamatTersimpan';
 export * from './DashboardMember/KeahlianDokter';
 export * from './DashboardMember/KeahlianDokter/RingkasanPembayaran';
+export * from './LoadingScreen';

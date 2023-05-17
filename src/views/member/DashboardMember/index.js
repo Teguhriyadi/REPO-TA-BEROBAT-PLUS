@@ -233,9 +233,14 @@ const DashboardMember = ({navigation}) => {
             </View>
           </View>
           <View style={styles.listFitur}>
-            <View style={styles.viewFitur}>
-              <Icon name="md-bookmarks-sharp" style={styles.icon} />
-            </View>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.replace(Navigasi.LoadingScreen);
+              }}>
+              <View style={styles.viewFitur}>
+                <Icon name="md-calendar" style={styles.icon} />
+              </View>
+            </TouchableOpacity>
             <View style={{paddingTop: 5}}>
               <Text style={{color: 'black', fontSize: 12, fontWeight: 'bold'}}>
                 Reservasi

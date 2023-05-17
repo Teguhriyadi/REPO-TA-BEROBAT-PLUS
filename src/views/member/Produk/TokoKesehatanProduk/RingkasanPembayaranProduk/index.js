@@ -118,20 +118,16 @@ const RingkasanPembayaranProduk = ({navigation}) => {
   const bayar = async () => {
     try {
       const response = await axios({
-        url: `${baseUrl.url}/xendit/va/create`,
-        headers: {
-          Authorization: 'Bearer ' + dataPribadi.token,
-        },
+        url: `${baseUrl.url}/invoice`,
         method: 'POST',
         data: {
-          bank_code: tampung,
-          name: dataPribadi.nama,
           expected_amount: harga,
         },
       });
 
-      AsyncStorage.removeItem("setBank");
-
+      console.log("---------------");
+      console.log(response.data.data.status);
+      
       navigation.navigate(Navigasi.CASH, {
         data: response.data.data,
       });

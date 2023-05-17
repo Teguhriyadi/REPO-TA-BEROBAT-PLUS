@@ -21,7 +21,6 @@ export default {
   SPESIALIS_DOKTER: 'SpesialisDokter',
   LANJUTKAN_PEMBAYARAN: 'LanjutkanPembayaran',
   DETAIL_PRODUK: 'DetailProduk',
-  SALDO_MEMBER: 'SaldoMember',
   KERANJANG: 'Keranjang',
   UPDATE_PASSWORD_MEMBER: 'UpdatePasswordMember',
   ALAMAT_TERSIMPAN: 'AlamatTersimpan',
@@ -33,7 +32,7 @@ export default {
   CASH: "CashPembayaran",
   BANKS: "ListBank",
   EWallet: "EWallet",
-  
+  LoadingScreen: "LoadingScreen",
   // Dokter
   DASHBOARD_DOKTER: 'DashboardDokter',
   MAIN_DOKTER: 'MainDokter',
