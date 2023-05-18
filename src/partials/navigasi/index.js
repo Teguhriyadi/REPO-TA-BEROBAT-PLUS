@@ -37,4 +37,7 @@ export default {
   DASHBOARD_DOKTER: 'DashboardDokter',
   MAIN_DOKTER: 'MainDokter',
   CHATING_DOKTER: 'ChatingDokter',
+  KONSULTASI_DOKTER: "KonsultasiDokter",
+  PROFILE_DOKTER: "ProfileAkunDokter",
+  EDIT_PROFILE_DOKTER: "EditProfileDokter"
 };

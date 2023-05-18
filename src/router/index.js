@@ -42,6 +42,9 @@ import Cash from '../views/member/Produk/TokoKesehatanProduk/RingkasanPembayaran
 import Banks from '../views/member/Produk/TokoKesehatanProduk/RingkasanPembayaranProduk/Banks';
 import EWallet from '../views/member/Produk/TokoKesehatanProduk/RingkasanPembayaranProduk/E-Wallet';
 import LoadingScreen from '../views/member/LoadingScreen';
+import ProfileAkunDokter from '../views/dokter/ProfileAkunDokter';
+import EditProfilDokter from '../views/dokter/ProfileAkunDokter/EditProfilDokter';
+import KonsultasiDokter from '../views/dokter/KonsultasiDokter';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -111,9 +114,9 @@ const MainDokter = () => {
 
           if (route.name == 'DashboardDokter') {
             iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name == 'ProfileMember') {
+          } else if (route.name == 'ProfileAkunDokter') {
             iconName = focused ? 'people' : 'people-outline';
-          } else if (route.name == 'ChatingDokter') {
+          } else if (route.name == 'KonsultasiDokter') {
             iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
           } else if (route.name == 'Transaksi') {
             iconName = focused ? 'book' : 'book-outline';
@@ -141,14 +144,14 @@ const MainDokter = () => {
         options={{headerShown: false}}
       />
       <Tab.Screen
-        name={Navigasi.CHATING_DOKTER}
-        component={ChatingDokter}
-        options={{headerShown: false, title: 'Chating'}}
+        name={Navigasi.KONSULTASI_DOKTER}
+        component={KonsultasiDokter}
+        options={{headerShown: false, title: 'Konsultasi'}}
       />
       <Tab.Screen
-        name={Navigasi.PROFILE_MEMBER}
-        component={ProfileAkun}
-        options={{headerShown: false}}
+        name={Navigasi.PROFILE_DOKTER}
+        component={ProfileAkunDokter}
+        options={{headerShown: false, title: 'Profil Saya'}}
       />
     </Tab.Navigator>
   );
@@ -325,6 +328,15 @@ const Router = () => {
         name={Navigasi.LoadingScreen}
         component={LoadingScreen}
         options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name={Navigasi.EDIT_PROFILE_DOKTER}
+        component={EditProfilDokter}
+        options={{
+          headerShown: false,
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        }}
       />
     </Stack.Navigator>
   );
