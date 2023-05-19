@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   PermissionsAndroid,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
 import {baseUrl, getData} from '../../../utils';
@@ -20,11 +21,16 @@ const Dashboard = () => {
   const [dataPribadi, setDataPribadi] = useState({});
   const [apotek, setApotek] = useState({});
   const [rumah_sakit, setRumahSakit] = useState({});
+  const [showIndicator, setShowIndicator] = useState(false);
 
   useEffect(() => {
-    getDataUserLocal();
-    dataLokasi();
-  }, []);
+    const debounceTimeout = setTimeout(() => {
+      getDataUserLocal();
+      dataLokasi();
+    }, 300);
+
+    return () => clearTimeout(debounceTimeout);
+  }, [dataPribadi.token]);
 
   const getDataUserLocal = () => {
     getData('dataUser').then(res => {
@@ -65,6 +71,7 @@ const Dashboard = () => {
               })
                 .then(response => {
                   setApotek(response.data);
+                  setShowIndicator(true);
                 })
                 .catch(error => {
                   console.log(error);
@@ -82,6 +89,7 @@ const Dashboard = () => {
                 },
               })
                 .then(response => {
+                  console.log(response.data.data);
                   setRumahSakit(response.data.data);
                 })
                 .catch(error => {
@@ -221,7 +229,7 @@ const Dashboard = () => {
           style={{
             flexDirection: 'row',
             marginHorizontal: 10,
-            marginVertical: 15,
+            marginTop: 20,
           }}>
           <Text
             style={{
@@ -247,25 +255,7 @@ const Dashboard = () => {
             </TouchableOpacity>
           </View>
         </View>
-        <View style={{marginHorizontal: 10}}>
-          <FlatList
-            data={rumah_sakit}
-            horizontal
-            showHorizontalScrollIndicator={false}
-            renderItem={({item}) => (
-              <View
-                style={{
-                  backgroundColor: 'white',
-                  elevation: 5,
-                  marginLeft: 1,
-                  marginTop: 5,
-                  marginRight: 10,
-                }}>
-                  <Image source={require("../../../assets/images/gambar-rs.jpg")} style={{width: 130, height: 130}} />
-              </View>
-            )}
-          />
-        </View>
+        <FlatList data={rumah_sakit} />
         <View style={styles.listApotek}>
           <View style={{flexDirection: 'row'}}>
             <View>

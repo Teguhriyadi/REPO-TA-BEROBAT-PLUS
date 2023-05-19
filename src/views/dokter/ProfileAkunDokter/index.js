@@ -3,6 +3,9 @@ import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {colors, getData} from '../../../utils';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Navigasi from '../../../partials/navigasi';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { baseUrl } from '../../../utils';
 
 const ProfileAkunDokter = ({navigation}) => {
   const [dataPribadi, setDataPribadi] = useState({});
@@ -14,6 +17,28 @@ const ProfileAkunDokter = ({navigation}) => {
   const getDataUserLocal = () => {
     getData('dataUser').then(res => {
       setDataPribadi(res);
+    });
+  };
+
+  const logout = () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        AsyncStorage.removeItem('dataUser');
+        AsyncStorage.removeItem('user');
+        AsyncStorage .removeItem('isLoggedIn');
+
+        await axios({
+          url: `${baseUrl.url}/logout`,
+          headers: {
+            Authorization: 'Bearer ' + dataPribadi.token,
+          },
+          method: 'GET',
+        });
+
+        navigation.navigate(Navigasi.LOGIN);
+      } catch (error) {
+        console.log(error);
+      }
     });
   };
 
@@ -83,7 +108,9 @@ const ProfileAkunDokter = ({navigation}) => {
           </TouchableOpacity>
         </View>
         <View style={styles.footer}>
-          <TouchableOpacity style={styles.buttonLogout}>
+          <TouchableOpacity style={styles.buttonLogout} onPress={() => {
+            logout()
+          }}>
             <Text style={styles.textButton}>Keluar</Text>
           </TouchableOpacity>
           <Text
