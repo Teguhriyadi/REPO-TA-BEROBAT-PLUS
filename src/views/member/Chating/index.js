@@ -13,6 +13,7 @@ import {
   useForm,
 } from '../../../utils';
 import axios from 'axios';
+import Navigasi from '../../../partials/navigasi';
 
 const Chating = ({navigation, route}) => {
   const getDokter = route.params;
@@ -132,7 +133,11 @@ const Chating = ({navigation, route}) => {
           alignItems: 'center',
         }}>
         <View style={{flex: 1, marginLeft: 10}}>
+          <TouchableOpacity onPress={() => {
+            navigation.goBack();
+          }}>
           <Icon name="arrow-back" style={{fontSize: 20, color: 'black'}} />
+          </TouchableOpacity>
         </View>
         <View
           style={{
