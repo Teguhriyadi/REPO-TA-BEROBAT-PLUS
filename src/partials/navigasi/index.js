@@ -39,5 +39,6 @@ export default {
   CHATING_DOKTER: 'ChatingDokter',
   KONSULTASI_DOKTER: "KonsultasiDokter",
   PROFILE_DOKTER: "ProfileAkunDokter",
-  EDIT_PROFILE_DOKTER: "EditProfileDokter"
+  EDIT_PROFILE_DOKTER: "EditProfileDokter",
+  ALL_DATA_RUMAH_SAKIT_TERDEKAT: "AllDataRumahSakitTerdekat"
 };

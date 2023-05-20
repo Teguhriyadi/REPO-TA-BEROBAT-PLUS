@@ -21,7 +21,7 @@ const DetailChatDokter = ({navigation, route}) => {
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate(Navigasi.MAIN_APP);
+              navigation.navigate(Navigasi.CHAT_DOKTER);
             }}>
             <Icon
               name="ios-arrow-back"
@@ -35,7 +35,7 @@ const DetailChatDokter = ({navigation, route}) => {
             alignItems: 'center',
             paddingHorizontal: 10,
           }}>
-          <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold'}}>
+          <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium'}}>
             {getDokter.data.user_id.nama}
           </Text>
         </View>

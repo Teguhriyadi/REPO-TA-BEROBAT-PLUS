@@ -8,6 +8,7 @@ import {
   PermissionsAndroid,
   FlatList,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
 import {baseUrl, getData} from '../../../utils';
@@ -16,8 +17,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Geocoder from 'react-native-geocoding';
 import Geolocation from '@react-native-community/geolocation';
+import Navigasi from '../../../partials/navigasi';
 
-const Dashboard = () => {
+const Dashboard = ({navigation}) => {
   const [dataPribadi, setDataPribadi] = useState({});
   const [apotek, setApotek] = useState({});
   const [rumah_sakit, setRumahSakit] = useState({});
@@ -225,147 +227,184 @@ const Dashboard = () => {
             </View>
           </View>
         </View>
-        <View
+      </View>
+
+      <View
+        style={{
+          flexDirection: 'row',
+          marginHorizontal: 10,
+          marginTop: 120,
+        }}>
+        <Text
           style={{
-            flexDirection: 'row',
-            marginHorizontal: 10,
-            marginTop: 20,
+            color: 'black',
+            fontSize: 16,
+            fontWeight: 'bold',
+            fontFamily: 'Poppins-Medium',
           }}>
-          <Text
+          Rumah Sakit Terdekat
+        </Text>
+        <View style={{alignItems: 'flex-end', flex: 1}}>
+          <TouchableOpacity
             style={{
-              color: 'black',
-              fontSize: 16,
-              fontWeight: 'bold',
-              fontFamily: 'Poppins-Medium',
-            }}>
-            Rumah Sakit Terdekat
-          </Text>
-          <View style={{alignItems: 'flex-end', flex: 1}}>
-            <TouchableOpacity
-              style={{
-                borderColor: 'green',
-                borderWidth: 1,
-                paddingVertical: 3,
-                paddingHorizontal: 5,
-                borderRadius: 10,
-              }}>
-              <Text style={{color: 'green', fontWeight: 'bold', fontSize: 10}}>
-                Lihat Semua
-              </Text>
-            </TouchableOpacity>
-          </View>
+              borderColor: 'green',
+              borderWidth: 1,
+              paddingVertical: 3,
+              paddingHorizontal: 5,
+              borderRadius: 10,
+            }} onPress={() => {
+              navigation.navigate(Navigasi.ALL_DATA_RUMAH_SAKIT_TERDEKAT)
+            }} >
+            <Text style={{color: 'green', fontWeight: 'bold', fontSize: 10}}>
+              Lihat Semua
+            </Text>
+          </TouchableOpacity>
         </View>
-        <FlatList data={rumah_sakit} />
-        <View style={styles.listApotek}>
-          <View style={{flexDirection: 'row'}}>
-            <View>
+      </View>
+
+      <View style={{marginLeft: 2}}>
+        <FlatList
+          data={rumah_sakit}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item) => item.id_rumah_sakit}
+          renderItem={({item}) => (
+            <View
+              style={{
+                backgroundColor: 'white',
+                elevation: 5,
+                marginRight: 5,
+                padding: 10,
+                borderRadius: 10,
+                marginLeft: 10,
+                marginVertical: 5,
+              }}>
+              <Image
+                source={require('../../../assets/images/gambar-rs.jpg')}
+                style={{width: 100, height: 100, borderRadius: 10}}
+              />
               <Text
                 style={{
                   color: 'black',
-                  fontWeight: 'bold',
-                  fontSize: 16,
+                  fontSize: 12,
                   fontFamily: 'Poppins-Medium',
+                  fontWeight: 'bold',
+                  marginTop: 5,
                 }}>
-                Apotek Terdekat
+                {item.nama_rs}
               </Text>
-            </View>
-            <View style={{alignItems: 'flex-end', flex: 1}}>
-              <TouchableOpacity
+              <View
                 style={{
-                  borderColor: 'green',
-                  borderWidth: 1,
-                  borderRadius: 10,
-                  paddingVertical: 3,
-                  paddingHorizontal: 5,
+                  backgroundColor: colors.backgroundDasarBelakang,
+                  borderRadius: 5,
+                  width: 40,
+                  marginTop: 5,
+                  paddingVertical: 5,
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}>
                 <Text
-                  style={{color: 'green', fontWeight: 'bold', fontSize: 10}}>
-                  Lihat Semua
+                  style={{
+                    color: 'black',
+                    fontSize: 10,
+                    fontFamily: 'Poppins-Medium',
+                    fontWeight: 'bold',
+                  }}>
+                  10 KM
                 </Text>
-              </TouchableOpacity>
+              </View>
             </View>
-          </View>
+          )}
+        />
+      </View>
 
-          <View style={{paddingVertical: 5, height: 250}}>
-            <View style={{marginVertical: 10}}>
-              <FlatList
-                data={apotek}
-                horizontal
-                showHorizontalScrollIndicator={false}
-                renderItem={({item}) => (
-                  <View
-                    style={{
-                      backgroundColor: 'white',
-                      elevation: 5,
-                      borderRadius: 10,
-                      padding: 10,
-                      width: 170,
-                      marginTop: 2,
-                      marginRight: 10,
-                      marginLeft: 2,
-                    }}>
-                    <View style={{marginBottom: 5}}>
-                      <Image
-                        source={require('../../../assets/images/gambar-rs.jpg')}
-                        style={{width: 150, height: 150}}
-                      />
-                    </View>
-                    <Text
-                      style={{
-                        color: 'black',
-                        fontSize: 14,
-                        fontWeight: 'bold',
-                        fontFamily: 'Poppins-Medium',
-                      }}>
-                      Rumah Sakit Plumbon
-                    </Text>
-                    <View style={{flexDirection: 'row'}}>
-                      <View
-                        style={{
-                          backgroundColor: colors.backgroundCardChildren,
-                          padding: 5,
-                          borderRadius: 10,
-                          marginTop: 10,
-                          width: 50,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}>
-                        <Text
-                          style={{
-                            color: 'black',
-                            fontSize: 10,
-                            fontWeight: 'bold',
-                          }}>
-                          10 KM
-                        </Text>
-                      </View>
-                      <View
-                        style={{
-                          backgroundColor: colors.backgroundCardChildren,
-                          padding: 5,
-                          borderRadius: 10,
-                          marginTop: 10,
-                          width: 50,
-                          marginLeft: 10,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}>
-                        <Text
-                          style={{
-                            color: 'black',
-                            fontSize: 10,
-                            fontWeight: 'bold',
-                          }}>
-                          5.5 *
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                )}
-              />
-            </View>
-          </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          marginHorizontal: 10,
+          marginTop: 10,
+        }}>
+        <View>
+          <Text
+            style={{
+              color: 'black',
+              fontWeight: 'bold',
+              fontSize: 16,
+              fontFamily: 'Poppins-Medium',
+            }}>
+            Apotek Terdekat
+          </Text>
         </View>
+        <View style={{alignItems: 'flex-end', flex: 1}}>
+          <TouchableOpacity
+            style={{
+              borderColor: 'green',
+              borderWidth: 1,
+              borderRadius: 10,
+              paddingVertical: 3,
+              paddingHorizontal: 5,
+              marginVertical: 5,
+            }}>
+            <Text style={{color: 'green', fontWeight: 'bold', fontSize: 10}}>
+              Lihat Semua
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <View style={{marginHorizontal: 10}}>
+        <FlatList
+          data={apotek}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item) => item.id_profil_apotek}
+          renderItem={({item}) => (
+            <View
+              style={{
+                backgroundColor: 'white',
+                elevation: 5,
+                borderRadius: 5,
+                marginRight: 10,
+                marginVertical: 5,
+                marginLeft: 5,
+                width: 170,
+              }}>
+              <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <Image
+                  source={require('../../../assets/images/gambar-rs.jpg')}
+                  style={{
+                    width: 150,
+                    height: 150,
+                    borderRadius: 5,
+                    marginVertical: 10,
+                  }}
+                />
+              </View>
+              <Text
+                style={{
+                  color: 'black',
+                  fontSize: 12,
+                  fontWeight: 'bold',
+                  fontFamily: 'Poppins-Medium',
+                  paddingHorizontal: 10,
+                }}>
+                {item.nama_apotek}
+              </Text>
+              <View
+                style={{
+                  backgroundColor: colors.backgroundDasarBelakang,
+                  marginHorizontal: 10,
+                  marginVertical: 10,
+                  width: 70,
+                  alignItems: 'center',
+                  borderRadius: 5,
+                  paddingVertical: 5
+                }}>
+                <Text style={{color: 'black', fontSize: 12, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>10 KM</Text>
+              </View>
+            </View>
+          )}
+        />
       </View>
     </View>
   );

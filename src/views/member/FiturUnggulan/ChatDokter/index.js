@@ -53,6 +53,7 @@ const ChatDokter = ({navigation, route}) => {
         method: 'GET',
       })
         .then(response => {
+          console.log(response.data.data);
           setListDataDokter(response.data.data);
           setShowIndicator(true);
         })
@@ -100,7 +101,7 @@ const ChatDokter = ({navigation, route}) => {
             alignItems: 'center',
             paddingLeft: 10,
           }}>
-          <Text style={{color: 'black'}}>Chat Dengan Ahlinya</Text>
+          <Text style={{color: 'black', fontFamily: 'Poppins-Medium'}}>Chat Dengan Ahlinya</Text>
         </View>
       </View>
       <View style={styles.cardSearch}>
@@ -124,7 +125,7 @@ const ChatDokter = ({navigation, route}) => {
       </View>
       <View style={{flexDirection: 'row'}}>
         <View style={styles.textLeftHeading}>
-          <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold'}}>
+          <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium'}}>
             Rekomendasi Dokter
           </Text>
           <Text style={{color: 'black', fontSize: 10}}>
@@ -314,21 +315,10 @@ const ChatDokter = ({navigation, route}) => {
                   }}>
                   <TouchableOpacity
                     style={{justifyContent: 'center', alignItems: 'center'}}>
-                    <View
-                      style={{
-                        width: 60,
-                        height: 60,
-                        borderRadius: 100,
-                        borderColor: 'black',
-                        marginTop: 5,
-                        borderWidth: 1,
-                        marginBottom: 5,
-                      }}>
                       <Image
                         source={require('../../../../assets/images/auth-new.png')}
-                        style={{width: '100%', height: '100%'}}
+                        style={{width: 60, height: 60, borderRadius: 50, borderColor: 'black', borderWidth: 1, marginTop: 5}}
                       />
-                    </View>
                     <Text
                       style={{
                         color: 'black',

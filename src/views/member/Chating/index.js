@@ -123,49 +123,55 @@ const Chating = ({navigation, route}) => {
       <View
         style={{
           backgroundColor: 'white',
-          padding: 15,
-          height: 80,
           elevation: 5,
+          height: 70,
+          borderBottomRightRadius: 20,
+          borderBottomLeftRadius: 20,
           flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}>
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}>
-            <Icon
-              name="ios-arrow-back"
-              style={{color: 'black', fontSize: 20}}
-            />
-          </TouchableOpacity>
+        <View style={{flex: 1, marginLeft: 10}}>
+          <Icon name="arrow-back" style={{fontSize: 20, color: 'black'}} />
         </View>
         <View
           style={{
-            justifyContent: 'center',
-            alignItems: 'flex-start',
-            paddingLeft: 10,
-            flex: 1,
+            flex: 2,
+            flexDirection: 'row',
+            marginRight: 10,
           }}>
-          <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold'}}>
-            {getDokter.data.data.user_id.nama}
-          </Text>
-          <Text style={{color: 'black', fontSize: 12}}>
-            {getDokter.data.data.kelas == 0
-              ? 'Dokter Umum'
-              : 'Dokter Spesialis'}
-          </Text>
-        </View>
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <Image
-            source={require('../../../assets/images/people.png')}
+          <View
+            style={{justifyContent: 'center', alignItems: 'flex-end', flex: 3}}>
+            <Text
+              style={{
+                color: 'black',
+                fontSize: 14,
+                fontFamily: 'Poppins-Medium',
+                fontWeight: 'bold',
+              }}>
+                {getDokter.data.data.user_id.nama}
+            </Text>
+            <Text style={{color: 'gray', fontSize: 12}}>
+              {getDokter.data.data.kelas == 1 ? 'Dokter Spesialis' : 'Dokter Umum' }
+            </Text>
+          </View>
+          <View
             style={{
-              width: 46,
-              height: 46,
-              borderRadius: 46 / 2,
-              borderColor: 'black',
-              borderWidth: 1,
-            }}
-          />
+              flex: 1,
+              justifyContent: 'flex-end',
+              alignItems: 'flex-end',
+            }}>
+            <Image
+              source={require('../../../assets/images/people.png')}
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 50,
+                borderColor: 'black',
+                borderWidth: 1,
+              }}
+            />
+          </View>
         </View>
       </View>
       <View style={{flex: 1}}>

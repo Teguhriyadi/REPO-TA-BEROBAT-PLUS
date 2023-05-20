@@ -137,7 +137,7 @@ const BuatJadwal = ({navigation, route}) => {
             justifyContent: 'center',
             alignItems: 'flex-start',
           }}>
-          <Text style={{color: 'black'}}>Buat Janji Ketemu Langsung</Text>
+          <Text style={{color: 'black', fontFamily: 'Poppins-Medium'}}>Buat Janji Ketemu Langsung</Text>
         </View>
       </View>
       <View
@@ -284,20 +284,14 @@ const BuatJadwal = ({navigation, route}) => {
             showsHorizontalScrollIndicator={false}
             keyExtractor={item => item.id_penyakit}
             renderItem={({item}) => (
-              <View style={styles.cardBackground}>
-                <TouchableOpacity style={styles.cardTouchable}>
-                  <View style={styles.cardCircle}>
-                    <Image
-                      source={require('../../../../assets/images/auth-new.png')}
-                      resizeMode="cover"
-                      style={styles.image}
-                    />
-                  </View>
-                  <Text style={styles.textSpesialis}>
-                    {item.nama_spesialis}
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity style={styles.cardTouchable}>
+                <Image
+                  source={require('../../../../assets/images/auth-new.png')}
+                  resizeMode="cover"
+                  style={styles.image}
+                />
+                <Text style={styles.textSpesialis}>{item.nama_spesialis}</Text>
+              </TouchableOpacity>
             )}
           />
         ) : (
@@ -361,6 +355,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontSize: 18,
     fontWeight: 'bold',
+    fontFamily: 'Poppins-Medium'
   },
   subTextTitle: {
     color: 'gray',
@@ -419,19 +414,15 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 10,
     textAlign: 'center',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-  },
-  cardBackground: {
-    marginRight: 10,
-    flex: 1,
-    marginBottom: 5,
+    fontFamily: 'Poppins-Medium',
+    fontWeight: 'bold'
   },
   cardTouchable: {
     justifyContent: 'center',
     alignItems: 'center',
+    flex: 1,
+    marginBottom: 10,
+    marginRight: 5,
   },
   cardCircle: {
     width: 60,
@@ -441,6 +432,13 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderWidth: 1,
     marginBottom: 5,
+  },
+  image: {
+    width: 60,
+    height: 60,
+    borderRadius: 50,
+    borderColor: 'black',
+    borderWidth: 1,
   },
 });
 

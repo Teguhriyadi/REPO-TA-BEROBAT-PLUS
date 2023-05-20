@@ -486,6 +486,7 @@ const DashboardMember = ({navigation}) => {
           <FlatList
             data={artikel}
             horizontal
+            showsHorizontalScrollIndicator={false}
             renderItem={({item}) => (
               <TouchableOpacity
                 onPress={() => {

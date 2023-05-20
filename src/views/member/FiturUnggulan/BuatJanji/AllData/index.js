@@ -285,6 +285,7 @@ const styles = StyleSheet.create({
   textHeading: {
     fontSize: 14,
     color: 'black',
+    fontFamily: 'Poppins-Medium',
   },
   content: {
     marginVertical: 15,
