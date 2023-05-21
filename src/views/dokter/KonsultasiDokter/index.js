@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
 import {baseUrl, colors, getData} from '../../../utils';
 import Firebase from '../../../firebase/firebaseConfig';
 import axios from 'axios';
@@ -78,6 +78,7 @@ const KonsultasiDokter = () => {
       <View style={styles.heading}>
         <Text style={styles.textHeading}>Konsultasi Pasien</Text>
       </View>
+      <ScrollView>
       {historyChat.map(item => {
         return (
           <View key={item.id} style={styles.content}>
@@ -148,6 +149,7 @@ const KonsultasiDokter = () => {
           </View>
         );
       })}
+      </ScrollView>
     </View>
   );
 };

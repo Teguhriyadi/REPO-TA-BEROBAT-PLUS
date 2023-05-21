@@ -178,19 +178,68 @@ const DashboardMember = ({navigation}) => {
   return (
     <View style={styles.background}>
       <StatusBarComponent />
-      <View style={styles.heading}>
-        <Text style={styles.textHeading}>
-          {dataPribadi.nama != null ? dataPribadi.nama : 'Masuk'}
-        </Text>
-        <View style={styles.locationHeading}>
-          <View style={{paddingRight: 5}}>
-            <Text style={{fontWeight: 'bold', color: 'white'}}>{alamat}</Text>
-          </View>
-          <View>
-            <Icon
-              name="md-location-outline"
-              style={{color: 'white', fontSize: 20}}
+      <View style={{backgroundColor: 'blue', height: 70}}>
+        <View
+          style={{
+            marginHorizontal: 10,
+            marginVertical: 10,
+            flexDirection: 'row',
+          }}>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'flex-start',
+              marginRight: 10,
+            }}>
+            <Image
+              source={require('../../../assets/images/people.png')}
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 50,
+                borderColor: 'white',
+                borderWidth: 1,
+              }}
             />
+          </View>
+          <View style={{justifyContent: 'center', alignItems: 'flex-start'}}>
+            <Text
+              style={{
+                color: 'white',
+                fontSize: 14,
+                fontWeight: 'bold',
+                fontFamily: 'Poppins-Medium',
+              }}>
+                {dataPribadi.nama}
+            </Text>
+            <Text
+              style={{
+                color: 'white',
+                fontSize: 12,
+                fontWeight: 'bold',
+                fontFamily: 'Poppins-Medium',
+              }}>
+              {dataPribadi.nomor_hp}
+            </Text>
+          </View>
+          <View
+            style={{justifyContent: 'center', alignItems: 'flex-end', flex: 1}}>
+            <View style={{flexDirection: 'row'}}>
+              <Icon
+                name="md-location-outline"
+                style={{fontSize: 20, color: 'white'}}
+              />
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 14,
+                  fontWeight: 'bold',
+                  fontFamily: 'Poppins-Medium',
+                  marginLeft: 5,
+                }}>
+                {alamat}
+              </Text>
+            </View>
           </View>
         </View>
       </View>

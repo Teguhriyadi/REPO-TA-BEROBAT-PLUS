@@ -9,7 +9,7 @@ import {
   FlatList,
   ActivityIndicator,
   ScrollView,
-  Alert
+  Alert,
 } from 'react-native';
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
 import {baseUrl, getData} from '../../../utils';
@@ -109,45 +109,45 @@ const Dashboard = ({navigation}) => {
       console.log(error);
     }
   };
-  
+
   const logout = async () => {
     Alert.alert(
-      'Info',
-      'Apakah Anda Setuju',
+      'Konfirmasi',
+      'Apakah Anda Yakin Ingin Keluar?',
       [
         {
           text: 'Tidak',
-          style: 'cancel'
+          style: 'cancel',
         },
         {
           text: 'Setuju',
           onPress: async () => {
             try {
-      AsyncStorage.removeItem('dataUser');
-      AsyncStorage.removeItem('user');
-      AsyncStorage .removeItem('isLoggedIn');
-      AsyncStorage.removeItem("profil_dokter");
+              AsyncStorage.removeItem('dataUser');
+              AsyncStorage.removeItem('user');
+              AsyncStorage.removeItem('isLoggedIn');
+              AsyncStorage.removeItem('profil_dokter');
 
-      await axios({
-        url: `${baseUrl.url}/logout`,
-        headers: {
-          Authorization: 'Bearer ' + dataPribadi.token,
+              await axios({
+                url: `${baseUrl.url}/logout`,
+                headers: {
+                  Authorization: 'Bearer ' + dataPribadi.token,
+                },
+                method: 'GET',
+              });
+
+              navigation.navigate(Navigasi.LOGIN);
+            } catch (error) {
+              console.log(error);
+            }
+          },
         },
-        method: 'GET',
-      });
-
-      navigation.navigate(Navigasi.LOGIN);
-    } catch (error) {
-      console.log(error);
-    }
-          }
-        }
       ],
       {
-        cancelable: false
-      }
-    )
-  }
+        cancelable: false,
+      },
+    );
+  };
 
   return (
     <View style={styles.backgroundBelakang}>
@@ -175,9 +175,10 @@ const Dashboard = ({navigation}) => {
                 justifyContent: 'center',
                 alignItems: 'flex-end',
               }}>
-              <TouchableOpacity onPress={() => {
-                logout()
-              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  logout();
+                }}>
                 <Icon
                   name="exit-outline"
                   style={{fontSize: 30, color: 'white'}}
@@ -287,13 +288,13 @@ const Dashboard = ({navigation}) => {
           </View>
 
           <View style={{marginLeft: 2, marginTop: 5}}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {rumah_sakit == null ? (
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                  <ActivityIndicator size={'large'} />
-                </View>
-              ) : (
-                rumah_sakit.map(item => {
+            {rumah_sakit == null ? (
+              <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <ActivityIndicator size={'large'} />
+              </View>
+            ) : (
+              <ScrollView showsHorizontalScrollIndicator={false} horizontal>
+                {rumah_sakit.map(item => {
                   return (
                     <View
                       key={item.id_rumah_sakit}
@@ -344,9 +345,9 @@ const Dashboard = ({navigation}) => {
                       </View>
                     </View>
                   );
-                })
-              )}
-            </ScrollView>
+                })}
+              </ScrollView>
+            )}
           </View>
 
           <View
@@ -388,11 +389,13 @@ const Dashboard = ({navigation}) => {
           </View>
 
           <View style={{marginHorizontal: 5}}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {apotek == null ? (
-                <ActivityIndicator></ActivityIndicator>
-              ) : (
-                apotek.map(item => {
+            {apotek == null ? (
+              <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <ActivityIndicator size={'large'} color={colors.primary} />
+              </View>
+            ) : (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {apotek.map(item => {
                   return (
                     <View
                       key={item.id_profil_apotek}
@@ -454,9 +457,9 @@ const Dashboard = ({navigation}) => {
                       </View>
                     </View>
                   );
-                })
-              )}
-            </ScrollView>
+                })}
+              </ScrollView>
+            )}
           </View>
         </ScrollView>
       </View>

@@ -3,9 +3,6 @@ import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {colors, getData} from '../../../utils';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Navigasi from '../../../partials/navigasi';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { baseUrl } from '../../../utils';
 
 const ProfileAkunDokter = ({navigation}) => {
   const [dataPribadi, setDataPribadi] = useState({});
@@ -17,28 +14,6 @@ const ProfileAkunDokter = ({navigation}) => {
   const getDataUserLocal = () => {
     getData('dataUser').then(res => {
       setDataPribadi(res);
-    });
-  };
-
-  const logout = () => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        AsyncStorage.removeItem('dataUser');
-        AsyncStorage.removeItem('user');
-        AsyncStorage .removeItem('isLoggedIn');
-
-        await axios({
-          url: `${baseUrl.url}/logout`,
-          headers: {
-            Authorization: 'Bearer ' + dataPribadi.token,
-          },
-          method: 'GET',
-        });
-
-        navigation.navigate(Navigasi.LOGIN);
-      } catch (error) {
-        console.log(error);
-      }
     });
   };
 
@@ -107,22 +82,6 @@ const ProfileAkunDokter = ({navigation}) => {
             </View>
           </TouchableOpacity>
         </View>
-        <View style={styles.footer}>
-          <TouchableOpacity style={styles.buttonLogout} onPress={() => {
-            logout()
-          }}>
-            <Text style={styles.textButton}>Keluar</Text>
-          </TouchableOpacity>
-          <Text
-            style={{
-              color: 'black',
-              fontSize: 16,
-              fontWeight: 'bold',
-              textAlign: 'center',
-            }}>
-            Versi Aplikasi 1.0
-          </Text>
-        </View>
       </View>
     </View>
   );
@@ -181,19 +140,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  textButton: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  buttonLogout: {
-    backgroundColor: 'green',
-    marginVertical: 10,
-    borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
   },
 });
 

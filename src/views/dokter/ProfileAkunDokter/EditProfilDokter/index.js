@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  ScrollView,
 } from 'react-native';
 import {colors} from '../../../../utils';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -22,92 +23,105 @@ const EditProfilDokter = ({navigation}) => {
         </TouchableOpacity>
         <Text style={{color: 'black'}}>Edit Profil</Text>
       </View>
-      <Text
+      <ScrollView>
+        <Text
+          style={{
+            color: 'black',
+            fontSize: 12,
+            marginHorizontal: 10,
+            marginVertical: 5,
+          }}>
+          Informasi Umum
+        </Text>
+        <View style={{backgroundColor: 'white', paddingHorizontal: 10}}>
+          <View>
+            <Text style={styles.textTitle}>NIP</Text>
+            <TextInput
+              placeholder="Masukkan NIP"
+              placeholderTextColor={'gray'}
+              style={styles.textInput}
+            />
+          </View>
+          <View>
+            <Text style={styles.textTitle}>Nama Lengkap</Text>
+            <TextInput
+              placeholder="Masukkan Nama Lengkap"
+              placeholderTextColor={'gray'}
+              style={styles.textInput}
+            />
+          </View>
+          <View style={{marginBottom: 15}}>
+            <Text style={styles.textTitle}>E - Mail</Text>
+            <TextInput
+              placeholder="Masukkan E - Mail"
+              placeholderTextColor={'gray'}
+              style={styles.textInput}
+            />
+          </View>
+        </View>
+        <Text
+          style={{
+            color: 'black',
+            fontSize: 12,
+            marginHorizontal: 10,
+            marginVertical: 5,
+          }}>
+          Informasi Umum Detail
+        </Text>
+        <View style={{backgroundColor: 'white', paddingHorizontal: 10}}>
+          <View>
+            <Text style={styles.textTitle}>Nomor STR</Text>
+            <TextInput
+              placeholder="Masukkan Nomor STR"
+              placeholderTextColor={'gray'}
+              style={styles.textInput}
+            />
+          </View>
+          <View>
+            <Text style={styles.textTitle}>Nomor Handphone</Text>
+            <TextInput
+              placeholder="Masukkan Nomor Handphone"
+              placeholderTextColor={'gray'}
+              style={styles.textInput}
+            />
+          </View>
+          <View>
+            <Text style={styles.textTitle}>Jenis Kelamin</Text>
+            <TextInput
+              placeholder="Masukkan Nama Lengkap"
+              placeholderTextColor={'gray'}
+              style={styles.textInput}
+            />
+          </View>
+          <View>
+            <Text style={styles.textTitle}>Tempat Lahir</Text>
+            <TextInput
+              placeholder="Masukkan Tempat Lahir"
+              placeholderTextColor={'gray'}
+              style={styles.textInput}
+            />
+          </View>
+          <View style={{marginBottom: 15}}>
+            <Text style={styles.textTitle}>Tanggal Lahir</Text>
+            <TextInput
+              placeholder="Masukkan Tanggal Lahir"
+              placeholderTextColor={'gray'}
+              style={styles.textInput}
+            />
+          </View>
+        </View>
+      </ScrollView>
+      <TouchableOpacity
         style={{
-          color: 'black',
-          fontSize: 12,
-          marginHorizontal: 10,
-          marginVertical: 5,
+          backgroundColor: 'green',
+          paddingVertical: 15,
+          borderTopLeftRadius: 10,
+          borderTopRightRadius: 10
         }}>
-        Informasi Umum
-      </Text>
-      <View style={{backgroundColor: 'white', paddingHorizontal: 10}}>
-        <View>
-          <Text style={styles.textTitle}>NIP</Text>
-          <TextInput
-            placeholder="Masukkan NIP"
-            placeholderTextColor={'gray'}
-            style={styles.textInput}
-          />
-        </View>
-        <View>
-          <Text style={styles.textTitle}>Nama Lengkap</Text>
-          <TextInput
-            placeholder="Masukkan Nama Lengkap"
-            placeholderTextColor={'gray'}
-            style={styles.textInput}
-          />
-        </View>
-        <View style={{marginBottom: 15}}>
-          <Text style={styles.textTitle}>E - Mail</Text>
-          <TextInput
-            placeholder="Masukkan E - Mail"
-            placeholderTextColor={'gray'}
-            style={styles.textInput}
-          />
-        </View>
-      </View>
-      <Text
-        style={{
-          color: 'black',
-          fontSize: 12,
-          marginHorizontal: 10,
-          marginVertical: 5,
-        }}>
-        Informasi Umum Detail
-      </Text>
-      <View style={{backgroundColor: 'white', paddingHorizontal: 10}}>
-        <View>
-          <Text style={styles.textTitle}>Nomor STR</Text>
-          <TextInput
-            placeholder="Masukkan Nomor STR"
-            placeholderTextColor={'gray'}
-            style={styles.textInput}
-          />
-        </View>
-        <View>
-          <Text style={styles.textTitle}>Nomor Handphone</Text>
-          <TextInput
-            placeholder="Masukkan Nomor Handphone"
-            placeholderTextColor={'gray'}
-            style={styles.textInput}
-          />
-        </View>
-        <View>
-          <Text style={styles.textTitle}>Jenis Kelamin</Text>
-          <TextInput
-            placeholder="Masukkan Nama Lengkap"
-            placeholderTextColor={'gray'}
-            style={styles.textInput}
-          />
-        </View>
-        <View>
-          <Text style={styles.textTitle}>Tempat Lahir</Text>
-          <TextInput
-            placeholder="Masukkan Tempat Lahir"
-            placeholderTextColor={'gray'}
-            style={styles.textInput}
-          />
-        </View>
-        <View style={{marginBottom: 15}}>
-          <Text style={styles.textTitle}>Tanggal Lahir</Text>
-          <TextInput
-            placeholder="Masukkan Tanggal Lahir"
-            placeholderTextColor={'gray'}
-            style={styles.textInput}
-          />
-        </View>
-      </View>
+        <Text style={{color: 'white', fontWeight: 'bold', fontSize: 14, textAlign: 'center'}}>
+          Simpan
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
