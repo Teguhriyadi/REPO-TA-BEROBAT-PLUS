@@ -61,12 +61,7 @@ const Konsultasi = ({navigation}) => {
       setDataPribadi(res);
     });
   };
-
-  const toChating = chat => {
-    navigation.navigate(Navigasi.CHATING, {
-      data: chat,
-    });
-  };
+  
   return (
     <View style={styles.backgroundBelakang}>
       <StatusBarComponent />

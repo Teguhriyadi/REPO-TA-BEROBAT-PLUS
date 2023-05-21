@@ -52,8 +52,21 @@ const Login = ({navigation}) => {
 
       if (data.message == 'Berhasil Login') {
         if (data.data.id_role == 'RO-2003062') {
+
           dispatch({type: 'SET_LOADING', value: false});
           setForm('reset');
+
+          axios({
+            url: `${baseUrl.url}/akun/profil/dokter/profil`,
+            headers: {
+              Authorization: 'Bearer ' + data.data.token
+            },
+            method: "GET"
+          }).then((response) => {
+            storeData("profil_dokter", response.data.data);
+          }).catch((error) => {
+            console.log(error);
+          });
 
           showSuccess('Good Job, Login Success', 'Anda Login Sebagai Dokter');
 
@@ -62,7 +75,6 @@ const Login = ({navigation}) => {
 
           navigation.navigate(Navigasi.MAIN_DOKTER);
 
-          console.log('Hamdan');
         } else if (data.data.id_role == 'RO-2003063') {
           console.log('Hayy');
         } else if (data.data.id_role == 'RO-2003064') {

@@ -268,11 +268,12 @@ const Dashboard = ({navigation}) => {
                         style={{
                           backgroundColor: colors.backgroundDasarBelakang,
                           borderRadius: 5,
-                          width: 40,
+                          width: 60,
                           marginTop: 5,
                           paddingVertical: 5,
                           justifyContent: 'center',
                           alignItems: 'center',
+                          paddingRight: 5
                         }}>
                         <Text
                           style={{
@@ -281,7 +282,7 @@ const Dashboard = ({navigation}) => {
                             fontFamily: 'Poppins-Medium',
                             fontWeight: 'bold',
                           }}>
-                          10 KM
+                            <Icon name='ios-location' /> {Math.floor(item.distance)} KM
                         </Text>
                       </View>
                     </View>
@@ -374,10 +375,11 @@ const Dashboard = ({navigation}) => {
                           backgroundColor: colors.backgroundDasarBelakang,
                           marginHorizontal: 10,
                           marginVertical: 10,
-                          width: 70,
+                          width: 80,
                           alignItems: 'center',
                           borderRadius: 5,
                           paddingVertical: 5,
+                          paddingRight: 5
                         }}>
                         <Text
                           style={{
@@ -386,7 +388,7 @@ const Dashboard = ({navigation}) => {
                             fontWeight: 'bold',
                             fontFamily: 'Poppins-Medium',
                           }}>
-                          10 KM
+                           <Icon name='ios-location' /> {Math.floor(item.distance)} KM
                         </Text>
                       </View>
                     </View>
