@@ -9,6 +9,7 @@ import {
   FlatList,
   ActivityIndicator,
   ScrollView,
+  Alert
 } from 'react-native';
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
 import {baseUrl, getData} from '../../../utils';
@@ -18,6 +19,7 @@ import axios from 'axios';
 import Geocoder from 'react-native-geocoding';
 import Geolocation from '@react-native-community/geolocation';
 import Navigasi from '../../../partials/navigasi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Dashboard = ({navigation}) => {
   const [dataPribadi, setDataPribadi] = useState({});
@@ -107,6 +109,45 @@ const Dashboard = ({navigation}) => {
       console.log(error);
     }
   };
+  
+  const logout = async () => {
+    Alert.alert(
+      'Info',
+      'Apakah Anda Setuju',
+      [
+        {
+          text: 'Tidak',
+          style: 'cancel'
+        },
+        {
+          text: 'Setuju',
+          onPress: async () => {
+            try {
+      AsyncStorage.removeItem('dataUser');
+      AsyncStorage.removeItem('user');
+      AsyncStorage .removeItem('isLoggedIn');
+      AsyncStorage.removeItem("profil_dokter");
+
+      await axios({
+        url: `${baseUrl.url}/logout`,
+        headers: {
+          Authorization: 'Bearer ' + dataPribadi.token,
+        },
+        method: 'GET',
+      });
+
+      navigation.navigate(Navigasi.LOGIN);
+    } catch (error) {
+      console.log(error);
+    }
+          }
+        }
+      ],
+      {
+        cancelable: false
+      }
+    )
+  }
 
   return (
     <View style={styles.backgroundBelakang}>
@@ -127,6 +168,21 @@ const Dashboard = ({navigation}) => {
               <Text style={{color: 'white', fontSize: 12}}>
                 {dataPribadi.nomor_hp}
               </Text>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'flex-end',
+              }}>
+              <TouchableOpacity onPress={() => {
+                logout()
+              }}>
+                <Icon
+                  name="exit-outline"
+                  style={{fontSize: 30, color: 'white'}}
+                />
+              </TouchableOpacity>
             </View>
           </View>
           <Text style={styles.textSaldo}>Saldo Anda</Text>
@@ -273,7 +329,7 @@ const Dashboard = ({navigation}) => {
                           paddingVertical: 5,
                           justifyContent: 'center',
                           alignItems: 'center',
-                          paddingRight: 5
+                          paddingRight: 5,
                         }}>
                         <Text
                           style={{
@@ -282,7 +338,8 @@ const Dashboard = ({navigation}) => {
                             fontFamily: 'Poppins-Medium',
                             fontWeight: 'bold',
                           }}>
-                            <Icon name='ios-location' /> {Math.floor(item.distance)} KM
+                          <Icon name="ios-location" />{' '}
+                          {Math.floor(item.distance)} KM
                         </Text>
                       </View>
                     </View>
@@ -310,9 +367,10 @@ const Dashboard = ({navigation}) => {
               </Text>
             </View>
             <View style={{alignItems: 'flex-end', flex: 1}}>
-              <TouchableOpacity onPress={() => {
-                navigation.navigate(Navigasi.ALL_DATA_APOTEK_TERDEKAT)
-              }}
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate(Navigasi.ALL_DATA_APOTEK_TERDEKAT);
+                }}
                 style={{
                   borderColor: 'green',
                   borderWidth: 1,
@@ -381,7 +439,7 @@ const Dashboard = ({navigation}) => {
                           alignItems: 'center',
                           borderRadius: 5,
                           paddingVertical: 5,
-                          paddingRight: 5
+                          paddingRight: 5,
                         }}>
                         <Text
                           style={{
@@ -390,7 +448,8 @@ const Dashboard = ({navigation}) => {
                             fontWeight: 'bold',
                             fontFamily: 'Poppins-Medium',
                           }}>
-                           <Icon name='ios-location' /> {Math.floor(item.distance)} KM
+                          <Icon name="ios-location" />{' '}
+                          {Math.floor(item.distance)} KM
                         </Text>
                       </View>
                     </View>
