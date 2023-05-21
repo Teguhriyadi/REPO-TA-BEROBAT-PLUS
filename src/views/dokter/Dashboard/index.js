@@ -310,7 +310,9 @@ const Dashboard = ({navigation}) => {
               </Text>
             </View>
             <View style={{alignItems: 'flex-end', flex: 1}}>
-              <TouchableOpacity
+              <TouchableOpacity onPress={() => {
+                navigation.navigate(Navigasi.ALL_DATA_APOTEK_TERDEKAT)
+              }}
                 style={{
                   borderColor: 'green',
                   borderWidth: 1,

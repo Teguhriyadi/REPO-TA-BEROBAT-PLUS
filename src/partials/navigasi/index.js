@@ -40,5 +40,6 @@ export default {
   KONSULTASI_DOKTER: "KonsultasiDokter",
   PROFILE_DOKTER: "ProfileAkunDokter",
   EDIT_PROFILE_DOKTER: "EditProfileDokter",
-  ALL_DATA_RUMAH_SAKIT_TERDEKAT: "AllDataRumahSakitTerdekat"
+  ALL_DATA_RUMAH_SAKIT_TERDEKAT: "AllDataRumahSakitTerdekat",
+  ALL_DATA_APOTEK_TERDEKAT: "AllDataApotekTerdekat"
 };

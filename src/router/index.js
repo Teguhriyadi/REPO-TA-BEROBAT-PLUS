@@ -46,6 +46,7 @@ import ProfileAkunDokter from '../views/dokter/ProfileAkunDokter';
 import EditProfilDokter from '../views/dokter/ProfileAkunDokter/EditProfilDokter';
 import KonsultasiDokter from '../views/dokter/KonsultasiDokter';
 import AllDataRumahSakit from '../views/dokter/Dashboard/AllDataRumahSakit';
+import AllDataApotek from '../views/dokter/Dashboard/AllDataApotek';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -343,6 +344,12 @@ const Router = () => {
       <Stack.Screen
         name={Navigasi.ALL_DATA_RUMAH_SAKIT_TERDEKAT}
         component={AllDataRumahSakit}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name={Navigasi.ALL_DATA_APOTEK_TERDEKAT}
+        component={AllDataApotek}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
