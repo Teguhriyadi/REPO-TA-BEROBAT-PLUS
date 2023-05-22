@@ -34,7 +34,7 @@ import Keranjang from '../views/member/Produk/TokoKesehatanProduk/Keranjang';
 import UpdatePassword from '../views/member/ProfileAkun/UpdatePassword';
 import AlamatTersimpan from '../views/member/ProfileAkun/AlamatTersimpan';
 import KeahlianDokter from '../views/member/DashboardMember/KeahlianDokter';
-import RingkasanPembayaran from '../views/member/DashboardMember/KeahlianDokter/RingkasanPembayaran';
+// import RingkasanPembayaran from '../views/member/DashboardMember/KeahlianDokter/RingkasanPembayaran';
 import AllData from '../views/member/FiturUnggulan/BuatJanji/AllData';
 import AllDataProduk from '../views/member/Produk/TokoKesehatanProduk/AllData';
 import RingkasanPembayaranProduk from '../views/member/Produk/TokoKesehatanProduk/RingkasanPembayaranProduk';
@@ -47,6 +47,7 @@ import EditProfilDokter from '../views/dokter/ProfileAkunDokter/EditProfilDokter
 import KonsultasiDokter from '../views/dokter/KonsultasiDokter';
 import AllDataRumahSakit from '../views/dokter/Dashboard/AllDataRumahSakit';
 import AllDataApotek from '../views/dokter/Dashboard/AllDataApotek';
+import RingkasanPembayaranKonsultasi from '../views/member/DetailChat/RingkasanPembayaranKonsultasi';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -258,11 +259,11 @@ const Router = () => {
         component={KeahlianDokter}
         options={{headerShown: false}}
       />
-      <Stack.Screen
-        name={Navigasi.RINGKASAN_PEMBAYARAN}
-        component={RingkasanPembayaran}
-        options={{headerShown: false}}
-      />
+        <Stack.Screen
+          name={Navigasi.RINGKASAN_PEMBAYARAN}
+          component={RingkasanPembayaranKonsultasi}
+          options={{headerShown: false}}
+        />
       <Stack.Screen
         name={Navigasi.DETAIL_CHAT}
         component={DetailChatDokter}

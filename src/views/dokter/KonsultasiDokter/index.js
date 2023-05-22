@@ -3,13 +3,13 @@ import {View, Text, StyleSheet, TouchableOpacity, ScrollView} from 'react-native
 import {baseUrl, colors, getData} from '../../../utils';
 import Firebase from '../../../firebase/firebaseConfig';
 import axios from 'axios';
+import { ActivityIndicator } from 'react-native';
 
 const KonsultasiDokter = () => {
 
   const [dokterProfil, setDokterProfil] = useState({});
   const [dataPribadi, setDataPribadi] = useState({});
   const [historyChat, setHistoryChat] = useState([]);
-  const [profil, setProfil] = useState(null);
   const [showIndicator, setShowIndicator] = useState(false);
   const [output, setOutput] = useState(false);
 
@@ -53,102 +53,88 @@ const KonsultasiDokter = () => {
     });
   };
 
-  const profil_dokter = async () => {
-    try {
-      const response = await axios({
-        url: `${baseUrl.url}/akun/profil/dokter/profil`,
-        headers: {
-          Authorization: 'Bearer ' + dataPribadi.token,
-        },
-        method: 'GET',
-      });
-
-      if (response.data.data) {
-        setProfil(response.data.data);
-      } else {
-        console.log('Error');
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <View style={styles.backgroundBelakang}>
       <View style={styles.heading}>
         <Text style={styles.textHeading}>Konsultasi Pasien</Text>
       </View>
       <ScrollView>
-      {historyChat.map(item => {
-        return (
-          <View key={item.id} style={styles.content}>
-            <View style={styles.listCard}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  paddingHorizontal: 10,
-                  marginVertical: 10,
-                }}>
-                <View style={styles.headerIdentitas}>
-                  <Text
+        {historyChat == null ? (
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <ActivityIndicator size={"large"} />
+          </View>
+        ) : (
+          historyChat.map(item => {
+            return (
+              <View key={item.id} style={styles.content}>
+                <View style={styles.listCard}>
+                  <View
                     style={{
-                      color: 'black',
-                      fontSize: 14,
-                      fontWeight: 'bold',
-                      fontFamily: 'Poppins-Medium',
+                      flexDirection: 'row',
+                      paddingHorizontal: 10,
+                      marginVertical: 10,
                     }}>
-                    Mohammad Ilham Teguhriyadi
-                  </Text>
+                    <View style={styles.headerIdentitas}>
+                      <Text
+                        style={{
+                          color: 'black',
+                          fontSize: 14,
+                          fontWeight: 'bold',
+                          fontFamily: 'Poppins-Medium',
+                        }}>
+                        Mohammad Ilham Teguhriyadi
+                      </Text>
+                      <Text
+                        style={{
+                          color: 'gray',
+                          fontSize: 12,
+                          fontFamily: 'Poppins-Medium',
+                        }}>
+                        085324237299
+                      </Text>
+                    </View>
+                    <View style={[styles.status, {backgroundColor: 'green'}]}>
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontSize: 10,
+                          fontWeight: 'bold',
+                          fontFamily: 'Poppins-Medium',
+                          textAlign: 'justify',
+                        }}>
+                        SELESAI
+                      </Text>
+                    </View>
+                  </View>
                   <Text
                     style={{
                       color: 'gray',
                       fontSize: 12,
-                      fontFamily: 'Poppins-Medium',
-                    }}>
-                    085324237299
-                  </Text>
-                </View>
-                <View style={[styles.status, {backgroundColor: 'green'}]}>
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontSize: 10,
-                      fontWeight: 'bold',
-                      fontFamily: 'Poppins-Medium',
+                      marginHorizontal: 10,
                       textAlign: 'justify',
                     }}>
-                    SELESAI
+                      {item.lastContentChat}
                   </Text>
+                  <TouchableOpacity
+                    style={{
+                      borderColor: 'green',
+                      borderWidth: 1,
+                      marginVertical: 15,
+                      marginHorizontal: 10,
+                      borderRadius: 10,
+                      paddingVertical: 10,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={{color: 'green', fontWeight: 'bold'}}>
+                      LANJUTKAN
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
-              <Text
-                style={{
-                  color: 'gray',
-                  fontSize: 12,
-                  marginHorizontal: 10,
-                  textAlign: 'justify',
-                }}>
-                  {item.lastContentChat}
-              </Text>
-              <TouchableOpacity
-                style={{
-                  borderColor: 'green',
-                  borderWidth: 1,
-                  marginVertical: 15,
-                  marginHorizontal: 10,
-                  borderRadius: 10,
-                  paddingVertical: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text style={{color: 'green', fontWeight: 'bold'}}>
-                  LANJUTKAN
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        );
-      })}
+            );
+          })
+        ) }
       </ScrollView>
     </View>
   );

@@ -3,6 +3,8 @@ import {View, Text, TouchableOpacity, Image} from 'react-native';
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Navigasi from '../../../partials/navigasi';
+import {colors} from '../../../utils/colors';
+import {ImageBackground} from 'react-native';
 
 const DetailChatDokter = ({navigation, route}) => {
   const getDokter = route.params;
@@ -10,181 +12,223 @@ const DetailChatDokter = ({navigation, route}) => {
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <StatusBarComponent />
-      <View
-        style={{
-          backgroundColor: 'white',
-          height: 50,
-          padding: 15,
-          elevation: 5,
-          flexDirection: 'row',
-        }}>
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate(Navigasi.CHAT_DOKTER);
-            }}>
-            <Icon
-              name="ios-arrow-back"
-              style={{fontSize: 20, color: 'black'}}
-            />
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingHorizontal: 10,
+      <ImageBackground
+        source={require('../../../assets/images/people.png')}
+        style={{width: '100%', height: 250}}
+        resizeMode="cover"
+      />
+      <View style={{position: 'absolute'}}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
           }}>
-          <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium'}}>
-            {getDokter.data.user_id.nama}
-          </Text>
-        </View>
+          <View
+            style={{
+              borderColor: 'black',
+              borderWidth: 1,
+              marginLeft: 10,
+              marginTop: 10,
+              padding: 10,
+              borderRadius: 50,
+            }}>
+            <Icon name="arrow-back" style={{fontSize: 20, color: 'black'}} />
+          </View>
+        </TouchableOpacity>
       </View>
       <View
         style={{
-          backgroundColor: 'white',
-          elevation: 5,
-          marginVertical: 20,
-          marginHorizontal: 10,
-          borderRadius: 10,
+          flex: 1,
+          backgroundColor: 'green',
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
         }}>
+        <Text
+          style={{
+            color: 'white',
+            textAlign: 'center',
+            fontSize: 14,
+            marginTop: 10,
+            fontWeight: 'bold',
+          }}>
+          Detail Data Dokter
+        </Text>
         <View
           style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingTop: 10,
-            paddingHorizontal: 20,
+            flex: 1,
+            marginTop: 10,
+            backgroundColor: '#FDFDFD',
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            paddingHorizontal: 15,
+            paddingVertical: 10,
           }}>
-          <Image
-            source={require('../../../assets/images/people.png')}
-            resizeMode="cover"
-            style={{width: 200, height: 200}}
-          />
-        </View>
-        <View style={{paddingHorizontal: 10, paddingVertical: 10}}>
-          <Text style={{color: 'black', fontWeight: 'bold', fontSize: 16}}>
-            {getDokter.data.user_id.nama}
-          </Text>
-          <Text style={{color: 'black', fontSize: 12}}>
-            {getDokter.data.kelas == 0 ? 'Dokter Umum' : 'Dokter Spesialis'}
-          </Text>
-          <View
-            style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 10}}>
-            <View
+          <View style={{flex: 1}}>
+            <Text
               style={{
-                backgroundColor: 'grey',
-                padding: 5,
-                borderRadius: 5,
-                marginRight: 5,
+                color: 'black',
+                fontSize: 20,
+                fontWeight: 'bold',
+                textAlign: 'justify',
               }}>
-              <Text style={{color: 'black', fontSize: 12, color: 'white'}}>
-                55 Tahun
-              </Text>
-            </View>
-            <View
-              style={{backgroundColor: 'grey', padding: 5, borderRadius: 5}}>
-              <Text style={{color: 'black', fontSize: 12, color: 'white'}}>
-                100 %
-              </Text>
-            </View>
-          </View>
-          <View
-            style={{
-              borderColor: 'gray',
-              borderWidth: 1,
-              marginVertical: 10,
-            }}
-          />
-          <View style={{flexDirection: 'row', marginVertical: 5}}>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
-              <Icon name="home" style={{color: 'blue', fontSize: 20}} />
-            </View>
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'flex-start',
-                paddingHorizontal: 10,
-              }}>
-              <Text style={{color: 'black', fontWeight: 'bold', fontSize: 16}}>
-                Alumni
-              </Text>
-              <Text style={{color: 'black', fontSize: 12}}>
-                SMK Informatika Al - Irsyad Al - Islamiyyah , 2020
-              </Text>
-            </View>
-          </View>
-          <View style={{flexDirection: 'row', marginVertical: 5}}>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
-              <Icon name="home" style={{color: 'blue', fontSize: 20}} />
-            </View>
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'flex-start',
-                paddingHorizontal: 10,
-              }}>
-              <Text style={{color: 'black', fontWeight: 'bold', fontSize: 16}}>
-                Praktik di
-              </Text>
-              <Text style={{color: 'black', fontSize: 12}}>
-                RS. Sumber Kasih, Cirebon
-              </Text>
-            </View>
-          </View>
-          <View style={{flexDirection: 'row', marginVertical: 5}}>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
-              <Icon name="home" style={{color: 'blue', fontSize: 20}} />
-            </View>
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'flex-start',
-                paddingHorizontal: 10,
-              }}>
-              <Text style={{color: 'black', fontWeight: 'bold', fontSize: 16}}>
-                Nomor STR
-              </Text>
-              <Text style={{color: 'black', fontSize: 12}}>
-                {getDokter.data.nomor_str}
-              </Text>
-            </View>
-          </View>
-          <View
-            style={{borderColor: 'gray', borderWidth: 1, marginVertical: 10}}
-          />
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate(Navigasi.CHATING, {
-                data: getDokter,
-              });
-            }}
-            style={{
-              backgroundColor: 'blue',
-              padding: 10,
-              marginVertical: 10,
-              borderRadius: 10,
-            }}>
-            <Text style={{color: 'white', textAlign: 'center'}}>
-              Chat Dengan Dokter
+              {getDokter.data.user_id.nama}
             </Text>
-          </TouchableOpacity>
-          {/* <TouchableOpacity
-            onPress={() => {
-              navigation.navigate(Navigasi.LANJUTKAN_PEMBAYARAN, {
-                data: getDokter,
-              });
+            <Text style={{color: 'black', fontSize: 14}}>
+              {getDokter.data.user_id.kelas == 1
+                ? 'Dokter Spesialis'
+                : 'Dokter Umum'}
+            </Text>
+            <View style={{flexDirection: 'row', marginTop: 10}}>
+              <View
+                style={{
+                  backgroundColor: colors.backgroundDasarBelakang,
+                  width: 70,
+                  marginRight: 5,
+                  borderRadius: 10,
+                  paddingVertical: 5,
+                }}>
+                <Text
+                  style={{
+                    color: 'black',
+                    fontWeight: 'bold',
+                    fontSize: 12,
+                    textAlign: 'center',
+                  }}>
+                  77 %
+                </Text>
+              </View>
+              <View
+                style={{
+                  backgroundColor: colors.backgroundDasarBelakang,
+                  width: 90,
+                  marginRight: 5,
+                  borderRadius: 10,
+                  paddingVertical: 5,
+                }}>
+                <Text
+                  style={{
+                    color: 'black',
+                    fontWeight: 'bold',
+                    fontSize: 12,
+                    textAlign: 'center',
+                  }}>
+                  77 Tahun
+                </Text>
+              </View>
+            </View>
+            <View style={{marginTop: 20}}>
+              <View style={{flexDirection: 'row'}}>
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                  <Icon
+                    name="md-school"
+                    style={{fontSize: 20, color: 'black'}}
+                  />
+                </View>
+                <View style={{marginLeft: 10}}>
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      fontFamily: 'Poppins-Medium',
+                    }}>
+                    Alumni
+                  </Text>
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontFamily: 'Poppins-Medium',
+                      fontSize: 12,
+                      textAlign: 'justify',
+                    }}>
+                    SMK Informatika Al - Irsyad Al - Islamiyyah Kota Cirebon
+                  </Text>
+                </View>
+              </View>
 
-            }}
+              <View style={{flexDirection: 'row', marginTop: 20}}>
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                  <Icon
+                    name="business"
+                    style={{fontSize: 20, color: 'black'}}
+                  />
+                </View>
+                <View style={{marginLeft: 10}}>
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      fontFamily: 'Poppins-Medium',
+                    }}>
+                    Praktik
+                  </Text>
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontFamily: 'Poppins-Medium',
+                      fontSize: 12,
+                      textAlign: 'justify',
+                    }}>
+                    RS. Plumbon Indramayu Kota Cirebon
+                  </Text>
+                </View>
+              </View>
+
+              <View style={{flexDirection: 'row', marginTop: 20}}>
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                  <Icon
+                    name="create-outline"
+                    style={{fontSize: 20, color: 'black'}}
+                  />
+                </View>
+                <View style={{marginLeft: 10}}>
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      fontFamily: 'Poppins-Medium',
+                    }}>
+                    Nomor STR
+                  </Text>
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontFamily: 'Poppins-Medium',
+                      fontSize: 12,
+                      textAlign: 'justify',
+                    }}>
+                    2392839283923238
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View
             style={{
-              backgroundColor: 'blue',
-              padding: 10,
-              marginVertical: 10,
+              justifyContent: 'flex-end',
+              backgroundColor: 'green',
               borderRadius: 10,
             }}>
-            <Text style={{color: 'white', textAlign: 'center'}}>
-              Lanjutkan Pembayaran
-            </Text>
-          </TouchableOpacity> */}
+            <TouchableOpacity onPress={() => {
+              navigation.navigate(Navigasi.RINGKASAN_PEMBAYARAN)
+            }}
+              style={{
+                paddingVertical: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 14,
+                  fontFamily: 'Poppins-Medium',
+                  fontWeight: 'bold',
+                }}>
+                Lanjutkan Pembayaran
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>

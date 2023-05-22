@@ -53,11 +53,11 @@ const ChatDokter = ({navigation, route}) => {
         method: 'GET',
       })
         .then(response => {
-          console.log(response.data.data);
           setListDataDokter(response.data.data);
           setShowIndicator(true);
         })
         .catch(error => {
+          console.log("Ada")
           console.log(error);
         });
     } catch (error) {
@@ -221,7 +221,7 @@ const ChatDokter = ({navigation, route}) => {
                           alignItems: 'flex-start',
                         }}>
                         <Text style={{color: 'black', fontSize: 16}}>
-                          Rp. {item.biaya.biaya}
+                          {item.harga}
                         </Text>
                       </View>
                       <View

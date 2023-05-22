@@ -74,14 +74,16 @@ const ProfileAkunDokter = ({navigation}) => {
             </View>
           </View>
         </View>
-        <View style={styles.listCard}>
-          <TouchableOpacity style={{flexDirection: 'row'}}>
-            <Text style={styles.textCard}>Ubah Password</Text>
-            <View style={{flex: 1, alignItems: 'flex-end'}}>
-              <Icon name="arrow-forward" style={styles.icon} />
+        <View style={{backgroundColor: 'white', elevation: 5,borderRadius: 5}}>
+          <View style={{flexDirection: 'row', paddingHorizontal: 10, paddingVertical: 15, justifyContent: 'flex-start', alignItems: 'center'}}>
+            <Icon name='create-outline' style={{fontSize: 25, color: 'black'}} />
+            <Text style={{color: 'black', fontWeight: 'bold', fontFamily: 'Poppins-Medium', fontSize: 14, marginLeft: 5 }}>Ubah Password</Text>
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}>
+            <Icon name='arrow-forward' style={{fontSize: 20, color: 'black'}} />
             </View>
-          </TouchableOpacity>
+          </View>
         </View>
+        <Text style={{color: 'black', fontWeight: 'bold', fontFamily: 'Poppins-Medium', fontSize: 14, textAlign: 'center', marginTop: 10}}>Versi Aplikasi 1.0</Text>
       </View>
     </View>
   );
@@ -90,7 +92,7 @@ const ProfileAkunDokter = ({navigation}) => {
 const styles = StyleSheet.create({
   backgroundBelakang: {
     flex: 1,
-    backgroundColor: colors.backgroundDasarBelakang,
+    backgroundColor: 'white',
   },
   heading: {
     backgroundColor: 'blue',
@@ -103,19 +105,6 @@ const styles = StyleSheet.create({
   content: {
     marginVertical: 10,
     marginHorizontal: 10,
-  },
-  listCard: {
-    backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 10,
-  },
-  textCard: {
-    color: 'black',
-    fontSize: 14,
-  },
-  icon: {
-    fontSize: 20,
-    color: 'black',
   },
   cardProfile: {
     backgroundColor: colors.backgroundPutih,
