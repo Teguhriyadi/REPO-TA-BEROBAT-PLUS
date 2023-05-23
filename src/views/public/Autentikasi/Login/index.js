@@ -22,14 +22,53 @@ import {baseUrl} from '../../../../utils';
 import {useDispatch} from 'react-redux';
 
 const Login = ({navigation}) => {
-  const [form, setForm] = useForm({
+
+  const [form, setForm] = useState({
     nomor_hp: '',
     password: '',
   });
 
+  const [error, setError] = useState('');
+  const [errorPassword, setErrorPassword] = useState('');
+
   const dispatch = useDispatch();
 
+  const handleInputChange = (value) => {
+    setForm({...form, nomor_hp: value});
+    if (value === "") {
+      setError("Nomor HP Tidak Boleh Kosong")
+    } else {
+      setError("");
+    }
+  }
+
+  const handleInputPassword = (value) => {
+    setForm({...form, password: value});
+    if (value === "") {
+      setErrorPassword("Password Tidak Boleh Kosong")
+    } else {
+      setErrorPassword("");
+    }
+  }
+
   const loginUser = async () => {
+    if (form.nomor_hp.trim() === '' && form.password.trim() === '') {
+      setError("Nomor HP Tidak Boleh Kosong");
+      setErrorPassword("Password Tidak Boleh Kosong");
+      return;
+    } else {
+      if (form.nomor_hp.trim() === '') {
+        setError("Nomor HP Tidak Boleh Kosong");
+        return;
+      } else if (form.password.trim() === '') {
+        setErrorPassword("Password Tidak Boleh Kosong");
+        return;
+      }
+    }
+
+    setError('');
+    setErrorPassword('');
+
     dispatch({
       type: 'SET_LOADING',
       value: true,
@@ -150,11 +189,14 @@ const Login = ({navigation}) => {
                 placeholderTextColor="gray"
                 keyboardType={'numeric'}
                 value={form.nomor_hp}
-                onChangeText={value => setForm('nomor_hp', value)}
+                onChangeText={handleInputChange}
                 style={{fontSize: 14, color: 'black'}}
               />
             </View>
           </View>
+          {error != '' && <View style={{marginHorizontal: 10, marginBottom: 5}}>
+          <Text style={{color: 'red', fontSize: 12, fontWeight: 'bold', fontFamily: 'Poppins-Medium'}}>* {error }</Text>
+          </View> }
           <View
             style={{
               flexDirection: 'row',
@@ -186,12 +228,15 @@ const Login = ({navigation}) => {
                 placeholder="Masukkan Password"
                 placeholderTextColor="gray"
                 value={form.password}
-                onChangeText={value => setForm('password', value)}
+                onChangeText={handleInputPassword}
                 secureTextEntry={true}
                 style={{fontSize: 14, color: 'black'}}
               />
             </View>
           </View>
+          {errorPassword != '' && <View style={{marginHorizontal: 10, marginBottom: 5}}>
+          <Text style={{color: 'red', fontSize: 12, fontWeight: 'bold', fontFamily: 'Poppins-Medium'}}>* {errorPassword }</Text>
+          </View> }
           <TouchableOpacity style={{paddingTop: 10}}>
             <View style={{alignItems: 'flex-end', paddingRight: 10}}>
               <Text style={{color: 'gray'}}>Lupa Password ?</Text>
