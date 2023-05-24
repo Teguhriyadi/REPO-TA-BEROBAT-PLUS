@@ -211,7 +211,9 @@ const DetailChatDokter = ({navigation, route}) => {
               borderRadius: 10,
             }}>
             <TouchableOpacity onPress={() => {
-              navigation.navigate(Navigasi.RINGKASAN_PEMBAYARAN)
+              navigation.navigate(Navigasi.CHATING, {
+                data: getDokter
+              })
             }}
               style={{
                 paddingVertical: 10,

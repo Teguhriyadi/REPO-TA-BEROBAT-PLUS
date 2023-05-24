@@ -14,6 +14,7 @@ const KonsultasiDokter = () => {
   const [output, setOutput] = useState(false);
 
   useEffect(() => {
+
     getDataUserLocal();
     const rootDB = Firebase.database().ref();
     const urlHistory = `messages/${dokterProfil.id_dokter}`;

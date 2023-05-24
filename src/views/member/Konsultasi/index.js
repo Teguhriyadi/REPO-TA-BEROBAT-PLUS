@@ -21,6 +21,7 @@ const Konsultasi = ({navigation}) => {
   const [output, setOutput] = useState(false);
 
   useEffect(() => {
+
     getDataUserLocal();
 
     const rootDB = Firebase.database().ref();

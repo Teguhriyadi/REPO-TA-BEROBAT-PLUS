@@ -195,7 +195,7 @@ const Login = ({navigation}) => {
             </View>
           </View>
           {error != '' && <View style={{marginHorizontal: 10, marginBottom: 5}}>
-          <Text style={{color: 'red', fontSize: 12, fontWeight: 'bold', fontFamily: 'Poppins-Medium'}}>* {error }</Text>
+          <Text style={{fontStyle: 'italic', color: 'red', fontSize: 12, fontWeight: 'bold', fontFamily: 'Poppins-Medium'}}>* {error }</Text>
           </View> }
           <View
             style={{
@@ -235,7 +235,7 @@ const Login = ({navigation}) => {
             </View>
           </View>
           {errorPassword != '' && <View style={{marginHorizontal: 10, marginBottom: 5}}>
-          <Text style={{color: 'red', fontSize: 12, fontWeight: 'bold', fontFamily: 'Poppins-Medium'}}>* {errorPassword }</Text>
+          <Text style={{fontStyle: 'italic', color: 'red', fontSize: 12, fontWeight: 'bold',  fontFamily: 'Poppins-Medium'}}>* {errorPassword }</Text>
           </View> }
           <TouchableOpacity style={{paddingTop: 10}}>
             <View style={{alignItems: 'flex-end', paddingRight: 10}}>
