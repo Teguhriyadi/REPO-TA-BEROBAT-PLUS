@@ -157,15 +157,16 @@ const DashboardMember = ({navigation}) => {
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         Geolocation.getCurrentPosition(position => {
-          Geocoder.init('AIzaSyB2Xd4GJtDxGPUI7nlMV-I99x5EQqYqhGc');
-          Geocoder.from(position.coords.latitude, position.coords.longitude)
-            .then(json => {
-              let alamat = json.results[0].address_components[2].short_name;
-              setAlamat(alamat);
-            })
-            .catch(error => {
+          const {latitude, longitude} = position.coords;
+          const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+
+          axios
+            .get(url)
+            .then((response) => {
+              setAlamat(response.data.address.village)
+            }).catch((error) => {
               console.log(error);
-            });
+            })
         });
       } else {
         console.log('Tidak Ditemukan');

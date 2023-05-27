@@ -16,7 +16,6 @@ import {getData} from '../../../../utils';
 import Navigasi from '../../../../partials/navigasi';
 import axios from 'axios';
 import {baseUrl, colors} from '../../../../utils';
-import Geocoder from 'react-native-geocoding';
 import Geolocation from '@react-native-community/geolocation';
 
 const BuatJadwal = ({navigation, route}) => {
@@ -76,37 +75,31 @@ const BuatJadwal = ({navigation, route}) => {
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         Geolocation.getCurrentPosition(position => {
-          Geocoder.init('AIzaSyB2Xd4GJtDxGPUI7nlMV-I99x5EQqYqhGc');
-          Geocoder.from(position.coords.latitude, position.coords.longitude)
-            .then(json => {
-              let latitude = position.coords.latitude;
-              let longitude = position.coords.longitude;
-              try {
-                axios({
-                  url: `${baseUrl.url}/master/rumah_sakit/data/find_nearest`,
-                  headers: {
-                    Authorization: 'Bearer ' + dataPribadi.token,
-                  },
-                  method: 'POST',
-                  data: {
-                    latitude: latitude,
-                    longitude: longitude,
-                  },
-                })
-                  .then(response => {
-                    setRumahSakit(response.data.data);
-                    setShowIndicator(true);
-                  })
-                  .catch(error => {
-                    console.log(error);
-                  });
-              } catch (error) {
+          const {latitude, longitude} = position.coords;
+          const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+          
+          axios
+            .get(url)
+            .then((response) => {
+              axios({
+                url: `${baseUrl.url}/master/rumah_sakit/data/find_nearest`,
+                headers: {
+                  Authorization: 'Bearer ' + dataPribadi.token
+                },
+                method: "POST",
+                data: {
+                  latitude: latitude,
+                  longitude: longitude
+                }
+              }).then((response) => {
+                setRumahSakit(response.data.data);
+                setShowIndicator(true);
+              }).catch((error) => {
                 console.log(error);
-              }
-            })
-            .catch(error => {
+              })
+            }).catch((error) => {
               console.log(error);
-            });
+            })
         });
       } else {
         console.log('Tidak Ditemukan');

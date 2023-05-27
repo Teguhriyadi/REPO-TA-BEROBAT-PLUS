@@ -89,7 +89,7 @@ const MainApp = () => {
       />
       <Tab.Screen
         name={Navigasi.TRANSAKSI_MEMBER}
-        component={Transaksi}
+        component={LoadingScreen}
         options={{headerShown: false}}
       />
       <Tab.Screen
