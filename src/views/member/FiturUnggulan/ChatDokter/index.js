@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -13,16 +13,16 @@ import {
 import StatusBarComponent from '../../../../components/StatusBar/StatusBarComponent';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
-import {colors, getData} from '../../../../utils';
+import { colors, getData } from '../../../../utils';
 import Navigasi from '../../../../partials/navigasi';
-import {baseUrl} from '../../../../utils';
+import { baseUrl } from '../../../../utils';
 
-const ChatDokter = ({navigation, route}) => {
+const ChatDokter = ({ navigation, route }) => {
   const [user, setUser] = useState({});
   const [dataPribadi, setDataPribadi] = useState({});
   const [listDataDokter, setListDataDokter] = useState(null);
   const [showIndicator, setShowIndicator] = useState(false);
-  const [spesialis, setSpesialis] = useState([]);
+  const [spesialis, setSpesialis] = useState(null);
 
   useEffect(() => {
     const debounceTimeout = setTimeout(() => {
@@ -80,7 +80,7 @@ const ChatDokter = ({navigation, route}) => {
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
       <StatusBarComponent />
       <View style={styles.heading}>
         <View>
@@ -90,7 +90,7 @@ const ChatDokter = ({navigation, route}) => {
             }}>
             <Icon
               name="ios-arrow-back-outline"
-              style={{fontSize: 20, color: 'black'}}
+              style={{ fontSize: 20, color: 'black' }}
             />
           </TouchableOpacity>
         </View>
@@ -100,14 +100,14 @@ const ChatDokter = ({navigation, route}) => {
             alignItems: 'center',
             paddingLeft: 10,
           }}>
-          <Text style={{color: 'black', fontFamily: 'Poppins-Medium'}}>Chat Dengan Ahlinya</Text>
+          <Text style={{ color: 'black', fontFamily: 'Poppins-Medium' }}>Chat Dengan Ahlinya</Text>
         </View>
       </View>
       <View style={styles.cardSearch}>
         <View style={styles.viewIcon}>
           <Icon
             name="search"
-            style={{color: 'gray', fontSize: 20, fontWeight: 'bold'}}
+            style={{ color: 'gray', fontSize: 20, fontWeight: 'bold' }}
           />
         </View>
         <View style={styles.contentSearch}>
@@ -122,18 +122,18 @@ const ChatDokter = ({navigation, route}) => {
           />
         </View>
       </View>
-      <View style={{flexDirection: 'row'}}>
+      <View style={{ flexDirection: 'row' }}>
         <View style={styles.textLeftHeading}>
-          <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium'}}>
+          <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
             Rekomendasi Dokter
           </Text>
-          <Text style={{color: 'black', fontSize: 10}}>
+          <Text style={{ color: 'black', fontSize: 10 }}>
             Silahkan konsultasikan dengan dokter
           </Text>
         </View>
         <View style={styles.buttonAll}>
           <TouchableOpacity style={styles.designButton}>
-            <Text style={{color: 'purple', fontSize: 10, fontWeight: 'bold'}}>
+            <Text style={{ color: 'purple', fontSize: 10, fontWeight: 'bold' }}>
               Lihat Semua
             </Text>
           </TouchableOpacity>
@@ -144,7 +144,7 @@ const ChatDokter = ({navigation, route}) => {
         {showIndicator ? (
           <FlatList
             data={listDataDokter}
-            renderItem={({item}) => {
+            renderItem={({ item }) => {
               return (
                 <View style={styles.cardList}>
                   <View
@@ -156,7 +156,7 @@ const ChatDokter = ({navigation, route}) => {
                     <Image
                       source={require('../../../../assets/images/people.png')}
                       resizeMode="cover"
-                      style={{width: 100, height: 100, margin: 10}}
+                      style={{ width: 100, height: 100, margin: 10 }}
                     />
                   </View>
                   <View
@@ -174,7 +174,7 @@ const ChatDokter = ({navigation, route}) => {
                       }}>
                       {item.user_id.nama}
                     </Text>
-                    <Text style={{color: 'black', fontSize: 10}}>
+                    <Text style={{ color: 'black', fontSize: 10 }}>
                       {item.user_id.status == 1 ? 'Dokter Ahli' : 'Dokter Umum'}
                     </Text>
                     <View
@@ -191,7 +191,7 @@ const ChatDokter = ({navigation, route}) => {
                           paddingHorizontal: 5,
                         }}>
                         <Text
-                          style={{color: 'white', fontSize: 10, padding: 3}}>
+                          style={{ color: 'white', fontSize: 10, padding: 3 }}>
                           77 Tahun
                         </Text>
                       </View>
@@ -202,7 +202,7 @@ const ChatDokter = ({navigation, route}) => {
                           paddingHorizontal: 5,
                         }}>
                         <Text
-                          style={{color: 'white', fontSize: 10, padding: 3}}>
+                          style={{ color: 'white', fontSize: 10, padding: 3 }}>
                           100 %
                         </Text>
                       </View>
@@ -219,7 +219,7 @@ const ChatDokter = ({navigation, route}) => {
                           justifyContent: 'center',
                           alignItems: 'flex-start',
                         }}>
-                        <Text style={{color: 'black', fontSize: 16}}>
+                        <Text style={{ color: 'black', fontSize: 16 }}>
                           {item.harga}
                         </Text>
                       </View>
@@ -298,45 +298,28 @@ const ChatDokter = ({navigation, route}) => {
       <Text style={styles.textTitle}>Cari Dokter Atau Spesialisasi</Text>
       <Text style={styles.subTextTitle}>Cari Kategori Yang Anda Inginkan</Text>
 
-      <View style={{marginHorizontal: 10}}>
-        {showIndicator ? (
-          <View>
-            <FlatList
-              data={spesialis}
-              numColumns={4}
-              showsHorizontalScrollIndicator={false}
-              renderItem={({item}) => (
-                <View
-                  style={{
-                    marginRight: 10,
-                    flex: 1,
-                    marginBottom: 5,
-                  }}>
-                  <TouchableOpacity
-                    style={{justifyContent: 'center', alignItems: 'center'}}>
-                      <Image
-                        source={require('../../../../assets/images/auth-new.png')}
-                        style={{width: 60, height: 60, borderRadius: 50, borderColor: 'black', borderWidth: 1, marginTop: 5}}
-                      />
-                    <Text
-                      style={{
-                        color: 'black',
-                        fontSize: 10,
-                        textAlign: 'center',
-                      }}>
-                      Hamdan
+      {spesialis == null ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size={'large'} />
+        </View>
+      ) : (
+        <ScrollView showsHorizontalScrollIndicator={false}>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+            {spesialis.map((item) => {
+              return (
+                <View key={item.id_spesialis_penyakit} style={{ marginHorizontal: 10 }}>
+                  <View style={{ marginVertical: 10, justifyContent: 'center', alignItems: 'center' }}>
+                    <Image source={require("../../../../assets/images/gambar-rs.jpg")} style={{ width: 70, height: 70, borderRadius: 50 }} />
+                    <Text style={{ color: 'black', fontSize: 9, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
+                      {item.nama_spesialis}
                     </Text>
-                  </TouchableOpacity>
+                  </View>
                 </View>
-              )}
-            />
+              )
+            })}
           </View>
-        ) : (
-          <View style={{marginVertical: 10}}>
-            <ActivityIndicator size={'large'} style={{color: colors.primary}} />
-          </View>
-        )}
-      </View>
+        </ScrollView>
+      )}
     </View>
   );
 };
@@ -411,11 +394,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginLeft: 10,
+    fontFamily: 'Poppins-Medium',
   },
   subTextTitle: {
     color: 'black',
     marginLeft: 10,
     fontSize: 12,
+    fontFamily: 'Poppins-Medium',
   },
   garisBorder: {
     backgroundColor: 'gray',
