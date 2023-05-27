@@ -4,15 +4,11 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  TextInput,
 } from 'react-native';
 import StatusBarComponent from '../../../../components/StatusBar/StatusBarComponent';
-import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import {
   storeData,
-  useForm,
-  colors,
   showError,
   showSuccess,
 } from '../../../../utils';
@@ -20,6 +16,7 @@ import Firebase from '../../../../firebase/firebaseConfig';
 import Navigasi from '../../../../partials/navigasi';
 import {baseUrl} from '../../../../utils';
 import {useDispatch} from 'react-redux';
+import FormInput from '../../../../components/FormInput';
 
 const Login = ({navigation}) => {
 
@@ -165,75 +162,11 @@ const Login = ({navigation}) => {
           Silahkan Login terlebih dahulu untuk memulai program.
         </Text>
         <View style={styles.viewCard}>
-          <View style={styles.viewTextInput}>
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginLeft: 10,
-              }}>
-              <Icon
-                name="md-logo-whatsapp"
-                style={{fontSize: 20, color: 'gray'}}
-              />
-            </View>
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                paddingLeft: 10,
-                paddingRight: 40,
-              }}>
-              <TextInput
-                placeholder="Masukkan Nomor HP"
-                placeholderTextColor="gray"
-                keyboardType={'numeric'}
-                value={form.nomor_hp}
-                onChangeText={handleInputChange}
-                style={{fontSize: 14, color: 'black'}}
-              />
-            </View>
-          </View>
+          <FormInput placeholder="Masukkan Nomor HP" placeholderTextColor="grey" keyBoardType="numeric" value={form.nomor_hp} onChangeText={handleInputChange} />
           {error != '' && <View style={{marginHorizontal: 10, marginBottom: 5}}>
           <Text style={{fontStyle: 'italic', color: 'red', fontSize: 12, fontWeight: 'bold', fontFamily: 'Poppins-Medium'}}>* {error }</Text>
           </View> }
-          <View
-            style={{
-              flexDirection: 'row',
-              borderColor: 'black',
-              borderWidth: 1,
-              marginHorizontal: 10,
-              marginVertical: 5,
-              borderRadius: 10,
-            }}>
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginLeft: 10,
-              }}>
-              <Icon
-                name="ios-key-sharp"
-                style={{fontSize: 20, color: 'gray'}}
-              />
-            </View>
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                paddingLeft: 10,
-                paddingRight: 40,
-              }}>
-              <TextInput
-                placeholder="Masukkan Password"
-                placeholderTextColor="gray"
-                value={form.password}
-                onChangeText={handleInputPassword}
-                secureTextEntry={true}
-                style={{fontSize: 14, color: 'black'}}
-              />
-            </View>
-          </View>
+          <FormInput placeholder="Masukkan Password" placeholderTextColor="grey" secureTextEntry={true} value={form.password} onChangeText={handleInputPassword} />
           {errorPassword != '' && <View style={{marginHorizontal: 10, marginBottom: 5}}>
           <Text style={{fontStyle: 'italic', color: 'red', fontSize: 12, fontWeight: 'bold',  fontFamily: 'Poppins-Medium'}}>* {errorPassword }</Text>
           </View> }
@@ -292,14 +225,6 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderRadius: 10,
     justifyContent: 'center',
-  },
-  viewTextInput: {
-    flexDirection: 'row',
-    borderColor: 'black',
-    borderWidth: 1,
-    marginHorizontal: 10,
-    marginVertical: 10,
-    borderRadius: 10,
   },
 });
 

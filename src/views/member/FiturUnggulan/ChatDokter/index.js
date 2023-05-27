@@ -57,7 +57,6 @@ const ChatDokter = ({navigation, route}) => {
           setShowIndicator(true);
         })
         .catch(error => {
-          console.log("Ada")
           console.log(error);
         });
     } catch (error) {

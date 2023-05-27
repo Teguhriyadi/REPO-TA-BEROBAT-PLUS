@@ -49,33 +49,31 @@ const AllData = ({navigation}) => {
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         Geolocation.getCurrentPosition(position => {
-          Geocoder.init('AIzaSyB2Xd4GJtDxGPUI7nlMV-I99x5EQqYqhGc');
-          Geocoder.from(position.coords.latitude, position.coords.longitude)
-            .then(json => {
-              let latitude = position.coords.latitude;
-              let longitude = position.coords.longitude;
+          const {latitude, longitude} = position.coords;
+          const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+          
+          axios
+            .get(url)
+            .then((response) => {
               axios({
-                url: `${baseUrl.url}/master/rumah_sakit/data/find_nearest/all`,
+                url: `${baseUrl.url}/master/rumah_sakit/data/find_nearest`,
                 headers: {
-                  Authorization: 'Bearer ' + dataPribadi.token,
+                  Authorization: 'Bearer ' + dataPribadi.token
                 },
-                method: 'POST',
+                method: "POST",
                 data: {
                   latitude: latitude,
-                  longitude: longitude,
-                },
+                  longitude: longitude
+                }
+              }).then((response) => {
+                setRumahSakit(response.data.data);
+                setShowIndicator(true);
+              }).catch((error) => {
+                console.log(error);
               })
-                .then(response => {
-                  setShowIndicator(true);
-                  setRumahSakit(response.data);
-                })
-                .catch(error => {
-                  console.log(error);
-                });
-            })
-            .catch(error => {
+            }).catch((error) => {
               console.log(error);
-            });
+            })
         });
       } else {
         console.log('Tidak Ditemukan');
