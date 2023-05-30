@@ -50,5 +50,7 @@ export default {
   // Perawat
   DASHBOARD_PERAWAT: "DashboardPerawat",
   MAIN_PERAWAT: "MainPerawat",
-  PROFILE_PERAWAT: "ProfilePerawat"
+  PROFILE_PERAWAT: "ProfilePerawat",
+  RIWAYAT_TRANSAKSI_PERAWAT: "RiwayatTransaksiPerawat",
+  KONSULTASI_PERAWAT: "KonsultasiPerawat",
 };

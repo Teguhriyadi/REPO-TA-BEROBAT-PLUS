@@ -54,6 +54,7 @@ import Pusher from '../views/dokter/Pusher';
 import ClassPusher from '../views/dokter/Pusher';
 import DashboardPerawat from '../views/perawat/Dashboard';
 import Profile from '../views/perawat/Profile';
+import Riwayat from '../views/perawat/Riwayat';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -184,6 +185,10 @@ const MainPerawat = () => {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name == "ProfilePerawat") {
             iconName = focused ? 'people' : 'people-outline';
+          } else if (route.name == "RiwayatTransaksiPerawat") {
+            iconName = focused ? 'book' : 'book-outline';
+          } else if (route.name == "KonsultasiPerawat") {
+            iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
           }
 
           return <Icon name={iconName} size={size} color={color} />;
@@ -201,6 +206,16 @@ const MainPerawat = () => {
         name={Navigasi.DASHBOARD_PERAWAT}
         component={DashboardPerawat}
         options={{ headerShown: false, title: 'Home' }}
+      />
+      <Tab.Screen 
+        name={Navigasi.RIWAYAT_TRANSAKSI_PERAWAT}
+        component={Riwayat}
+        options={{headerShown: false, title: 'Riwayat'}} 
+      />
+      <Tab.Screen
+        name={Navigasi.KONSULTASI_PERAWAT}
+        component={Konsultasi}
+        options={{headerShown: false, title: "Konsultasi"}}
       />
       <Tab.Screen 
         name={Navigasi.PROFILE_PERAWAT}
