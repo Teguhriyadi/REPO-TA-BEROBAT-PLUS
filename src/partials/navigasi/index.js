@@ -33,6 +33,9 @@ export default {
   BANKS: "ListBank",
   EWallet: "EWallet",
   LoadingScreen: "LoadingScreen",
+  ALL_ARTIKEL: "AllArtikel",
+  CHAT_PUSHER: "ChatPusher",
+
   // Dokter
   DASHBOARD_DOKTER: 'DashboardDokter',
   MAIN_DOKTER: 'MainDokter',
@@ -41,5 +44,11 @@ export default {
   PROFILE_DOKTER: "ProfileAkunDokter",
   EDIT_PROFILE_DOKTER: "EditProfileDokter",
   ALL_DATA_RUMAH_SAKIT_TERDEKAT: "AllDataRumahSakitTerdekat",
-  ALL_DATA_APOTEK_TERDEKAT: "AllDataApotekTerdekat"
+  ALL_DATA_APOTEK_TERDEKAT: "AllDataApotekTerdekat",
+  PUSHER: "Pusher",
+
+  // Perawat
+  DASHBOARD_PERAWAT: "DashboardPerawat",
+  MAIN_PERAWAT: "MainPerawat",
+  PROFILE_PERAWAT: "ProfilePerawat"
 };

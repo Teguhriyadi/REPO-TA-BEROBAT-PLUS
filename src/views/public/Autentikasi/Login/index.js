@@ -112,7 +112,29 @@ const Login = ({navigation}) => {
           navigation.navigate(Navigasi.MAIN_DOKTER);
 
         } else if (data.data.id_role == 'RO-2003063') {
-          console.log('Hayy');
+
+          dispatch({type: 'SET_LOADING', value: false});
+          setForm('reset');
+
+          axios({
+            url: `${baseUrl.url}/akun/profil/perawat/profil`,
+            headers: {
+              Authorization: 'Bearer ' + data.data.token
+            },
+            method: "GET"
+          }).then((response) => {
+            storeData("profil_perawat", response.data.data);
+          }).catch((error) => {
+            console.log(error);
+          });
+
+          showSuccess('Good Job, Login Success', 'Anda Login Sebagai Perawat');
+
+          storeData('dataUser', dataUser);
+          storeData('isLoggedIn', 'true');
+
+          navigation.navigate(Navigasi.MAIN_PERAWAT);
+
         } else if (data.data.id_role == 'RO-2003064') {
           dispatch({type: 'SET_LOADING', value: false});
           setForm('reset');

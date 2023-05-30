@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,16 +6,15 @@ import {
   TouchableOpacity,
   Image,
   PermissionsAndroid,
+  ScrollView,
 } from 'react-native';
-import {colors, baseUrl, getData} from '../../../../../utils';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { colors, baseUrl, getData } from '../../../../../utils';
 import axios from 'axios';
-import Geocoder from 'react-native-geocoding';
 import Geolocation from '@react-native-community/geolocation';
-import {FlatList} from 'react-native-gesture-handler';
 import Navigasi from '../../../../../partials/navigasi';
+import Heading from '../../../../../components/Heading';
 
-const AllData = ({navigation}) => {
+const AllData = ({ navigation }) => {
   const [dataPribadi, setDataPribadi] = useState({});
   const [rumah_sakit, setRumahSakit] = useState(null);
   const [showIndicator, setShowIndicator] = useState(false);
@@ -49,9 +48,9 @@ const AllData = ({navigation}) => {
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         Geolocation.getCurrentPosition(position => {
-          const {latitude, longitude} = position.coords;
+          const { latitude, longitude } = position.coords;
           const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
-          
+
           axios
             .get(url)
             .then((response) => {
@@ -66,6 +65,7 @@ const AllData = ({navigation}) => {
                   longitude: longitude
                 }
               }).then((response) => {
+                console.log(response.data.data);
                 setRumahSakit(response.data.data);
                 setShowIndicator(true);
               }).catch((error) => {
@@ -85,95 +85,28 @@ const AllData = ({navigation}) => {
 
   return (
     <View style={styles.backgroundBelakang}>
-      <View style={styles.heading}>
-        <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}>
-            <Icon name="arrow-back" style={styles.icon} />
-          </TouchableOpacity>
-          <Text style={styles.textHeading}>RS & Klinik Terdekat</Text>
-        </View>
-      </View>
-
-      {showIndicator ? (
-        <FlatList
-          data={rumah_sakit}
-          showsVerticalScrollIndicator={false}
-          renderItem={({item}) => (
-            <>
-              <View style={styles.content}>
-                <View style={styles.viewImage}>
-                  {item.foto_rs == null ? (
-                    <Image
-                      source={require('../../../../../assets/images/auth-new.png')}
-                      style={{width: 100, height: 150}}
-                    />
-                  ) : (
-                    <Image
-                      source={{uri: item.foto_rs}}
-                      style={{width: 100, height: 150}}
-                    />
-                  )}
-                </View>
-                <View style={{flex: 2}}>
-                  <Text style={styles.namaRs}>{item.nama_rs}</Text>
-                  <Text style={{color: 'black', fontSize: 12}}>
-                    {item.kategori_rs == 1
-                      ? 'Rumah Sakit Spesialis'
-                      : 'Rumah Sakit Umum'}
-                  </Text>
-                  <View style={{flexDirection: 'row', marginTop: 30}}>
-                    <View style={styles.viewAlamatRs}>
-                      <Text style={{color: 'black'}}>{item.alamat_rs}</Text>
-                    </View>
-                    <View style={styles.viewKM}>
-                      <Icon name="ios-location" style={{color: 'black'}} />
-                      <Text style={styles.textKM}>{item.jarak} KM</Text>
-                    </View>
-                  </View>
-                  <View style={{flexDirection: 'row', marginTop: 40}}>
-                    <View style={styles.viewRating}>
-                      <Text style={styles.textRating}>5,7*</Text>
-                    </View>
-                    <TouchableOpacity
-                      style={styles.designButton}
-                      onPress={() => {
-                        navigation.navigate(Navigasi.DETAIL_BUAT_JANJI, {
-                          data: item,
-                        });
-                      }}>
-                      <Text style={styles.textButton}>Pilih</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-              <View style={styles.viewBorder} />
-            </>
-          )}
-        />
-      ) : (
+      <Heading navigasi={() => navigation.goBack()} textHeading={"RS & Klinik Terdekat"} />
+      {rumah_sakit == null ? (
         <>
           <View style={styles.jarakHorizontal}>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <View style={styles.imageEmpty} />
-              <View style={{flex: 2}}>
+              <View style={{ flex: 2 }}>
                 <View style={styles.namaRsEmpty} />
                 <View style={styles.kategoriRsEmpty} />
-                <View style={{flexDirection: 'row'}}>
-                  <View style={{flex: 1}}>
+                <View style={{ flexDirection: 'row' }}>
+                  <View style={{ flex: 1 }}>
                     <View style={styles.alamatRsEmpty} />
                   </View>
-                  <View style={{flex: 1, alignItems: 'flex-end'}}>
+                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
                     <View style={styles.KMEmpty} />
                   </View>
                 </View>
-                <View style={{flexDirection: 'row', marginTop: 20}}>
-                  <View style={{flex: 1}}>
+                <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                  <View style={{ flex: 1 }}>
                     <View style={styles.ratingEmpty} />
                   </View>
-                  <View style={{flex: 1, alignItems: 'flex-end'}}>
+                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
                     <View style={styles.buttonEmpty} />
                   </View>
                 </View>
@@ -182,24 +115,24 @@ const AllData = ({navigation}) => {
           </View>
 
           <View style={styles.jarakHorizontal}>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <View style={styles.imageEmpty} />
-              <View style={{flex: 2}}>
+              <View style={{ flex: 2 }}>
                 <View style={styles.namaRsEmpty} />
                 <View style={styles.kategoriRsEmpty} />
-                <View style={{flexDirection: 'row'}}>
-                  <View style={{flex: 1}}>
+                <View style={{ flexDirection: 'row' }}>
+                  <View style={{ flex: 1 }}>
                     <View style={styles.alamatRsEmpty} />
                   </View>
-                  <View style={{flex: 1, alignItems: 'flex-end'}}>
+                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
                     <View style={styles.KMEmpty} />
                   </View>
                 </View>
-                <View style={{flexDirection: 'row', marginTop: 20}}>
-                  <View style={{flex: 1}}>
+                <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                  <View style={{ flex: 1 }}>
                     <View style={styles.ratingEmpty} />
                   </View>
-                  <View style={{flex: 1, alignItems: 'flex-end'}}>
+                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
                     <View style={styles.buttonEmpty} />
                   </View>
                 </View>
@@ -208,24 +141,24 @@ const AllData = ({navigation}) => {
           </View>
 
           <View style={styles.jarakHorizontal}>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <View style={styles.imageEmpty} />
-              <View style={{flex: 2}}>
+              <View style={{ flex: 2 }}>
                 <View style={styles.namaRsEmpty} />
                 <View style={styles.kategoriRsEmpty} />
-                <View style={{flexDirection: 'row'}}>
-                  <View style={{flex: 1}}>
+                <View style={{ flexDirection: 'row' }}>
+                  <View style={{ flex: 1 }}>
                     <View style={styles.alamatRsEmpty} />
                   </View>
-                  <View style={{flex: 1, alignItems: 'flex-end'}}>
+                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
                     <View style={styles.KMEmpty} />
                   </View>
                 </View>
-                <View style={{flexDirection: 'row', marginTop: 20}}>
-                  <View style={{flex: 1}}>
+                <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                  <View style={{ flex: 1 }}>
                     <View style={styles.ratingEmpty} />
                   </View>
-                  <View style={{flex: 1, alignItems: 'flex-end'}}>
+                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
                     <View style={styles.buttonEmpty} />
                   </View>
                 </View>
@@ -234,24 +167,24 @@ const AllData = ({navigation}) => {
           </View>
 
           <View style={styles.jarakHorizontal}>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <View style={styles.imageEmpty} />
-              <View style={{flex: 2}}>
+              <View style={{ flex: 2 }}>
                 <View style={styles.namaRsEmpty} />
                 <View style={styles.kategoriRsEmpty} />
-                <View style={{flexDirection: 'row'}}>
-                  <View style={{flex: 1}}>
+                <View style={{ flexDirection: 'row' }}>
+                  <View style={{ flex: 1 }}>
                     <View style={styles.alamatRsEmpty} />
                   </View>
-                  <View style={{flex: 1, alignItems: 'flex-end'}}>
+                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
                     <View style={styles.KMEmpty} />
                   </View>
                 </View>
-                <View style={{flexDirection: 'row', marginTop: 20}}>
-                  <View style={{flex: 1}}>
+                <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                  <View style={{ flex: 1 }}>
                     <View style={styles.ratingEmpty} />
                   </View>
-                  <View style={{flex: 1, alignItems: 'flex-end'}}>
+                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
                     <View style={styles.buttonEmpty} />
                   </View>
                 </View>
@@ -259,6 +192,73 @@ const AllData = ({navigation}) => {
             </View>
           </View>
         </>
+      ) : (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {rumah_sakit.map((item) => {
+            return (
+              <View key={item.id_rumah_sakit}>
+                <View style={styles.content}>
+                  <View style={{ flex: 1, marginRight: 10 }}>
+                    {item.foto_rs == null ? (
+                      <Image
+                        source={require('../../../../../assets/images/gambar-rs.jpg')}
+                        style={{ width: 100, height: 130, borderRadius: 10 }}
+                      />
+                    ) : (
+                      <Image
+                        source={{ uri: item.foto_rs }}
+                        style={{ width: 100, height: 150, borderRadius: 10 }}
+                      />
+                    )}
+                  </View>
+                  <View style={{ flex: 2 }}>
+                    <View style={{ marginBottom: 10 }}>
+                      <Text style={styles.namaRs}>{item.nama_rs}</Text>
+                      <Text style={{ color: 'black', fontSize: 12 }}>
+                        {item.kategori_rs == 1 ? 'Rumah Sakit Spesialis' : 'Rumah Sakit Umum'}
+                      </Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', marginBottom: 15, marginTop: 10 }}>
+                      <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'center' }}>
+                        <Text style={{ fontSize: 12, color: 'black', fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
+                          {item.deskripsi_rs}
+                        </Text>
+                      </View>
+                      <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
+                        <View style={{ backgroundColor: 'skyblue', width: 100, borderRadius: 10, paddingVertical: 5 }}>
+                          <Text style={{ color: 'black', fontSize: 14, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
+                            {Math.floor(item.jarak)} KM
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                    <View style={{ flexDirection: 'row' }}>
+                      <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'center' }}>
+                        <View style={{ backgroundColor: colors.backgroundEmpty, width: 100, borderRadius: 10, paddingVertical: 5 }}>
+                          <Text style={{ color: 'black', fontSize: 14, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
+                            * 5, 7
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
+                        <TouchableOpacity style={{ backgroundColor: 'blue', width: 100, borderRadius: 10, paddingVertical: 5 }} onPress={() => {
+                          navigation.navigate(Navigasi.DETAIL_BUAT_JANJI, {
+                            data: item
+                          })
+                        }} >
+                          <Text style={{ color: 'white', fontSize: 14, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
+                            Pilih
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+                <View style={styles.viewBorder} />
+              </View>
+            )
+          })}
+        </ScrollView>
       )}
     </View>
   );
@@ -268,22 +268,6 @@ const styles = StyleSheet.create({
   backgroundBelakang: {
     flex: 1,
     backgroundColor: colors.background,
-  },
-  heading: {
-    padding: 15,
-    height: 50,
-    backgroundColor: colors.background,
-    elevation: 5,
-  },
-  icon: {
-    color: 'black',
-    marginRight: 10,
-    fontSize: 20,
-  },
-  textHeading: {
-    fontSize: 14,
-    color: 'black',
-    fontFamily: 'Poppins-Medium',
   },
   content: {
     marginVertical: 15,
@@ -348,19 +332,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: 60,
   },
-  viewImage: {
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    borderColor: colors.backgroundEmpty,
-    borderWidth: 1,
-    borderRadius: 5,
-    flex: 1,
-    marginRight: 5,
-  },
   namaRs: {
     color: 'black',
     fontSize: 16,
     fontWeight: 'bold',
+    fontFamily: 'Poppins-Medium'
   },
   viewKM: {
     backgroundColor: colors.backgroundEmpty,

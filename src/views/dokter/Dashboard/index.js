@@ -56,47 +56,41 @@ const Dashboard = ({navigation}) => {
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         Geolocation.getCurrentPosition(position => {
-          Geocoder.init('AIzaSyB2Xd4GJtDxGPUI7nlMV-I99x5EQqYqhGc');
-          Geocoder.from(position.coords.latitude, position.coords.longitude)
-            .then(json => {
-              let latitude = position.coords.latitude;
-              let longitude = position.coords.longitude;
-              axios({
-                url: `${baseUrl.url}/apotek/pengaturan/profil_apotek/find_nearest`,
-                headers: {
-                  Authorization: 'Bearer ' + dataPribadi.token,
-                },
-                method: 'POST',
-                data: {
-                  latitude: latitude,
-                  longitude: longitude,
-                },
-              })
-                .then(response => {
-                  setApotek(response.data);
-                  setShowIndicator(true);
-                })
-                .catch(error => {
-                  console.log(error);
-                });
+          const {latitude, longitude} = position.coords;
+          const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+          
+          axios({
+            url: `${baseUrl.url}/apotek/pengaturan/profil_apotek/find_nearest`,
+            headers: {
+              Authorization: 'Bearer ' + dataPribadi.token,
+            },
+            method: 'POST',
+            data: {
+              latitude: latitude,
+              longitude: longitude,
+            },
+          })
+            .then(response => {
+              setApotek(response.data);
+              setShowIndicator(true);
+            })
+            .catch(error => {
+              console.log(error);
+            });
 
-              axios({
-                url: `${baseUrl.url}/master/rumah_sakit/data/find_nearest`,
-                headers: {
-                  Authorization: 'Bearer ' + dataPribadi.token,
-                },
-                method: 'POST',
-                data: {
-                  latitude: latitude,
-                  longitude: longitude,
-                },
-              })
-                .then(response => {
-                  setRumahSakit(response.data.data);
-                })
-                .catch(error => {
-                  console.log(error);
-                });
+          axios({
+            url: `${baseUrl.url}/master/rumah_sakit/data/find_nearest`,
+            headers: {
+              Authorization: 'Bearer ' + dataPribadi.token,
+            },
+            method: 'POST',
+            data: {
+              latitude: latitude,
+              longitude: longitude,
+            },
+          })
+            .then(response => {
+              setRumahSakit(response.data.data);
             })
             .catch(error => {
               console.log(error);

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   createStackNavigator,
@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/stack';
 import Splash from '../views/public/SplashScreen';
 import OptionsAutentikasi from '../views/public/OptionsAutentikasi';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Navigasi from '../partials/navigasi/';
 import Login from '../views/public/Autentikasi/Login';
 import Daftar from '../views/public/Autentikasi/Daftar';
@@ -48,6 +48,12 @@ import KonsultasiDokter from '../views/dokter/KonsultasiDokter';
 import AllDataRumahSakit from '../views/dokter/Dashboard/AllDataRumahSakit';
 import AllDataApotek from '../views/dokter/Dashboard/AllDataApotek';
 import RingkasanPembayaranKonsultasi from '../views/member/DetailChat/RingkasanPembayaranKonsultasi';
+import AllArtikel from '../views/member/DashboardMember/AllArtikel';
+import ChatPusher from '../views/member/ChatPusher';
+import Pusher from '../views/dokter/Pusher';
+import ClassPusher from '../views/dokter/Pusher';
+import DashboardPerawat from '../views/perawat/Dashboard';
+import Profile from '../views/perawat/Profile';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -56,9 +62,9 @@ const MainApp = () => {
   return (
     <Tab.Navigator
       initialRouteName={Navigasi.DASHBOARD_MEMBER}
-      screenOptions={({route, navigation}) => ({
+      screenOptions={({ route, navigation }) => ({
         headerShown: false,
-        tabBarIcon: ({focused, color, size}) => {
+        tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
           if (route.name == 'Beranda') {
@@ -85,22 +91,22 @@ const MainApp = () => {
       <Tab.Screen
         name={Navigasi.DASHBOARD_MEMBER}
         component={DashboardMember}
-        options={{headerShown: false, title: 'Home'}}
+        options={{ headerShown: false, title: 'Home' }}
       />
       <Tab.Screen
         name={Navigasi.TRANSAKSI_MEMBER}
-        component={LoadingScreen}
-        options={{headerShown: false}}
+        component={ChatPusher}
+        options={{ headerShown: false }}
       />
       <Tab.Screen
         name={Navigasi.KONSULTASI}
         component={Konsultasi}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Tab.Screen
         name={Navigasi.PROFILE_MEMBER}
         component={ProfileAkun}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
     </Tab.Navigator>
   );
@@ -110,9 +116,9 @@ const MainDokter = () => {
   return (
     <Tab.Navigator
       initialRouteName="DashboardDokter"
-      screenOptions={({route, navigation}) => ({
+      screenOptions={({ route, navigation }) => ({
         headerShown: false,
-        tabBarIcon: ({focused, color, size}) => {
+        tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
           if (route.name == 'DashboardDokter') {
@@ -139,22 +145,67 @@ const MainDokter = () => {
       <Tab.Screen
         name={Navigasi.DASHBOARD_DOKTER}
         component={Dashboard}
-        options={{headerShown: false, title: 'Home'}}
+        options={{ headerShown: false, title: 'Home' }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name={Navigasi.TRANSAKSI_MEMBER}
         component={Transaksi}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
+      /> */}
+      <Tab.Screen 
+        name={Navigasi.PUSHER} 
+        component={ClassPusher}
+        options={{headerSHow: false, tilte: 'Transaksi' }}
       />
       <Tab.Screen
         name={Navigasi.KONSULTASI_DOKTER}
         component={KonsultasiDokter}
-        options={{headerShown: false, title: 'Konsultasi'}}
+        options={{ headerShown: false, title: 'Konsultasi' }}
       />
       <Tab.Screen
         name={Navigasi.PROFILE_DOKTER}
         component={ProfileAkunDokter}
-        options={{headerShown: false, title: 'Profil Saya'}}
+        options={{ headerShown: false, title: 'Profil Saya' }}
+      />
+    </Tab.Navigator>
+  );
+};
+
+const MainPerawat = () => {
+  return (
+    <Tab.Navigator
+      initialRouteName="DashboardPerawat"
+      screenOptions={({ route, navigation }) => ({
+        headerShown: false,
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name == 'DashboardPerawat') {
+            iconName = focused ? 'home' : 'home-outline';
+          } else if (route.name == "ProfilePerawat") {
+            iconName = focused ? 'people' : 'people-outline';
+          }
+
+          return <Icon name={iconName} size={size} color={color} />;
+        },
+        tabBarStyle: {
+          backgroundColor: '#FFFFFF',
+          elevation: 3,
+          paddingTop: 5,
+          paddingBottom: 5,
+        },
+        tabBarActiveTintColor: 'blue',
+        tabBarInactiveTintColor: 'black',
+      })}>
+      <Tab.Screen
+        name={Navigasi.DASHBOARD_PERAWAT}
+        component={DashboardPerawat}
+        options={{ headerShown: false, title: 'Home' }}
+      />
+      <Tab.Screen 
+        name={Navigasi.PROFILE_PERAWAT}
+        component={Profile}
+        options={{headerShown: false, title: "Profil"}}
       />
     </Tab.Navigator>
   );
@@ -164,16 +215,22 @@ const Router = () => {
   return (
     <Stack.Navigator
       initialRouteName={Navigasi.SPLASH}
-      screenOptions={{gestureEnabled: true, gestureDirection: 'horizontal'}}>
+      screenOptions={{ gestureEnabled: true, gestureDirection: 'horizontal' }}>
       <Stack.Screen
         name={Navigasi.SPLASH}
         component={Splash}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
+      <Stack.Screen name={Navigasi.ALL_ARTIKEL} component={AllArtikel} options={{ headerShown: false }} />
+      <Stack.Screen 
+        name={Navigasi.CHAT_PUSHER}
+        component={ChatPusher}
+        options={{headerShown: false}}
+       />
       <Stack.Screen
         name={Navigasi.OPTIONS_AUTENTIKASI}
         component={OptionsAutentikasi}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.MAIN_APP}
@@ -187,12 +244,17 @@ const Router = () => {
       <Stack.Screen
         name={Navigasi.MAIN_DOKTER}
         component={MainDokter}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen 
+        name={Navigasi.MAIN_PERAWAT}
+        component={MainPerawat}
         options={{headerShown: false}}
       />
       <Stack.Screen
         name={Navigasi.SPESIALIS_DOKTER}
         component={SpesialisDokter}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.LOGIN}
@@ -222,72 +284,72 @@ const Router = () => {
       <Stack.Screen
         name={Navigasi.BUAT_JANJI}
         component={BuatJadwal}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.All_DATA_RS}
         component={AllData}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.All_DATA_PRODUK}
         component={AllDataProduk}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.RINGKASAN_PEMBAYARAN_PRODUK}
         component={RingkasanPembayaranProduk}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.BANKS}
         component={Banks}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.EWallet}
         component={EWallet}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.CASH}
         component={Cash}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.KEAHLIAN_DOKTER}
         component={KeahlianDokter}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
-        <Stack.Screen
-          name={Navigasi.RINGKASAN_PEMBAYARAN}
-          component={RingkasanPembayaranKonsultasi}
-          options={{headerShown: false}}
-        />
+      <Stack.Screen
+        name={Navigasi.RINGKASAN_PEMBAYARAN}
+        component={RingkasanPembayaranKonsultasi}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name={Navigasi.DETAIL_CHAT}
         component={DetailChatDokter}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.UPDATE_PASSWORD_MEMBER}
         component={UpdatePassword}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.ALAMAT_TERSIMPAN}
         component={AlamatTersimpan}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.LANJUTKAN_PEMBAYARAN}
         component={LanjutkanPembayaran}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.DETAIL_ARTIKEL}
         component={Detail}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.TOKO_KESEHATAN_PRODUK}
@@ -300,37 +362,37 @@ const Router = () => {
       <Stack.Screen
         name={Navigasi.KERANJANG}
         component={Keranjang}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.DETAIL_PRODUK}
         component={DetailProduk}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.DETAIL_BUAT_JANJI}
         component={DetailBuatJanji}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.INFORMASI_BUAT_JANJI}
         component={InformasiBuatJanji}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.EDIT_PROFILE}
         component={EditProfil}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.CHATING}
         component={Chating}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.LoadingScreen}
         component={LoadingScreen}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
 
       <Stack.Screen
@@ -345,13 +407,13 @@ const Router = () => {
       <Stack.Screen
         name={Navigasi.ALL_DATA_RUMAH_SAKIT_TERDEKAT}
         component={AllDataRumahSakit}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
 
       <Stack.Screen
         name={Navigasi.ALL_DATA_APOTEK_TERDEKAT}
         component={AllDataApotek}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

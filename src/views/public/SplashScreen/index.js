@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, StatusBar} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import StatusBarComponents from '../../../components/StatusBar/StatusBarComponent';
 import Navigasi from '../../../partials/navigasi';
 import {getData, baseUrl} from '../../../utils';
+import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
 
 const Splash = ({navigation}) => {
   useEffect(() => {
@@ -18,6 +18,8 @@ const Splash = ({navigation}) => {
               navigation.replace(Navigasi.MAIN_DOKTER);
             } else if (response.role == 'RO-2003064') {
               navigation.replace(Navigasi.MAIN_APP);
+            } else if (response.role == "RO-2003063") {
+              navigation.replace(Navigasi.MAIN_PERAWAT)
             }
           }
         })
@@ -28,66 +30,42 @@ const Splash = ({navigation}) => {
   });
 
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <StatusBarComponents />
-      <LinearGradient
-        start={{x: 0, y: 0}}
-        end={{x: 0, y: 1}}
-        colors={['blue', 'skyblue']}
-        style={{height: 900, width: 360}}>
-        <View style={styles.viewHead}>
-          <View style={{elevation: 100}}>
-            <Image
-              source={require('../../../assets/images/group-satu-new.png')}
-              resizeMode="cover"
-              style={{
-                width: 150,
-                height: 150,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            />
-          </View>
-          <Text style={styles.textHead}>Solusi Kesehatan Anda</Text>
-          <Text style={styles.textSubHead}>
-            " Melayani dalam bidang reservasi dan konsultasi "
-          </Text>
-        </View>
-      </LinearGradient>
+    <View style={styles.background}>
+      <StatusBarComponent />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Image source={require("../../../assets/images/group-satu-new.png")} style={{width: 150, height: 150}} />
+        <Text style={styles.title}>
+          Solusi Kesehatan Anda
+        </Text>
+        <Text style={styles.subtitle}>
+          " Melayani Konsultasi dan Reservasi Secara Online "
+        </Text>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  viewHead: {
-    flex: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textHead: {
-    color: 'white',
-    fontSize: 22,
-    fontWeight: 'bold',
-  },
-  textSubHead: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
-    fontStyle: 'italic',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  viewFooter: {
+  background: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: 'blue'
   },
-  textFooter: {
+
+  title: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 18,
-    textTransform: 'uppercase',
+    fontSize: 20,
+    marginTop: 10,
+    marginBottom: 5,
+    fontFamily: 'Poppins-Medium'
   },
+
+  subtitle: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+    fontFamily: 'Poppins-Medium'
+  }
 });
 
 export default Splash;

@@ -19,6 +19,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Navigasi from '../../../partials/navigasi';
 import {baseUrl} from '../../../utils';
+import ButtonAllData from '../../../components/ButtonAllData';
 
 const DashboardMember = ({navigation}) => {
   const [user, setUser] = useState({});
@@ -460,31 +461,9 @@ const DashboardMember = ({navigation}) => {
             }}>
             <Text style={styles.judulTextMenu}>Beberapa Artikel</Text>
           </View>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'flex-end',
-            }}>
-            <TouchableOpacity
-              style={{
-                paddingHorizontal: 10,
-                borderColor: 'green',
-                borderWidth: 1,
-                borderRadius: 20,
-              }}>
-              <Text
-                style={{
-                  color: 'green',
-                  marginHorizontal: 5,
-                  fontSize: 12,
-                  marginVertical: 2,
-                  fontWeight: 'bold',
-                }}>
-                Lihat Semua
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <ButtonAllData onPress={() => {
+            navigation.navigate(Navigasi.ALL_ARTIKEL)
+          } } textButton={"Lihat Semua"} />
         </View>
 
         {showIndicator ? (

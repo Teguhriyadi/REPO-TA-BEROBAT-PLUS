@@ -16,6 +16,7 @@ import axios from 'axios';
 import { colors, getData } from '../../../../utils';
 import Navigasi from '../../../../partials/navigasi';
 import { baseUrl } from '../../../../utils';
+import Heading from '../../../../components/Heading';
 
 const ChatDokter = ({ navigation, route }) => {
   const [user, setUser] = useState({});
@@ -82,27 +83,7 @@ const ChatDokter = ({ navigation, route }) => {
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <StatusBarComponent />
-      <View style={styles.heading}>
-        <View>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate(Navigasi.MAIN_APP);
-            }}>
-            <Icon
-              name="ios-arrow-back-outline"
-              style={{ fontSize: 20, color: 'black' }}
-            />
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingLeft: 10,
-          }}>
-          <Text style={{ color: 'black', fontFamily: 'Poppins-Medium' }}>Chat Dengan Ahlinya</Text>
-        </View>
-      </View>
+      <Heading navigasi={() => navigation.navigate(Navigasi.MAIN_APP)} textHeading={"Chat Dengan Ahlinya"} />
       <View style={styles.cardSearch}>
         <View style={styles.viewIcon}>
           <Icon
@@ -325,13 +306,6 @@ const ChatDokter = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({
-  heading: {
-    backgroundColor: 'white',
-    padding: 15,
-    height: 50,
-    elevation: 5,
-    flexDirection: 'row',
-  },
   cardSearch: {
     marginHorizontal: 10,
     backgroundColor: '#f4f0f0',

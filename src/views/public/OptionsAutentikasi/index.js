@@ -1,26 +1,14 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
 import Navigasi from '../../../partials/navigasi';
-import {colors} from "../../../utils/colors"
+import { colors } from "../../../utils/colors"
 
-const OptionsAutentikasi = ({navigation}) => {
+const OptionsAutentikasi = ({ navigation }) => {
   return (
-    <View style={{flex: 1, backgroundColor: colors.backgroundDasarBelakang }}>
-      <StatusBarComponent />
-      <View style={{flex: 4, justifyContent: 'center', alignItems: 'center'}}>
-        <Image
-          source={require('../../../assets/images/auth.png')}
-          style={{width: 300, height: 300}}
-        />
-        <Text style={{color: 'black', fontWeight: 'bold', fontSize: 25}}>
-          Selamat Datang
-        </Text>
-        <Text style={{color: 'black', fontSize: 14}}>
-          Silahkan pilih menu untuk ke tahap selanjutnya
-        </Text>
-      </View>
-      <View style={{flex: 1}}>
+    <View>
+      <ImageBackground resizeMode='cover' source={require("../../../assets/images/background.png")} style={styles.backgroundimage} />
+      <View style={styles.content}>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate(Navigasi.LOGIN);
@@ -31,9 +19,10 @@ const OptionsAutentikasi = ({navigation}) => {
             marginHorizontal: 20,
             padding: 10,
             borderRadius: 10,
+            width: '80%',
           }}>
           <Text
-            style={{textAlign: 'center', color: 'black', fontWeight: 'bold'}}>
+            style={{ textAlign: 'center', color: 'black', fontWeight: 'bold' }}>
             Masuk
           </Text>
         </TouchableOpacity>
@@ -47,9 +36,10 @@ const OptionsAutentikasi = ({navigation}) => {
             marginTop: 10,
             padding: 10,
             borderRadius: 10,
+            width: '80%'
           }}>
           <Text
-            style={{textAlign: 'center', color: 'white', fontWeight: 'bold'}}>
+            style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>
             Login Sebagai Tamu
           </Text>
         </TouchableOpacity>
@@ -57,5 +47,23 @@ const OptionsAutentikasi = ({navigation}) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  backgroundimage: {
+    width: '100%',
+    height: '100%',
+    opacity: 0.5
+  },
+
+  content: {
+    flex: 1,
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingBottom: 50
+  }
+});
 
 export default OptionsAutentikasi;

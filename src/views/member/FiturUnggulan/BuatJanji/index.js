@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,20 +9,29 @@ import {
   FlatList,
   ActivityIndicator,
   StyleSheet,
+  ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import StatusBarComponent from '../../../../components/StatusBar/StatusBarComponent';
-import {getData} from '../../../../utils';
+import { getData } from '../../../../utils';
 import Navigasi from '../../../../partials/navigasi';
 import axios from 'axios';
-import {baseUrl, colors} from '../../../../utils';
+import { baseUrl, colors } from '../../../../utils';
 import Geolocation from '@react-native-community/geolocation';
+import Heading from '../../../../components/Heading';
+import DropDownPicker from 'react-native-dropdown-picker';
 
-const BuatJadwal = ({navigation, route}) => {
+const BuatJadwal = ({ navigation, route }) => {
   const [dataPribadi, setDataPribadi] = useState({});
-  const [rumah_sakit, setRumahSakit] = useState({});
+  const [rumah_sakit, setRumahSakit] = useState(null);
   const [spesialis, setSpesialis] = useState({});
   const [showIndicator, setShowIndicator] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    {label: 'Perawat', value: 'perawat'},
+    {label: 'Dokter', value: 'dokter'}
+  ]);
 
   useEffect(() => {
     const debounceTimeout = setTimeout(() => {
@@ -75,9 +84,9 @@ const BuatJadwal = ({navigation, route}) => {
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         Geolocation.getCurrentPosition(position => {
-          const {latitude, longitude} = position.coords;
+          const { latitude, longitude } = position.coords;
           const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
-          
+
           axios
             .get(url)
             .then((response) => {
@@ -112,27 +121,22 @@ const BuatJadwal = ({navigation, route}) => {
   return (
     <View style={styles.backgroundBelakang}>
       <StatusBarComponent />
-      <View style={styles.heading}>
-        <View style={styles.viewHeading}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate(Navigasi.MAIN_APP);
-            }}>
-            <Icon
-              name="ios-arrow-back"
-              style={{color: 'black', fontSize: 20}}
-            />
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            flex: 10,
-            justifyContent: 'center',
-            alignItems: 'flex-start',
-          }}>
-          <Text style={{color: 'black', fontFamily: 'Poppins-Medium'}}>Buat Janji Ketemu Langsung</Text>
-        </View>
-      </View>
+      <Heading navigasi={() => navigation.navigate(Navigasi.MAIN_APP)} textHeading={"Buat Janji Ketemu Langsung"} />
+      <DropDownPicker 
+        open={open} 
+        value={value} 
+        items={items} 
+        setOpen={setOpen} 
+        setValue={setValue}
+        onSelectItem={(item) => {
+          console.log(item)
+        }}
+        setItems={setItems} 
+        placeholder='Silahkan Pilih'
+        textStyle={{fontSize: 14}}
+        containerStyle={{marginHorizontal: 10, width: 150, marginTop: 10}}
+        labelStyle={{fontWeight: 'bold'}}
+      />
       <View
         style={{
           marginHorizontal: 10,
@@ -149,7 +153,7 @@ const BuatJadwal = ({navigation, route}) => {
           }}>
           <Icon
             name="search"
-            style={{color: 'gray', fontSize: 20, fontWeight: 'bold'}}
+            style={{ color: 'gray', fontSize: 20, fontWeight: 'bold' }}
           />
         </View>
         <View
@@ -173,57 +177,8 @@ const BuatJadwal = ({navigation, route}) => {
       <Text style={styles.textTitle}>Rumah Sakit Sekitar Anda</Text>
 
       <View>
-        {showIndicator ? (
-          <FlatList
-            data={rumah_sakit}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={item => item.id_rumah_sakit}
-            renderItem={({item}) => (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate(Navigasi.DETAIL_BUAT_JANJI, {
-                    data: item,
-                  });
-                }}>
-                <View style={styles.cardList}>
-                  <View
-                    style={{justifyContent: 'center', alignItems: 'center'}}>
-                    {item.foto_rs == null ? (
-                      <Image
-                        source={require('../../../../assets/images/auth-new.png')}
-                        resizeMode="cover"
-                        style={{width: 200, height: 100, margin: 10}}
-                      />
-                    ) : (
-                      <Image
-                        source={{uri: item.foto_rs}}
-                        resizeMode="cover"
-                        style={{width: 200, height: 100, margin: 10}}
-                      />
-                    )}
-                  </View>
-                  <View style={{paddingHorizontal: 10, paddingVertical: 10}}>
-                    <Text style={styles.namaCardRs}>{item.nama_rs}</Text>
-                    <Text style={{color: 'black', fontSize: 12}}>
-                      {item.kategori_rs == 1
-                        ? 'Rumah Sakit Spesialis'
-                        : 'Rumah Sakit Umum'}
-                    </Text>
-                    <View style={styles.cardChild}>
-                      <Icon
-                        name="ios-location"
-                        style={{color: 'black', marginRight: 3}}
-                      />
-                      <Text style={styles.textCardChild}>{item.jarak} KM</Text>
-                    </View>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-        ) : (
-          <View style={{flexDirection: 'row'}}>
+        {rumah_sakit == null ? (
+          <View style={{ flexDirection: 'row' }}>
             <View style={styles.backgroundCardEmpty}>
               <View style={styles.contentCardEmpty}>
                 <View style={styles.backgroundImageEmpty} />
@@ -234,7 +189,7 @@ const BuatJadwal = ({navigation, route}) => {
               <View style={styles.jarakTextSubJudul}>
                 <View style={styles.textSubJudulEmpty} />
               </View>
-              <View style={{paddingHorizontal: 10, paddingBottom: 10}}>
+              <View style={{ paddingHorizontal: 10, paddingBottom: 10 }}>
                 <View style={styles.jarakEmpty} />
               </View>
             </View>
@@ -248,11 +203,59 @@ const BuatJadwal = ({navigation, route}) => {
               <View style={styles.jarakTextSubJudul}>
                 <View style={styles.textSubJudulEmpty} />
               </View>
-              <View style={{paddingHorizontal: 10, paddingBottom: 10}}>
+              <View style={{ paddingHorizontal: 10, paddingBottom: 10 }}>
                 <View style={styles.jarakEmpty} />
               </View>
             </View>
           </View>
+        ) : (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {rumah_sakit.map((item) => {
+              return (
+                <TouchableOpacity
+                  key={item.id_rumah_sakit}
+                  onPress={() => {
+                    navigation.navigate(Navigasi.DETAIL_BUAT_JANJI, {
+                      data: item,
+                    });
+                  }}>
+                  <View style={styles.cardList}>
+                    <View
+                      style={{ justifyContent: 'center', alignItems: 'center' }}>
+                      {item.foto_rs == null ? (
+                        <Image
+                          source={require('../../../../assets/images/auth-new.png')}
+                          resizeMode="cover"
+                          style={{ width: 200, height: 100, margin: 10 }}
+                        />
+                      ) : (
+                        <Image
+                          source={{ uri: item.foto_rs }}
+                          resizeMode="cover"
+                          style={{ width: 200, height: 100, margin: 10 }}
+                        />
+                      )}
+                    </View>
+                    <View style={{ paddingHorizontal: 10, paddingVertical: 10 }}>
+                      <Text style={styles.namaCardRs}>{item.nama_rs}</Text>
+                      <Text style={{ color: 'black', fontSize: 12 }}>
+                        {item.kategori_rs == 1
+                          ? 'Rumah Sakit Spesialis'
+                          : 'Rumah Sakit Umum'}
+                      </Text>
+                      <View style={styles.cardChild}>
+                        <Icon
+                          name="ios-location"
+                          style={{ color: 'black', marginRight: 3 }}
+                        />
+                        <Text style={styles.textCardChild}>{item.jarak} KM</Text>
+                      </View>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              )
+            })}
+          </ScrollView>
         )}
       </View>
 
@@ -269,14 +272,14 @@ const BuatJadwal = ({navigation, route}) => {
         Buat Jadwal Sesuai Dengan Kebutuhanmu
       </Text>
 
-      <View style={{marginHorizontal: 10, marginVertical: 5}}>
+      <View style={{ marginHorizontal: 10, marginVertical: 5 }}>
         {showIndicator ? (
           <FlatList
             data={spesialis}
             numColumns={4}
             showsHorizontalScrollIndicator={false}
-            keyExtractor={item => item.id_penyakit}
-            renderItem={({item}) => (
+            keyExtractor={item => item.id_spesialis_penyakit}
+            renderItem={({ item }) => (
               <TouchableOpacity style={styles.cardTouchable}>
                 <Image
                   source={require('../../../../assets/images/auth-new.png')}
@@ -300,14 +303,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  heading: {
-    backgroundColor: 'white',
-    padding: 15,
-    height: 50,
-    elevation: 5,
-    flexDirection: 'row',
-  },
-  viewHeading: {flex: 1, justifyContent: 'center', alignItems: 'flex-start'},
   cardChild: {
     marginTop: 10,
     backgroundColor: colors.backgroundCardChildren,
