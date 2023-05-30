@@ -84,6 +84,23 @@ const ChatDokter = ({ navigation, route }) => {
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <StatusBarComponent />
       <Heading navigasi={() => navigation.navigate(Navigasi.MAIN_APP)} textHeading={"Chat Dengan Ahlinya"} />
+      <View style={{ marginVertical: 10, marginHorizontal: 10 }}>
+        <Text style={{ color: 'black', fontSize: 14, fontWeight: 'bold', fontFamily: 'Poppins-Medium', marginBottom: 5 }}>
+          Butuh Dengan :
+        </Text>
+        <View style={{ flexDirection: 'row' }}>
+          <View style={[styles.option, {backgroundColor: 'blue'}]}>
+            <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold' }}>
+              Dokter
+            </Text>
+          </View>
+          <View style={[styles.option, { borderColor: 'blue', borderWidth: 1, backgroundColor: 'white', marginLeft:10}]}>
+            <Text style={{ color: 'blue', fontSize: 14, fontWeight: 'bold' }}>
+              Perawat
+            </Text>
+          </View>
+        </View>
+      </View>
       <View style={styles.cardSearch}>
         <View style={styles.viewIcon}>
           <Icon
@@ -93,7 +110,7 @@ const ChatDokter = ({ navigation, route }) => {
         </View>
         <View style={styles.contentSearch}>
           <TextInput
-            placeholder="Ex: Dr. Hamdan"
+            placeholder="Ex: Dr. Mohammad"
             placeholderTextColor="gray"
             style={{
               height: 40,
@@ -309,7 +326,8 @@ const styles = StyleSheet.create({
   cardSearch: {
     marginHorizontal: 10,
     backgroundColor: '#f4f0f0',
-    marginVertical: 10,
+    marginTop: 5,
+    marginBottom: 5,
     borderRadius: 10,
     flexDirection: 'row',
   },
@@ -397,6 +415,14 @@ const styles = StyleSheet.create({
     width: 70,
     height: 15,
     borderRadius: 10,
+  },
+  option: { 
+    flex: 1 , 
+    borderRadius: 50, 
+    paddingVertical: 5, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    elevation: 10
   },
   subTextKosong: {
     backgroundColor: colors.backgroundEmpty,

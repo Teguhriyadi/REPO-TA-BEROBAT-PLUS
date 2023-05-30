@@ -107,7 +107,7 @@ const MainApp = () => {
       <Tab.Screen
         name={Navigasi.PROFILE_MEMBER}
         component={ProfileAkun}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, title: "Profil Saya" }}
       />
     </Tab.Navigator>
   );

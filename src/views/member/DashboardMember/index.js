@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,18 +10,19 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import {colors} from '../../../utils/colors';
+import { colors } from '../../../utils/colors';
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
-import {getData} from '../../../utils';
+import { getData } from '../../../utils';
 import Geocoder from 'react-native-geocoding';
 import Geolocation from '@react-native-community/geolocation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Navigasi from '../../../partials/navigasi';
-import {baseUrl} from '../../../utils';
+import { baseUrl } from '../../../utils';
 import ButtonAllData from '../../../components/ButtonAllData';
+import ListFitur from '../../../components/ListFitur';
 
-const DashboardMember = ({navigation}) => {
+const DashboardMember = ({ navigation }) => {
   const [user, setUser] = useState({});
   const [alamat, setAlamat] = useState(null);
   const [dataPribadi, setDataPribadi] = useState({});
@@ -158,7 +159,7 @@ const DashboardMember = ({navigation}) => {
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         Geolocation.getCurrentPosition(position => {
-          const {latitude, longitude} = position.coords;
+          const { latitude, longitude } = position.coords;
           const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
 
           axios
@@ -180,7 +181,7 @@ const DashboardMember = ({navigation}) => {
   return (
     <View style={styles.background}>
       <StatusBarComponent />
-      <View style={{backgroundColor: 'blue', height: 70}}>
+      <View style={{ backgroundColor: 'blue', height: 70 }}>
         <View
           style={{
             marginHorizontal: 10,
@@ -204,7 +205,7 @@ const DashboardMember = ({navigation}) => {
               }}
             />
           </View>
-          <View style={{justifyContent: 'center', alignItems: 'flex-start'}}>
+          <View style={{ justifyContent: 'center', alignItems: 'flex-start' }}>
             <Text
               style={{
                 color: 'white',
@@ -212,7 +213,7 @@ const DashboardMember = ({navigation}) => {
                 fontWeight: 'bold',
                 fontFamily: 'Poppins-Medium',
               }}>
-                {dataPribadi.nama}
+              {dataPribadi.nama}
             </Text>
             <Text
               style={{
@@ -225,11 +226,11 @@ const DashboardMember = ({navigation}) => {
             </Text>
           </View>
           <View
-            style={{justifyContent: 'center', alignItems: 'flex-end', flex: 1}}>
-            <View style={{flexDirection: 'row'}}>
+            style={{ justifyContent: 'center', alignItems: 'flex-end', flex: 1 }}>
+            <View style={{ flexDirection: 'row' }}>
               <Icon
                 name="md-location-outline"
-                style={{fontSize: 20, color: 'white'}}
+                style={{ fontSize: 20, color: 'white' }}
               />
               <Text
                 style={{
@@ -247,90 +248,53 @@ const DashboardMember = ({navigation}) => {
       </View>
 
       <ScrollView showsHorizontalScrollIndicator={false}>
-        <View style={{paddingTop: 10, paddingHorizontal: 10}}>
+        <View style={{ paddingTop: 10, paddingHorizontal: 10 }}>
           <View>
             <Text style={styles.judulTextMenu}>Fitur Unggulan Kami</Text>
           </View>
         </View>
         <View style={styles.cardFitur}>
-          <View style={styles.listFitur}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate(Navigasi.CHAT_DOKTER);
-              }}>
-              <View style={styles.viewFitur}>
-                <Icon name="md-call" style={styles.icon} />
-              </View>
-            </TouchableOpacity>
-            <View style={{paddingTop: 5}}>
-              <Text style={{color: 'black', fontSize: 12, fontWeight: 'bold'}}>
-                Chat Dokter
-              </Text>
-            </View>
-          </View>
-          <View style={styles.listFitur}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.replace(Navigasi.BUAT_JANJI);
-              }}>
-              <View style={styles.viewFitur}>
-                <Icon name="md-calendar" style={styles.icon} />
-              </View>
-            </TouchableOpacity>
-            <View style={{paddingTop: 5}}>
-              <Text style={{color: 'black', fontSize: 12, fontWeight: 'bold'}}>
-                Buat Janji
-              </Text>
-            </View>
-          </View>
-          <View style={styles.listFitur}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.replace(Navigasi.LoadingScreen);
-              }}>
-              <View style={styles.viewFitur}>
-                <Icon name="md-calendar" style={styles.icon} />
-              </View>
-            </TouchableOpacity>
-            <View style={{paddingTop: 5}}>
-              <Text style={{color: 'black', fontSize: 12, fontWeight: 'bold'}}>
-                Reservasi
-              </Text>
-            </View>
-          </View>
-          <View style={styles.listFitur}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.replace(Navigasi.TOKO_KESEHATAN_PRODUK);
-              }}>
-              <View style={styles.viewFitur}>
-                <Icon name="medkit" style={styles.icon} />
-              </View>
-            </TouchableOpacity>
-            <View style={{paddingTop: 5}}>
-              <Text
-                style={{
-                  color: 'black',
-                  fontSize: 12,
-                  fontWeight: 'bold',
-                }}>
-                Toko Sekitar
-              </Text>
-            </View>
-          </View>
+          <ListFitur
+            onPress={() => {
+              navigation.replace(Navigasi.CHAT_DOKTER)
+            }}
+            nameIcon={"home"}
+            textfitur={"Chat Ahli"}
+          />
+          <ListFitur
+            onPress={() => {
+              navigation.replace(Navigasi.BUAT_JANJI)
+            }}
+            nameIcon={"book"}
+            textfitur={"Buat Janji"}
+          />
+          <ListFitur 
+            onPress={() => {
+              navigation.replace(Navigasi.LoadingScreen)
+            }} 
+            nameIcon={"md-calendar"}
+            textfitur={"Reservasi"}
+          />
+          <ListFitur 
+            onPress={() => {
+              navigation.replace(Navigasi.TOKO_KESEHATAN_PRODUK)
+            }} 
+            nameIcon={"medkit"}
+            textfitur={"Toko Sekitar"}
+          />
         </View>
 
-        <View style={{paddingHorizontal: 15}}>
+        <View style={{ paddingHorizontal: 15 }}>
           <Text style={styles.judulTextMenu}>Keahlian Dokter</Text>
         </View>
 
-        <View style={{marginHorizontal: 15}}>
+        <View style={{ marginHorizontal: 15 }}>
           {showIndicator ? (
             <FlatList
               data={keahlian}
               horizontal
               showsHorizontalScrollIndicator={false}
-              renderItem={({item}) => (
+              renderItem={({ item }) => (
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate(Navigasi.KEAHLIAN_DOKTER, {
@@ -355,7 +319,7 @@ const DashboardMember = ({navigation}) => {
                           />
                         ) : (
                           <Image
-                            source={{uri: item.logo}}
+                            source={{ uri: item.logo }}
                             style={styles.cardImage}
                           />
                         )}
@@ -408,12 +372,12 @@ const DashboardMember = ({navigation}) => {
         </View>
 
         {showIndicator ? (
-          <View style={{marginLeft: 10, marginRight: 15}}>
+          <View style={{ marginLeft: 10, marginRight: 15 }}>
             <FlatList
               data={produkData}
               horizontal
               showsHorizontalScrollIndicator={false}
-              renderItem={({item}) => (
+              renderItem={({ item }) => (
                 <View style={styles.produk}>
                   <TouchableOpacity>
                     <View style={styles.cardProduk}>
@@ -425,7 +389,7 @@ const DashboardMember = ({navigation}) => {
                         <Image
                           source={require('../../../assets/images/auth-new.png')}
                           resizeMode="cover"
-                          style={{width: 100, height: 80}}
+                          style={{ width: 100, height: 80 }}
                         />
                       </View>
                       <Text
@@ -443,9 +407,9 @@ const DashboardMember = ({navigation}) => {
             />
           </View>
         ) : (
-          <View style={{flexDirection: 'row'}}>
-            <View style={[styles.produkNotFound, {width: 200}]} />
-            <View style={[styles.produkNotFound, {width: 100}]} />
+          <View style={{ flexDirection: 'row' }}>
+            <View style={[styles.produkNotFound, { width: 200 }]} />
+            <View style={[styles.produkNotFound, { width: 100 }]} />
           </View>
         )}
 
@@ -463,15 +427,15 @@ const DashboardMember = ({navigation}) => {
           </View>
           <ButtonAllData onPress={() => {
             navigation.navigate(Navigasi.ALL_ARTIKEL)
-          } } textButton={"Lihat Semua"} />
+          }} textButton={"Lihat Semua"} />
         </View>
 
         {showIndicator ? (
-          <View style={{marginLeft: 10, marginRight: 15}}>
+          <View style={{ marginLeft: 10, marginRight: 15 }}>
             <FlatList
               data={kategori}
               horizontal
-              renderItem={({item}) => (
+              renderItem={({ item }) => (
                 <View
                   style={{
                     marginTop: 10,
@@ -505,9 +469,9 @@ const DashboardMember = ({navigation}) => {
               marginHorizontal: 15,
               flexDirection: 'row',
             }}>
-            <TouchableOpacity style={[styles.buttonNotFound, {width: 120}]} />
-            <TouchableOpacity style={[styles.buttonNotFound, {width: 120}]} />
-            <TouchableOpacity style={[styles.buttonNotFound, {width: 70}]} />
+            <TouchableOpacity style={[styles.buttonNotFound, { width: 120 }]} />
+            <TouchableOpacity style={[styles.buttonNotFound, { width: 120 }]} />
+            <TouchableOpacity style={[styles.buttonNotFound, { width: 70 }]} />
           </View>
         )}
 
@@ -516,7 +480,7 @@ const DashboardMember = ({navigation}) => {
             data={artikel}
             horizontal
             showsHorizontalScrollIndicator={false}
-            renderItem={({item}) => (
+            renderItem={({ item }) => (
               <TouchableOpacity
                 onPress={() => {
                   navigation.replace(Navigasi.DETAIL_ARTIKEL, {
@@ -525,16 +489,16 @@ const DashboardMember = ({navigation}) => {
                 }}>
                 <View style={styles.viewArtikel}>
                   <View
-                    style={{justifyContent: 'center', alignItems: 'center'}}>
+                    style={{ justifyContent: 'center', alignItems: 'center' }}>
                     {item.foto == null ? (
                       <Image
                         source={require('../../../assets/images/auth-new.png')}
                         resizeMode="cover"
-                        style={{width: 300, height: 200, alignSelf: 'center'}}
+                        style={{ width: 300, height: 200, alignSelf: 'center' }}
                       />
                     ) : (
                       <Image
-                        source={{uri: item.foto}}
+                        source={{ uri: item.foto }}
                         resizeMode="cover"
                         style={{
                           width: 300,
@@ -558,7 +522,7 @@ const DashboardMember = ({navigation}) => {
             )}
           />
         ) : (
-          <View style={{marginHorizontal: 15}}>
+          <View style={{ marginHorizontal: 15 }}>
             <View style={styles.viewCard}>
               <View style={styles.imageNotFound} />
               <View style={styles.textNotFound} />
@@ -609,17 +573,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
   },
-  listFitur: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  viewFitur: {
-    borderColor: 'blue',
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 50,
-  },
   produk: {
     width: 200,
     height: 100,
@@ -635,10 +588,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     borderColor: '#D8D8D8',
     borderWidth: 2,
-  },
-  icon: {
-    fontSize: 20,
-    color: 'blue',
   },
   viewArtikel: {
     backgroundColor: 'white',
