@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
-  FlatList,
   ActivityIndicator,
   ScrollView,
   StyleSheet,
@@ -22,14 +21,18 @@ const ChatDokter = ({ navigation, route }) => {
   const [user, setUser] = useState({});
   const [dataPribadi, setDataPribadi] = useState({});
   const [listDataDokter, setListDataDokter] = useState(null);
-  const [showIndicator, setShowIndicator] = useState(false);
-  const [spesialis, setSpesialis] = useState(null);
+  const [listDataPerawat, setListDataPerawat] = useState(null);
+  const [cekoption, setOption] = useState(0);
 
   useEffect(() => {
     const debounceTimeout = setTimeout(() => {
       getDataUserLocal();
       listDokter();
-      getDataSpesialis();
+      if (cekoption == 0) {
+
+      } else {
+        dataperawat();
+      }
     }, 300);
 
     return () => clearTimeout(debounceTimeout);
@@ -45,62 +48,43 @@ const ChatDokter = ({ navigation, route }) => {
   };
 
   const listDokter = async () => {
+    setOption(0);
     try {
-      await axios({
-        url: `${baseUrl.url}/akun/dokter`,
+      const response = await axios({
+        url: `${baseUrl.url}/akun/dokter/data`,
         headers: {
-          Authorization: 'Bearer ' + dataPribadi.token,
+          Authorization: 'Bearer ' + dataPribadi.token
         },
-        method: 'GET',
-      })
-        .then(response => {
-          setListDataDokter(response.data.data);
-          setShowIndicator(true);
-        })
-        .catch(error => {
-          console.log(error);
-        });
+        method: "GET"
+      });
+      setListDataDokter(response.data.data);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const getDataSpesialis = async () => {
+  const dataperawat = async () => {
+    setOption(1);
     try {
       const response = await axios({
-        url: `${baseUrl.url}/master/penyakit/spesialis_penyakit`,
+        url: `${baseUrl.url}/akun/perawat/data`,
         headers: {
-          Authorization: 'Bearer ' + dataPribadi.token,
+          Authorization: 'Bearer ' + dataPribadi.token
         },
-        method: 'GET',
+        method: "GET"
       });
-      setSpesialis(response.data.data);
+
+      setListDataPerawat(response.data.data);
     } catch (error) {
       console.log(error);
     }
-  };
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <StatusBarComponent />
       <Heading navigasi={() => navigation.navigate(Navigasi.MAIN_APP)} textHeading={"Chat Dengan Ahlinya"} />
-      <View style={{ marginVertical: 10, marginHorizontal: 10 }}>
-        <Text style={{ color: 'black', fontSize: 14, fontWeight: 'bold', fontFamily: 'Poppins-Medium', marginBottom: 5 }}>
-          Butuh Dengan :
-        </Text>
-        <View style={{ flexDirection: 'row' }}>
-          <View style={[styles.option, {backgroundColor: 'blue'}]}>
-            <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold' }}>
-              Dokter
-            </Text>
-          </View>
-          <View style={[styles.option, { borderColor: 'blue', borderWidth: 1, backgroundColor: 'white', marginLeft:10}]}>
-            <Text style={{ color: 'blue', fontSize: 14, fontWeight: 'bold' }}>
-              Perawat
-            </Text>
-          </View>
-        </View>
-      </View>
+
       <View style={styles.cardSearch}>
         <View style={styles.viewIcon}>
           <Icon
@@ -120,204 +104,134 @@ const ChatDokter = ({ navigation, route }) => {
           />
         </View>
       </View>
-      <View style={{ flexDirection: 'row' }}>
-        <View style={styles.textLeftHeading}>
-          <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
-            Rekomendasi Dokter
-          </Text>
-          <Text style={{ color: 'black', fontSize: 10 }}>
-            Silahkan konsultasikan dengan dokter
-          </Text>
-        </View>
-        <View style={styles.buttonAll}>
-          <TouchableOpacity style={styles.designButton}>
-            <Text style={{ color: 'purple', fontSize: 10, fontWeight: 'bold' }}>
-              Lihat Semua
+      <View style={{ marginVertical: 10, marginHorizontal: 10 }}>
+        <Text style={{ color: 'black', fontSize: 14, fontWeight: 'bold', fontFamily: 'Poppins-Medium', marginBottom: 5 }}>
+          Butuh Dengan :
+        </Text>
+        <View style={{ flexDirection: 'row' }}>
+          <TouchableOpacity style={[styles.option, cekoption == 1 ? styles.non_active : styles.active ]} onPress={() => {
+            listDokter();
+          }}>
+            <Text style={cekoption == 1 ? styles.text_non_active : styles.text_active }>
+              Dokter
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.option, cekoption == 1 ? styles.active : styles.non_active, { marginLeft: 10 }]} onPress={() => {
+            dataperawat();
+          }}>
+            <Text style={cekoption == 1 ? styles.text_active : styles.text_non_active }>
+              Perawat
             </Text>
           </TouchableOpacity>
         </View>
       </View>
-
-      <View>
-        {showIndicator ? (
-          <FlatList
-            data={listDataDokter}
-            renderItem={({ item }) => {
+      <View style={{ flexDirection: 'row' }}>
+        <View style={styles.textLeftHeading}>
+          <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
+            Rekomendasi Ahli
+          </Text>
+          <Text style={{ color: 'black', fontSize: 10 }}>
+            Silahkan konsultasikan dengan ahlinya
+          </Text>
+        </View>
+      </View>
+      {cekoption == 0 ? (
+        listDataDokter == null ? (
+          <ActivityIndicator size={"large"} fontSize="20" />
+        ) : (
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {listDataDokter.map((item) => {
               return (
-                <View style={styles.cardList}>
-                  <View
-                    style={{
-                      flex: 1,
-                      justifyContent: 'center',
-                      alignItems: 'flex-start',
-                    }}>
-                    <Image
-                      source={require('../../../../assets/images/people.png')}
-                      resizeMode="cover"
-                      style={{ width: 100, height: 100, margin: 10 }}
-                    />
+                <View style={{ marginHorizontal: 10, marginVertical: 10, backgroundColor: 'white', elevation: 5, padding: 10, borderRadius: 5, flexDirection: 'row' }} key={item.id_dokter}>
+                  <View style={{ flex: 1, justifyContent: 'center' }}>
+                    <Image source={require("../../../../assets/images/people.png")} style={{ width: 100, height: 100 }} />
                   </View>
-                  <View
-                    style={{
-                      flex: 2,
-                      justifyContent: 'center',
-                      alignItems: 'flex-start',
-                      marginHorizontal: 10,
-                    }}>
-                    <Text
-                      style={{
-                        color: 'black',
-                        fontSize: 16,
-                        fontWeight: 'bold',
-                      }}>
+                  <View style={{ flex: 2 }}>
+                    <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
                       {item.user_id.nama}
                     </Text>
-                    <Text style={{ color: 'black', fontSize: 10 }}>
-                      {item.user_id.status == 1 ? 'Dokter Ahli' : 'Dokter Umum'}
+                    <Text style={{ color: 'black', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
+                      {item.user_id.status == 1 ? 'Dokter Spesialis' : 'Dokter Umum'}
                     </Text>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        marginTop: 10,
-                        marginBottom: 10,
-                      }}>
-                      <View
-                        style={{
-                          backgroundColor: 'gray',
-                          borderRadius: 5,
-                          marginRight: 10,
-                          paddingHorizontal: 5,
-                        }}>
-                        <Text
-                          style={{ color: 'white', fontSize: 10, padding: 3 }}>
+                    <View style={{ flexDirection: 'row', marginTop: 15 }}>
+                      <View style={{ width: 70, backgroundColor: colors.backgroundEmpty, borderRadius: 5, padding: 3, alignItems: 'center' }}>
+                        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
                           77 Tahun
                         </Text>
                       </View>
-                      <View
-                        style={{
-                          backgroundColor: 'gray',
-                          borderRadius: 5,
-                          paddingHorizontal: 5,
-                        }}>
-                        <Text
-                          style={{ color: 'white', fontSize: 10, padding: 3 }}>
-                          100 %
+                      <View style={{ width: 70, backgroundColor: colors.backgroundEmpty, borderRadius: 5, marginLeft: 5, padding: 3, alignItems: 'center' }}>
+                        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
+                          <Icon name="thumbs-up" style={{ color: 'white', fontWeight: 'bold' }} /> 100 %
                         </Text>
                       </View>
                     </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: 200,
-                        marginTop: 10,
-                      }}>
-                      <View
-                        style={{
-                          flex: 1,
-                          justifyContent: 'center',
-                          alignItems: 'flex-start',
-                        }}>
-                        <Text style={{ color: 'black', fontSize: 16 }}>
-                          {item.harga}
+                    <View style={{ marginTop: 20, alignItems: 'flex-end' }}>
+                      <TouchableOpacity style={{ backgroundColor: 'purple', width: 100, borderRadius: 5, paddingVertical: 5, alignItems: 'center' }} onPress={() => navigation.navigate(Navigasi.DETAIL_CHAT, {
+                        data: item
+                      })}>
+                        <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
+                          KONSULTASI
                         </Text>
-                      </View>
-                      <View
-                        style={{
-                          flex: 1,
-                          justifyContent: 'center',
-                          alignItems: 'flex-end',
-                        }}>
-                        <TouchableOpacity
-                          onPress={() => {
-                            navigation.replace(Navigasi.DETAIL_CHAT, {
-                              data: item,
-                            });
-                          }}
-                          style={{
-                            backgroundColor: 'purple',
-                            borderRadius: 5,
-                            paddingVertical: 3,
-                            width: 70,
-                          }}>
-                          <Text
-                            style={{
-                              color: 'white',
-                              fontWeight: 'bold',
-                              textAlign: 'center',
-                              fontSize: 12,
-                            }}>
-                            Chat
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
+                      </TouchableOpacity>
                     </View>
-                  </View>
-                </View>
-              );
-            }}
-          />
-        ) : (
-          <View>
-            <View style={styles.cardListKosong}>
-              <View style={styles.imageCardKosong} />
-              <View style={styles.contentFlexKosong}>
-                <View style={styles.textKosong} />
-                <View style={styles.subTextKosong} />
-                <View style={styles.flexRatingKosong}>
-                  <View style={styles.ratingKosong} />
-                  <View style={styles.ratingKosong} />
-                </View>
-                <View style={styles.flexHargaButton}>
-                  <View style={styles.hargaKosong} />
-                  <View style={styles.buttonKosong} />
-                </View>
-              </View>
-            </View>
-            <View style={styles.cardListKosong}>
-              <View style={styles.imageCardKosong} />
-              <View style={styles.contentFlexKosong}>
-                <View style={styles.textKosong} />
-                <View style={styles.subTextKosong} />
-                <View style={styles.flexRatingKosong}>
-                  <View style={styles.ratingKosong} />
-                  <View style={styles.ratingKosong} />
-                </View>
-                <View style={styles.flexHargaButton}>
-                  <View style={styles.hargaKosong} />
-                  <View style={styles.buttonKosong} />
-                </View>
-              </View>
-            </View>
-          </View>
-        )}
-      </View>
-
-      <View style={styles.garisBorder} />
-      <Text style={styles.textTitle}>Cari Dokter Atau Spesialisasi</Text>
-      <Text style={styles.subTextTitle}>Cari Kategori Yang Anda Inginkan</Text>
-
-      {spesialis == null ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size={'large'} />
-        </View>
-      ) : (
-        <ScrollView showsHorizontalScrollIndicator={false}>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-            {spesialis.map((item) => {
-              return (
-                <View key={item.id_spesialis_penyakit} style={{ marginHorizontal: 10 }}>
-                  <View style={{ marginVertical: 10, justifyContent: 'center', alignItems: 'center' }}>
-                    <Image source={require("../../../../assets/images/gambar-rs.jpg")} style={{ width: 70, height: 70, borderRadius: 50 }} />
-                    <Text style={{ color: 'black', fontSize: 9, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
-                      {item.nama_spesialis}
-                    </Text>
                   </View>
                 </View>
               )
             })}
-          </View>
-        </ScrollView>
+          </ScrollView>
+        )
+      ) : (
+        cekoption == 1 ? (
+          listDataPerawat == null ? (
+            <ActivityIndicator size={"large"} color={"black"} />
+          ) : (
+            <ScrollView showsVerticalScrollIndicator={false}>
+            {listDataPerawat && listDataPerawat.map((item) => {
+              return (
+                <View style={{ marginHorizontal: 10, marginVertical: 10, backgroundColor: 'white', elevation: 5, padding: 10, borderRadius: 5, flexDirection: 'row' }} key={item.id_dokter}>
+                  <View style={{ flex: 1, justifyContent: 'center' }}>
+                    <Image source={require("../../../../assets/images/people.png")} style={{ width: 100, height: 100 }} />
+                  </View>
+                  <View style={{ flex: 2 }}>
+                    <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
+                      {item.get_user.nama}
+                    </Text>
+                    <Text style={{ color: 'black', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
+                      Perawat
+                    </Text>
+                    <View style={{ flexDirection: 'row', marginTop: 15 }}>
+                      <View style={{ width: 70, backgroundColor: colors.backgroundEmpty, borderRadius: 5, padding: 3, alignItems: 'center' }}>
+                        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
+                          77 Tahun
+                        </Text>
+                      </View>
+                      <View style={{ width: 70, backgroundColor: colors.backgroundEmpty, borderRadius: 5, marginLeft: 5, padding: 3, alignItems: 'center' }}>
+                        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
+                          <Icon name="thumbs-up" style={{ color: 'white', fontWeight: 'bold' }} /> 100 %
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={{ marginTop: 20, alignItems: 'flex-end' }}>
+                      <TouchableOpacity style={{ backgroundColor: 'purple', width: 100, borderRadius: 5, paddingVertical: 5, alignItems: 'center' }} onPress={() => navigation.navigate(Navigasi.DETAIL_CHAT, {
+                        data: item
+                      })}>
+                        <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
+                          KONSULTASI
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
+              )
+            })}
+          </ScrollView>
+          )
+          
+        ) : (
+          <ActivityIndicator size={"large"} color={"black"} />
+        )
       )}
+
     </View>
   );
 };
@@ -326,8 +240,7 @@ const styles = StyleSheet.create({
   cardSearch: {
     marginHorizontal: 10,
     backgroundColor: '#f4f0f0',
-    marginTop: 5,
-    marginBottom: 5,
+    marginTop: 10,
     borderRadius: 10,
     flexDirection: 'row',
   },
@@ -348,30 +261,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     paddingLeft: 10,
   },
-  buttonAll: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    marginRight: 10,
-  },
-  designButton: {
-    borderColor: 'purple',
-    borderWidth: 1,
-    paddingVertical: 5,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-  },
   cardList: {
-    backgroundColor: 'white',
-    elevation: 5,
-    marginHorizontal: 10,
-    marginVertical: 10,
-    borderRadius: 10,
-    flexDirection: 'row',
-    paddingTop: 10,
-    paddingBottom: 15,
-  },
-  cardListKosong: {
     backgroundColor: 'white',
     elevation: 5,
     marginHorizontal: 10,
@@ -394,84 +284,37 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'Poppins-Medium',
   },
-  garisBorder: {
-    backgroundColor: 'gray',
-    height: 1,
-    marginHorizontal: 10,
-    marginVertical: 10,
-  },
-  imageCardKosong: {
+  option: {
     flex: 1,
+    borderRadius: 50,
+    paddingVertical: 5,
     justifyContent: 'center',
-    alignItems: 'flex-start',
-    width: 100,
-    height: 100,
-    margin: 10,
-    backgroundColor: colors.backgroundEmpty,
-    borderRadius: 10,
-  },
-  textKosong: {
-    backgroundColor: colors.backgroundEmpty,
-    width: 70,
-    height: 15,
-    borderRadius: 10,
-  },
-  option: { 
-    flex: 1 , 
-    borderRadius: 50, 
-    paddingVertical: 5, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    elevation: 10
-  },
-  subTextKosong: {
-    backgroundColor: colors.backgroundEmpty,
-    width: 50,
-    height: 10,
-    marginTop: 10,
-    borderRadius: 10,
-  },
-  ratingKosong: {
-    backgroundColor: colors.backgroundEmpty,
-    borderRadius: 5,
-    marginRight: 10,
-    paddingHorizontal: 5,
-    width: 40,
-    padding: 10,
-  },
-  hargaKosong: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    backgroundColor: colors.backgroundEmpty,
-    height: 25,
-    marginRight: 10,
-    borderRadius: 10,
-  },
-  buttonKosong: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    backgroundColor: colors.backgroundEmpty,
-    height: 25,
-    borderRadius: 10,
-  },
-  contentFlexKosong: {
-    flex: 2,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    marginHorizontal: 10,
-  },
-  flexRatingKosong: {
-    flexDirection: 'row',
-    marginTop: 10,
-    marginBottom: 10,
+    alignItems: 'center',
+    elevation: 10,
   },
   flexHargaButton: {
     flexDirection: 'row',
     width: 200,
     marginTop: 10,
   },
+  active: {
+    backgroundColor: 'blue'
+  },
+  non_active: {
+    borderColor: 'blue', 
+    borderWidth: 1, 
+    backgroundColor: 'white'
+  },
+  text_active: {
+    color: 'white', 
+    fontSize: 14, 
+    fontWeight: 'bold'
+  },
+  text_non_active: {
+    color: 'blue', 
+    fontSize: 14, 
+    fontWeight: 'bold'
+  }
 });
 
 export default ChatDokter;

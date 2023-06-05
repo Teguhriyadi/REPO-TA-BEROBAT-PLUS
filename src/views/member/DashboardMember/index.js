@@ -45,7 +45,7 @@ const DashboardMember = ({ navigation }) => {
     const debounceTimeout = setTimeout(() => {
       getDataUserLocal();
       dataLokasi();
-      dataDokter();
+      dataartikel();
       dataKategori();
       dataProduk();
       dataKeahlian();
@@ -54,50 +54,36 @@ const DashboardMember = ({ navigation }) => {
     return () => clearTimeout(debounceTimeout);
   }, [dataPribadi.nama, dataPribadi.token]);
 
-  const dataProduk = () => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        await axios({
-          url: `${baseUrl.url}/apotek/produk/data_produk`,
-          headers: {
-            Authorization: 'Bearer ' + dataPribadi.token,
-          },
-          method: 'GET',
-        })
-          .then(response => {
-            setDataProduk(response.data.data);
-            setShowIndicator(true);
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      } catch (error) {
-        console.log(error);
-      }
-    });
+  const dataProduk = async () => {
+    try {
+      const response = await axios({
+        url: `${baseUrl.url}/apotek/produk/data_produk`,
+        headers: {
+          Authorization: 'Bearer ' + dataPribadi.token
+        },
+        method: "GET"
+      })
+
+      setDataProduk(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const dataDokter = () => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        await axios({
-          url: `${baseUrl.url}/master/artikel`,
-          headers: {
-            Authorization: 'Bearer ' + dataPribadi.token,
-          },
-          method: 'GET',
-        })
-          .then(response => {
-            setArtikel(response.data.data);
-            setShowIndicator(true);
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      } catch (error) {
-        console.log(error);
-      }
-    });
+  const dataartikel = async () => {
+    try {
+      const response = await axios({
+        url: `${baseUrl.url}/master/artikel`,
+        headers: {
+          Authorization: 'Bearer ' + dataPribadi.token
+        },
+        method: "GET"
+      })
+
+      setArtikel(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const dataKategori = () => {
@@ -123,23 +109,18 @@ const DashboardMember = ({ navigation }) => {
     });
   };
 
-  const dataKeahlian = () => {
+  const dataKeahlian = async () => {
     try {
-      return new Promise(async (resolve, reject) => {
-        await axios({
-          url: `${baseUrl.url}/master/keahlian`,
-          headers: {
-            Authorization: 'Bearer ' + dataPribadi.token,
-          },
-          method: 'GET',
-        })
-          .then(response => {
-            setKeahlian(response.data.data);
-          })
-          .catch(error => {
-            console.log(error);
-          });
+      const datakeahlian = await axios({
+        url: `${baseUrl.url}/master/keahlian`,
+        headers: {
+          Authorization: 'Bearer ' + dataPribadi.token
+        },
+        method: "GET"
       });
+
+      setKeahlian(datakeahlian.data.data);
+
     } catch (error) {
       console.log(error);
     }
@@ -268,17 +249,17 @@ const DashboardMember = ({ navigation }) => {
             nameIcon={"book"}
             textfitur={"Buat Janji"}
           />
-          <ListFitur 
+          <ListFitur
             onPress={() => {
               navigation.replace(Navigasi.LoadingScreen)
-            }} 
+            }}
             nameIcon={"md-calendar"}
             textfitur={"Reservasi"}
           />
-          <ListFitur 
+          <ListFitur
             onPress={() => {
               navigation.replace(Navigasi.TOKO_KESEHATAN_PRODUK)
-            }} 
+            }}
             nameIcon={"medkit"}
             textfitur={"Toko Sekitar"}
           />
@@ -289,69 +270,30 @@ const DashboardMember = ({ navigation }) => {
         </View>
 
         <View style={{ marginHorizontal: 15 }}>
-          {showIndicator ? (
-            <FlatList
-              data={keahlian}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate(Navigasi.KEAHLIAN_DOKTER, {
-                      data: item,
-                    });
-                  }}>
-                  <View
-                    style={{
-                      marginTop: 10,
-                      marginBottom: 5,
-                    }}>
-                    <View style={styles.cardContent}>
-                      <View
-                        style={{
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}>
-                        {item.logo == null ? (
-                          <Image
-                            source={require('../../../assets/images/auth-new.png')}
-                            style={styles.cardImage}
-                          />
-                        ) : (
-                          <Image
-                            source={{ uri: item.logo }}
-                            style={styles.cardImage}
-                          />
-                        )}
-                      </View>
-                      <Text style={styles.textContent}>
+          {keahlian == null ? (
+            <ActivityIndicator />
+          ) : (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {keahlian.map((item) => {
+                return (
+                  <TouchableOpacity
+                    key={item.id_keahlian}
+                    onPress={() => {
+                      navigation.navigate(Navigasi.KEAHLIAN_DOKTER, {
+                        data: item
+                      })
+                    }}
+                  >
+                    <View style={{ marginHorizontal: 5, backgroundColor: 'white', elevation: 5, height: 150, width: 120, marginVertical: 5, borderRadius: 10, paddingHorizontal: 10 }}>
+                      <Image source={require("../../../assets/images/gambar-rs.jpg")} style={{ width: 100, height: 80, marginVertical: 10, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }} />
+                      <Text style={{ fontSize: 12, color: 'black', fontFamily: 'Poppins-Medium', fontWeight: 'bold', textAlign: 'center' }}>
                         {item.nama_keahlian}
                       </Text>
                     </View>
-                  </View>
-                </TouchableOpacity>
-              )}
-            />
-          ) : (
-            <View
-              style={{
-                marginTop: 10,
-                marginBottom: 5,
-                flexDirection: 'row',
-              }}>
-              <View style={styles.cardContent}>
-                <View style={styles.backgroundImageKosong} />
-                <View style={styles.textImageKosong} />
-              </View>
-              <View style={styles.cardContent}>
-                <View style={styles.backgroundImageKosong} />
-                <View style={styles.textImageKosong} />
-              </View>
-              <View style={styles.cardContentKosong}>
-                <View style={styles.backgroundImageKosong} />
-                <View style={styles.textImageKosongKanan} />
-              </View>
-            </View>
+                  </TouchableOpacity>
+                )
+              })}
+            </ScrollView>
           )}
         </View>
 
@@ -371,46 +313,21 @@ const DashboardMember = ({ navigation }) => {
           </View>
         </View>
 
-        {showIndicator ? (
-          <View style={{ marginLeft: 10, marginRight: 15 }}>
-            <FlatList
-              data={produkData}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              renderItem={({ item }) => (
-                <View style={styles.produk}>
-                  <TouchableOpacity>
-                    <View style={styles.cardProduk}>
-                      <View
-                        style={{
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}>
-                        <Image
-                          source={require('../../../assets/images/auth-new.png')}
-                          resizeMode="cover"
-                          style={{ width: 100, height: 80 }}
-                        />
-                      </View>
-                      <Text
-                        style={{
-                          color: 'black',
-                          marginHorizontal: 15,
-                          fontWeight: 'bold',
-                        }}>
-                        {item.nama_produk}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              )}
-            />
-          </View>
+        {produkData == null ? (
+          <ActivityIndicator />
         ) : (
-          <View style={{ flexDirection: 'row' }}>
-            <View style={[styles.produkNotFound, { width: 200 }]} />
-            <View style={[styles.produkNotFound, { width: 100 }]} />
-          </View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {produkData.map((item) => {
+              return (
+                <View key={item.artikel} style={{marginLeft: 15, backgroundColor: 'white', borderRadius: 10, elevation: 5, height: 130, marginTop: 10, marginBottom: 5, borderRadius: 10, paddingHorizontal: 10, width: 150}} >
+                  <Image source={require("../../../assets/images/gambar-rs.jpg")} style={{width: '100%', height: 80, marginVertical: 10, borderRadius: 10}} />
+                  <Text style={{color: 'black', fontSize: 14, fontWeight: 'bold', fontFamily: 'Poppins-Medium'}}>
+                    {item.nama_produk}
+                  </Text>
+                </View>
+              )
+            })}
+          </ScrollView>
         )}
 
         <View
@@ -475,50 +392,64 @@ const DashboardMember = ({ navigation }) => {
           </View>
         )}
 
-        {showIndicator ? (
+        {artikel == null ? (
+          <ActivityIndicator />
+        ) : (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {artikel.map((item) => {
+              return (
+                <TouchableOpacity
+                  key={item.id_artikel}
+                  onPress={() => {
+                    navigation.replace(Navigasi.DETAIL_ARTIKEL, {
+                      data: item,
+                    });
+                  }}>
+                  <View style={styles.viewArtikel}>
+                    <View
+                      style={{ justifyContent: 'center', alignItems: 'center' }}>
+                      {item.foto == null ? (
+                        <Image
+                          source={require('../../../assets/images/gambar-rs.jpg')}
+                          resizeMode="cover"
+                          style={{ width: '100%', borderTopLeftRadius: 10, borderTopRightRadius: 10, height: 200, alignSelf: 'center' }}
+                        />
+                      ) : (
+                        <Image
+                          source={{ uri: item.foto }}
+                          resizeMode="cover"
+                          style={{
+                            width: '100%',
+                            height: 200,
+                            borderTopLeftRadius: 10,
+                            borderTopRightRadius: 10,
+                            alignSelf: 'center',
+                            borderTopLeftRadius: 10,
+                            borderTopRightRadius: 10,
+                          }}
+                        />
+                      )}
+                    </View>
+                    <Text style={styles.judulArtikel}>{item.judul_artikel}</Text>
+                    <Text
+                      style={styles.deskripsi}
+                      numberOfLines={1}
+                      ellipsizeMode="tail">
+                      {item.deskripsi}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              )
+            })}
+          </ScrollView>
+        )}
+        {/* {showIndicator ? (
           <FlatList
             data={artikel}
             horizontal
             showsHorizontalScrollIndicator={false}
             renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.replace(Navigasi.DETAIL_ARTIKEL, {
-                    data: item,
-                  });
-                }}>
-                <View style={styles.viewArtikel}>
-                  <View
-                    style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    {item.foto == null ? (
-                      <Image
-                        source={require('../../../assets/images/auth-new.png')}
-                        resizeMode="cover"
-                        style={{ width: 300, height: 200, alignSelf: 'center' }}
-                      />
-                    ) : (
-                      <Image
-                        source={{ uri: item.foto }}
-                        resizeMode="cover"
-                        style={{
-                          width: 300,
-                          height: 200,
-                          borderTopLeftRadius: 10,
-                          borderTopRightRadius: 10,
-                          alignSelf: 'center',
-                        }}
-                      />
-                    )}
-                  </View>
-                  <Text style={styles.judulArtikel}>{item.judul_artikel}</Text>
-                  <Text
-                    style={styles.deskripsi}
-                    numberOfLines={1}
-                    ellipsizeMode="tail">
-                    {item.deskripsi}
-                  </Text>
-                </View>
-              </TouchableOpacity>
+              
             )}
           />
         ) : (
@@ -529,7 +460,7 @@ const DashboardMember = ({ navigation }) => {
               <View style={styles.subTextNotFound} />
             </View>
           </View>
-        )}
+        )} */}
       </ScrollView>
     </View>
   );
@@ -562,6 +493,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     fontSize: 18,
+    fontFamily: 'Poppins-Medium',
   },
   cardFitur: {
     paddingVertical: 10,
@@ -579,7 +511,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     marginBottom: 40,
     borderRadius: 10,
-    marginLeft: 5,
+    marginLeft: 15,
   },
   cardProduk: {
     height: 120,
@@ -594,9 +526,9 @@ const styles = StyleSheet.create({
     height: 300,
     width: 300,
     elevation: 5,
-    marginTop: 10,
+    marginTop: 20,
     marginHorizontal: 15,
-    marginBottom: 10,
+    marginBottom: 20,
     borderRadius: 10,
   },
   judulArtikel: {
@@ -604,7 +536,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingTop: 10,
     fontWeight: 'bold',
-    fontSize: 18,
+    textAlign: 'justify',
+    fontSize: 16,
+    fontFamily: 'Poppins-Medium'
   },
   deskripsi: {
     color: 'gray',
