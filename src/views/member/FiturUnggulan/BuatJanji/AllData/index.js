@@ -7,12 +7,15 @@ import {
   Image,
   PermissionsAndroid,
   ScrollView,
+  TextInput
 } from 'react-native';
 import { colors, baseUrl, getData } from '../../../../../utils';
 import axios from 'axios';
 import Geolocation from '@react-native-community/geolocation';
 import Navigasi from '../../../../../partials/navigasi';
 import Heading from '../../../../../components/Heading';
+import Icon from 'react-native-vector-icons/Ionicons';
+import StatusBarComponent from '../../../../../components/StatusBar/StatusBarComponent';
 
 const AllData = ({ navigation }) => {
   const [dataPribadi, setDataPribadi] = useState({});
@@ -85,7 +88,27 @@ const AllData = ({ navigation }) => {
 
   return (
     <View style={styles.backgroundBelakang}>
+      <StatusBarComponent/>
       <Heading navigasi={() => navigation.goBack()} textHeading={"RS & Klinik Terdekat"} />
+      <View style={styles.cardSearch}>
+        <View style={styles.viewIcon}>
+          <Icon
+            name="search"
+            style={{ color: 'gray', fontSize: 20, fontWeight: 'bold' }}
+          />
+        </View>
+        <View style={styles.contentSearch}>
+          <TextInput
+            placeholder="Ex: RS. Plumbon Cirebon"
+            placeholderTextColor="gray"
+            style={{
+              height: 40,
+              fontSize: 12,
+              color: 'gray',
+            }}
+          />
+        </View>
+      </View>
       {rumah_sakit == null ? (
         <>
           <View style={styles.jarakHorizontal}>
@@ -225,8 +248,8 @@ const AllData = ({ navigation }) => {
                         </Text>
                       </View>
                       <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
-                        <View style={{ backgroundColor: 'skyblue', width: 100, borderRadius: 10, paddingVertical: 5 }}>
-                          <Text style={{ color: 'black', fontSize: 14, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
+                        <View style={{ backgroundColor: 'skyblue', width: 70, borderRadius: 10, paddingVertical: 2 }}>
+                          <Text style={{ color: 'black', fontSize: 12, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
                             {Math.floor(item.jarak)} KM
                           </Text>
                         </View>
@@ -234,19 +257,19 @@ const AllData = ({ navigation }) => {
                     </View>
                     <View style={{ flexDirection: 'row' }}>
                       <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'center' }}>
-                        <View style={{ backgroundColor: colors.backgroundEmpty, width: 100, borderRadius: 10, paddingVertical: 5 }}>
-                          <Text style={{ color: 'black', fontSize: 14, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
-                            * 5, 7
+                        <View style={{ backgroundColor: colors.backgroundEmpty, width: 100, borderRadius: 10, paddingVertical: 2 }}>
+                          <Text style={{ color: 'black', fontSize: 12, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
+                            <Icon name="thumbs-up" style={{color: 'black'}} /> 5, 7
                           </Text>
                         </View>
                       </View>
                       <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
-                        <TouchableOpacity style={{ backgroundColor: 'blue', width: 100, borderRadius: 10, paddingVertical: 5 }} onPress={() => {
+                        <TouchableOpacity style={{ backgroundColor: 'blue', width: 70, borderRadius: 10, paddingVertical: 3, elevation: 10 }} onPress={() => {
                           navigation.navigate(Navigasi.DETAIL_BUAT_JANJI, {
                             data: item
                           })
                         }} >
-                          <Text style={{ color: 'white', fontSize: 14, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
+                          <Text style={{ color: 'white', fontSize: 12, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
                             Pilih
                           </Text>
                         </TouchableOpacity>
@@ -281,6 +304,24 @@ const styles = StyleSheet.create({
   jarakHorizontal: {
     marginVertical: 10,
     marginHorizontal: 15,
+  },
+  cardSearch: {
+    marginHorizontal: 10,
+    backgroundColor: '#f4f0f0',
+    marginTop: 10,
+    borderRadius: 10,
+    flexDirection: 'row',
+  },
+  viewIcon: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
+  contentSearch: {
+    flex: 8,
+    paddingRight: 10,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
   },
   imageEmpty: {
     backgroundColor: colors.backgroundEmpty,

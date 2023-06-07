@@ -159,11 +159,12 @@ const InformasiBuatJanji = ({route}) => {
               textAlign: 'center',
               fontWeight: 'bold',
               fontSize: 18,
+              fontFamily: 'Poppins-Medium'
             }}>
-            Maaf, Dokter Tidak Tersedia
+            Maaf, Spesialis Tidak Tersedia
           </Text>
-          <Text style={{color: 'black', fontSize: 14}}>
-            Silahkan Cari Dokter Di Rumah Sakit Lain.
+          <Text style={{color: 'black', fontSize: 14, fontFamily: 'Poppins-Medium'}}>
+            Silahkan Cari Spesialis Di Rumah Sakit Lain.
           </Text>
         </View>
       ) : (

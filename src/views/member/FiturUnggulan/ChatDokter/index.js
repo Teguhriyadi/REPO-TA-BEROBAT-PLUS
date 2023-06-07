@@ -22,6 +22,7 @@ const ChatDokter = ({ navigation, route }) => {
   const [dataPribadi, setDataPribadi] = useState({});
   const [listDataDokter, setListDataDokter] = useState(null);
   const [listDataPerawat, setListDataPerawat] = useState(null);
+  const [keahlian, setListKeahlian] = useState(null);
   const [cekoption, setOption] = useState(0);
 
   useEffect(() => {
@@ -48,7 +49,6 @@ const ChatDokter = ({ navigation, route }) => {
   };
 
   const listDokter = async () => {
-    setOption(0);
     try {
       const response = await axios({
         url: `${baseUrl.url}/akun/dokter/data`,
@@ -57,7 +57,23 @@ const ChatDokter = ({ navigation, route }) => {
         },
         method: "GET"
       });
+
+      const promises = response.data.data.map(async (item) => {
+        const responsedata = await axios({
+          url: `${baseUrl.url}/master/dokter_keahlian/${item.id_dokter}`,
+          headers: {
+            Authorization: 'Bearer ' + dataPribadi.token
+          },
+          method: "GET"
+        });
+
+        return responsedata.data.data;
+      });
+
+      const result = await Promise.all(promises);
+
       setListDataDokter(response.data.data);
+      setListKeahlian(result.flat());
     } catch (error) {
       console.log(error);
     }
@@ -109,17 +125,17 @@ const ChatDokter = ({ navigation, route }) => {
           Butuh Dengan :
         </Text>
         <View style={{ flexDirection: 'row' }}>
-          <TouchableOpacity style={[styles.option, cekoption == 1 ? styles.non_active : styles.active ]} onPress={() => {
+          <TouchableOpacity style={[styles.option, cekoption == 1 ? styles.non_active : styles.active]} onPress={() => {
             listDokter();
           }}>
-            <Text style={cekoption == 1 ? styles.text_non_active : styles.text_active }>
+            <Text style={cekoption == 1 ? styles.text_non_active : styles.text_active}>
               Dokter
             </Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.option, cekoption == 1 ? styles.active : styles.non_active, { marginLeft: 10 }]} onPress={() => {
             dataperawat();
           }}>
-            <Text style={cekoption == 1 ? styles.text_active : styles.text_non_active }>
+            <Text style={cekoption == 1 ? styles.text_active : styles.text_non_active}>
               Perawat
             </Text>
           </TouchableOpacity>
@@ -150,9 +166,21 @@ const ChatDokter = ({ navigation, route }) => {
                     <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
                       {item.user_id.nama}
                     </Text>
-                    <Text style={{ color: 'black', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
-                      {item.user_id.status == 1 ? 'Dokter Spesialis' : 'Dokter Umum'}
-                    </Text>
+                    {keahlian == null ? (
+                      <ActivityIndicator />
+                    ) : (
+                      keahlian.map((datakeahlian) => {
+                        return (
+                          item.id_dokter == datakeahlian.get_dokter.id_dokter ? (
+                            <Text style={{ color: 'black' }}>
+                              {datakeahlian.get_keahlian.nama_keahlian}
+                            </Text>
+                          ) : (
+                            <View />
+                          )
+                        )
+                      })
+                    )}
                     <View style={{ flexDirection: 'row', marginTop: 15 }}>
                       <View style={{ width: 70, backgroundColor: colors.backgroundEmpty, borderRadius: 5, padding: 3, alignItems: 'center' }}>
                         <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
@@ -186,47 +214,47 @@ const ChatDokter = ({ navigation, route }) => {
             <ActivityIndicator size={"large"} color={"black"} />
           ) : (
             <ScrollView showsVerticalScrollIndicator={false}>
-            {listDataPerawat && listDataPerawat.map((item) => {
-              return (
-                <View style={{ marginHorizontal: 10, marginVertical: 10, backgroundColor: 'white', elevation: 5, padding: 10, borderRadius: 5, flexDirection: 'row' }} key={item.id_dokter}>
-                  <View style={{ flex: 1, justifyContent: 'center' }}>
-                    <Image source={require("../../../../assets/images/people.png")} style={{ width: 100, height: 100 }} />
-                  </View>
-                  <View style={{ flex: 2 }}>
-                    <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
-                      {item.get_user.nama}
-                    </Text>
-                    <Text style={{ color: 'black', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
-                      Perawat
-                    </Text>
-                    <View style={{ flexDirection: 'row', marginTop: 15 }}>
-                      <View style={{ width: 70, backgroundColor: colors.backgroundEmpty, borderRadius: 5, padding: 3, alignItems: 'center' }}>
-                        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
-                          77 Tahun
-                        </Text>
+              {listDataPerawat && listDataPerawat.map((item) => {
+                return (
+                  <View style={{ marginHorizontal: 10, marginVertical: 10, backgroundColor: 'white', elevation: 5, padding: 10, borderRadius: 5, flexDirection: 'row' }} key={item.id_perawat}>
+                    <View style={{ flex: 1, justifyContent: 'center' }}>
+                      <Image source={require("../../../../assets/images/people.png")} style={{ width: 100, height: 100 }} />
+                    </View>
+                    <View style={{ flex: 2 }}>
+                      <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
+                        {item.get_user.nama}
+                      </Text>
+                      <Text style={{ color: 'black', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
+                        Perawat
+                      </Text>
+                      <View style={{ flexDirection: 'row', marginTop: 15 }}>
+                        <View style={{ width: 70, backgroundColor: colors.backgroundEmpty, borderRadius: 5, padding: 3, alignItems: 'center' }}>
+                          <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
+                            77 Tahun
+                          </Text>
+                        </View>
+                        <View style={{ width: 70, backgroundColor: colors.backgroundEmpty, borderRadius: 5, marginLeft: 5, padding: 3, alignItems: 'center' }}>
+                          <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
+                            <Icon name="thumbs-up" style={{ color: 'white', fontWeight: 'bold' }} /> 100 %
+                          </Text>
+                        </View>
                       </View>
-                      <View style={{ width: 70, backgroundColor: colors.backgroundEmpty, borderRadius: 5, marginLeft: 5, padding: 3, alignItems: 'center' }}>
-                        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
-                          <Icon name="thumbs-up" style={{ color: 'white', fontWeight: 'bold' }} /> 100 %
-                        </Text>
+                      <View style={{ marginTop: 20, alignItems: 'flex-end' }}>
+                        <TouchableOpacity style={{ backgroundColor: 'purple', width: 100, borderRadius: 5, paddingVertical: 5, alignItems: 'center' }} onPress={() => navigation.navigate(Navigasi.DETAIL_CHAT, {
+                          data: item
+                        })}>
+                          <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
+                            KONSULTASI
+                          </Text>
+                        </TouchableOpacity>
                       </View>
                     </View>
-                    <View style={{ marginTop: 20, alignItems: 'flex-end' }}>
-                      <TouchableOpacity style={{ backgroundColor: 'purple', width: 100, borderRadius: 5, paddingVertical: 5, alignItems: 'center' }} onPress={() => navigation.navigate(Navigasi.DETAIL_CHAT, {
-                        data: item
-                      })}>
-                        <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
-                          KONSULTASI
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
                   </View>
-                </View>
-              )
-            })}
-          </ScrollView>
+                )
+              })}
+            </ScrollView>
           )
-          
+
         ) : (
           <ActivityIndicator size={"large"} color={"black"} />
         )
@@ -301,18 +329,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'blue'
   },
   non_active: {
-    borderColor: 'blue', 
-    borderWidth: 1, 
+    borderColor: 'blue',
+    borderWidth: 1,
     backgroundColor: 'white'
   },
   text_active: {
-    color: 'white', 
-    fontSize: 14, 
+    color: 'white',
+    fontSize: 14,
     fontWeight: 'bold'
   },
   text_non_active: {
-    color: 'blue', 
-    fontSize: 14, 
+    color: 'blue',
+    fontSize: 14,
     fontWeight: 'bold'
   }
 });

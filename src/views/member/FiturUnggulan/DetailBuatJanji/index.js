@@ -58,9 +58,9 @@ const DetailBuatJanji = ({navigation, route, props}) => {
         }}>
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
           <ImageBackground
-            source={require('../../../../assets/images/auth-new.png')}
+            source={require('../../../../assets/images/gambar-rs.jpg')}
             resizeMode="cover"
-            style={{width: 300, height: 200}}
+            style={{width: '100%', height: 200}}
           />
         </View>
         <View
@@ -85,11 +85,11 @@ const DetailBuatJanji = ({navigation, route, props}) => {
         </View>
       </View>
       <View style={{flex: 1, paddingHorizontal: 10, paddingVertical: 5}}>
-        <Text style={{color: 'black', fontSize: 18, fontWeight: 'bold'}}>
+        <Text style={{color: 'black', fontSize: 18, fontWeight: 'bold', fontFamily: 'Poppins-Medium'}}>
           {getRS.data.nama_rs}
         </Text>
         <View style={{flexDirection: 'row', marginTop: 10}}>
-          <Text style={{flex: 1, color: 'black', fontSize: 16}}>
+          <Text style={{flex: 1, color: 'grey', fontWeight: 'bold', fontSize: 14, fontFamily: 'Poppins-Medium'}}>
             {getRS.data.kategori_rs == 1
               ? 'Rumah Sakit Spesialis'
               : 'Rumah Sakit Umum'}

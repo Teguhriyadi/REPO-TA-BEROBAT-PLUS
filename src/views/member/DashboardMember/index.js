@@ -251,7 +251,7 @@ const DashboardMember = ({ navigation }) => {
           />
           <ListFitur
             onPress={() => {
-              navigation.replace(Navigasi.LoadingScreen)
+              navigation.replace(Navigasi.RESERVASI)
             }}
             nameIcon={"md-calendar"}
             textfitur={"Reservasi"}

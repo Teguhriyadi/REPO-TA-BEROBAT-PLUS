@@ -55,6 +55,7 @@ import ClassPusher from '../views/dokter/Pusher';
 import DashboardPerawat from '../views/perawat/Dashboard';
 import Profile from '../views/perawat/Profile';
 import Riwayat from '../views/perawat/Riwayat';
+import Reservasi from '../views/member/FiturUnggulan/Reservasi';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -300,6 +301,11 @@ const Router = () => {
         name={Navigasi.BUAT_JANJI}
         component={BuatJadwal}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={Navigasi.RESERVASI}
+        component={Reservasi}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name={Navigasi.All_DATA_RS}

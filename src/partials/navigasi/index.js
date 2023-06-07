@@ -46,6 +46,7 @@ export default {
   ALL_DATA_RUMAH_SAKIT_TERDEKAT: "AllDataRumahSakitTerdekat",
   ALL_DATA_APOTEK_TERDEKAT: "AllDataApotekTerdekat",
   PUSHER: "Pusher",
+  RESERVASI: "Reservasi",
 
   // Perawat
   DASHBOARD_PERAWAT: "DashboardPerawat",

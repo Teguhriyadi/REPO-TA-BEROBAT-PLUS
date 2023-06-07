@@ -19,19 +19,12 @@ import axios from 'axios';
 import { baseUrl, colors } from '../../../../utils';
 import Geolocation from '@react-native-community/geolocation';
 import Heading from '../../../../components/Heading';
-import DropDownPicker from 'react-native-dropdown-picker';
 
 const BuatJadwal = ({ navigation, route }) => {
   const [dataPribadi, setDataPribadi] = useState({});
   const [rumah_sakit, setRumahSakit] = useState(null);
   const [spesialis, setSpesialis] = useState({});
   const [showIndicator, setShowIndicator] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    {label: 'Perawat', value: 'perawat'},
-    {label: 'Dokter', value: 'dokter'}
-  ]);
 
   useEffect(() => {
     const debounceTimeout = setTimeout(() => {
@@ -122,21 +115,6 @@ const BuatJadwal = ({ navigation, route }) => {
     <View style={styles.backgroundBelakang}>
       <StatusBarComponent />
       <Heading navigasi={() => navigation.navigate(Navigasi.MAIN_APP)} textHeading={"Buat Janji Ketemu Langsung"} />
-      <DropDownPicker 
-        open={open} 
-        value={value} 
-        items={items} 
-        setOpen={setOpen} 
-        setValue={setValue}
-        onSelectItem={(item) => {
-          console.log(item)
-        }}
-        setItems={setItems} 
-        placeholder='Silahkan Pilih'
-        textStyle={{fontSize: 14}}
-        containerStyle={{marginHorizontal: 10, width: 150, marginTop: 10}}
-        labelStyle={{fontWeight: 'bold'}}
-      />
       <View
         style={{
           marginHorizontal: 10,

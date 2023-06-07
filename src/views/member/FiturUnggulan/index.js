@@ -5,3 +5,4 @@ export * from './InformasiDetail';
 export * from './SpesialisDokter';
 export * from './LanjutkanPembayaran';
 export * from './BuatJanji/AllData';
+export * from "./Reservasi"
