@@ -6,14 +6,12 @@ import {
   PermissionsAndroid,
   ActivityIndicator,
   Image,
-  FlatList,
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
 import { colors } from '../../../utils/colors';
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
 import { getData } from '../../../utils';
-import Geocoder from 'react-native-geocoding';
 import Geolocation from '@react-native-community/geolocation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
@@ -29,8 +27,8 @@ const DashboardMember = ({ navigation }) => {
   const [artikel, setArtikel] = useState(null);
   const [kategori, setKategori] = useState(null);
   const [showIndicator, setShowIndicator] = useState(false);
-  const [produkData, setDataProduk] = useState(null);
-  const [keahlian, setKeahlian] = useState(null);
+  const [kategoriArtikel, setKategoriArtikel] = useState(null);
+  const [option, setoption] = useState(0);
 
   useEffect(() => {
     const getDataUserLocal = () => {
@@ -47,28 +45,10 @@ const DashboardMember = ({ navigation }) => {
       dataLokasi();
       dataartikel();
       dataKategori();
-      dataProduk();
-      dataKeahlian();
     });
 
     return () => clearTimeout(debounceTimeout);
   }, [dataPribadi.nama, dataPribadi.token]);
-
-  const dataProduk = async () => {
-    try {
-      const response = await axios({
-        url: `${baseUrl.url}/apotek/produk/data_produk`,
-        headers: {
-          Authorization: 'Bearer ' + dataPribadi.token
-        },
-        method: "GET"
-      })
-
-      setDataProduk(response.data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const dataartikel = async () => {
     try {
@@ -80,47 +60,38 @@ const DashboardMember = ({ navigation }) => {
         method: "GET"
       })
 
+      const promises = response.data.data.map(async (item) => {
+        const responsedata = await axios({
+          url: `${baseUrl.url}/master/grouping_artikel/${item.id_artikel}/get`,
+          headers: {
+            Authorization: 'Bearer ' + dataPribadi.token
+          },
+          method: "GET"
+        });
+
+        return responsedata.data.data;
+      });
+
+      const result = await Promise.all(promises);
+
       setArtikel(response.data.data);
+      setKategoriArtikel(result.flat());
     } catch (error) {
       console.log(error);
     }
   };
 
-  const dataKategori = () => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        await axios({
-          url: `${baseUrl.url}/master/kategori_artikel`,
-          headers: {
-            Authorization: 'Bearer ' + dataPribadi.token,
-          },
-          method: 'GET',
-        })
-          .then(response => {
-            setKategori(response.data.data);
-            setShowIndicator(true);
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      } catch (error) {
-        console.log(error);
-      }
-    });
-  };
-
-  const dataKeahlian = async () => {
+  const dataKategori = async () => {
+    setoption(0);
     try {
-      const datakeahlian = await axios({
-        url: `${baseUrl.url}/master/keahlian`,
+      const response = await axios({
+        url: `${baseUrl.url}/master/kategori_artikel`,
         headers: {
           Authorization: 'Bearer ' + dataPribadi.token
         },
         method: "GET"
       });
-
-      setKeahlian(datakeahlian.data.data);
-
+      setKategori(response.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -158,6 +129,10 @@ const DashboardMember = ({ navigation }) => {
       console.log(error);
     }
   };
+
+  const klikKategori = (id_kategori_artikel) => {
+    console.log(id_kategori_artikel);
+  }
 
   return (
     <View style={styles.background}>
@@ -265,71 +240,6 @@ const DashboardMember = ({ navigation }) => {
           />
         </View>
 
-        <View style={{ paddingHorizontal: 15 }}>
-          <Text style={styles.judulTextMenu}>Keahlian Dokter</Text>
-        </View>
-
-        <View style={{ marginHorizontal: 15 }}>
-          {keahlian == null ? (
-            <ActivityIndicator />
-          ) : (
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {keahlian.map((item) => {
-                return (
-                  <TouchableOpacity
-                    key={item.id_keahlian}
-                    onPress={() => {
-                      navigation.navigate(Navigasi.KEAHLIAN_DOKTER, {
-                        data: item
-                      })
-                    }}
-                  >
-                    <View style={{ marginHorizontal: 5, backgroundColor: 'white', elevation: 5, height: 150, width: 120, marginVertical: 5, borderRadius: 10, paddingHorizontal: 10 }}>
-                      <Image source={require("../../../assets/images/gambar-rs.jpg")} style={{ width: 100, height: 80, marginVertical: 10, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }} />
-                      <Text style={{ fontSize: 12, color: 'black', fontFamily: 'Poppins-Medium', fontWeight: 'bold', textAlign: 'center' }}>
-                        {item.nama_keahlian}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                )
-              })}
-            </ScrollView>
-          )}
-        </View>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            paddingTop: 10,
-            paddingHorizontal: 15,
-          }}>
-          <View
-            style={{
-              flex: 1,
-            }}>
-            <Text style={styles.judulTextMenu}>
-              Produk Yang Bisa Anda Pilih
-            </Text>
-          </View>
-        </View>
-
-        {produkData == null ? (
-          <ActivityIndicator />
-        ) : (
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {produkData.map((item) => {
-              return (
-                <View key={item.artikel} style={{marginLeft: 15, backgroundColor: 'white', borderRadius: 10, elevation: 5, height: 130, marginTop: 10, marginBottom: 5, borderRadius: 10, paddingHorizontal: 10, width: 150}} >
-                  <Image source={require("../../../assets/images/gambar-rs.jpg")} style={{width: '100%', height: 80, marginVertical: 10, borderRadius: 10}} />
-                  <Text style={{color: 'black', fontSize: 14, fontWeight: 'bold', fontFamily: 'Poppins-Medium'}}>
-                    {item.nama_produk}
-                  </Text>
-                </View>
-              )
-            })}
-          </ScrollView>
-        )}
-
         <View
           style={{
             flexDirection: 'row',
@@ -347,120 +257,83 @@ const DashboardMember = ({ navigation }) => {
           }} textButton={"Lihat Semua"} />
         </View>
 
-        {showIndicator ? (
-          <View style={{ marginLeft: 10, marginRight: 15 }}>
-            <FlatList
-              data={kategori}
-              horizontal
-              renderItem={({ item }) => (
-                <View
-                  style={{
-                    marginTop: 10,
-                    marginLeft: 5,
-                    backgroundColor:
-                      item.nama_kategori == 'Semua' ? 'blue' : 'white',
-                    borderColor:
-                      item.nama_kategori == 'Semua' ? 'gray' : 'blue',
-                    borderWidth: 1,
-                    borderRadius: 10,
-                    paddingHorizontal: 10,
-                    paddingVertical: 5,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Text
-                    style={{
-                      color: item.nama_kategori == 'Semua' ? 'white' : 'black',
-                      fontWeight: 'bold',
-                    }}>
-                    {item.nama_kategori}
-                  </Text>
-                </View>
-              )}
-            />
-          </View>
+        {kategori == null ? (
+          <ActivityIndicator size={"large"} />
         ) : (
-          <View
-            style={{
-              flex: 1,
-              marginHorizontal: 15,
-              flexDirection: 'row',
-            }}>
-            <TouchableOpacity style={[styles.buttonNotFound, { width: 120 }]} />
-            <TouchableOpacity style={[styles.buttonNotFound, { width: 120 }]} />
-            <TouchableOpacity style={[styles.buttonNotFound, { width: 70 }]} />
+          <View style={{ marginHorizontal: 10 }}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {kategori.map((item) => {
+                return (
+                  <TouchableOpacity onPress={() => {
+                    klikKategori(item.id_kategori_artikel)
+                  }}>
+                    <View
+                      style={[styles.viewkategori, item.nama_kategori == "Semua" ? styles.active : styles.non_active]}
+                      key={item.id_kategori_artikel}>
+                      <Text
+                        style={[styles.textkategori, item.nama_kategori == "Semua" ? styles.text_active : styles.non_active]}>
+                        {item.nama_kategori.toUpperCase()}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                )
+              })}
+            </ScrollView>
           </View>
         )}
 
         {artikel == null ? (
-          <ActivityIndicator />
+          <ActivityIndicator size={"large"} />
         ) : (
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {artikel.map((item) => {
               return (
-                <TouchableOpacity
-                  key={item.id_artikel}
-                  onPress={() => {
-                    navigation.replace(Navigasi.DETAIL_ARTIKEL, {
-                      data: item,
-                    });
-                  }}>
-                  <View style={styles.viewArtikel}>
-                    <View
-                      style={{ justifyContent: 'center', alignItems: 'center' }}>
-                      {item.foto == null ? (
-                        <Image
-                          source={require('../../../assets/images/gambar-rs.jpg')}
-                          resizeMode="cover"
-                          style={{ width: '100%', borderTopLeftRadius: 10, borderTopRightRadius: 10, height: 200, alignSelf: 'center' }}
-                        />
-                      ) : (
-                        <Image
-                          source={{ uri: item.foto }}
-                          resizeMode="cover"
-                          style={{
-                            width: '100%',
-                            height: 200,
-                            borderTopLeftRadius: 10,
-                            borderTopRightRadius: 10,
-                            alignSelf: 'center',
-                            borderTopLeftRadius: 10,
-                            borderTopRightRadius: 10,
-                          }}
-                        />
-                      )}
+                <TouchableOpacity key={item.id_artikel} onPress={() => {
+                  navigation.replace(Navigasi.DETAIL_ARTIKEL, {
+                    data: item
+                  })
+                }}>
+                  <View style={styles.viewartikel}>
+                    <View style={styles.viewimage}>
+                      <Image
+                        source={item.foto == null ? (require("../../../assets/images/gambar-rs.jpg")) : { uri: item.foto }}
+                        resizeMode='cover'
+                        style={styles.image}
+                      />
                     </View>
-                    <Text style={styles.judulArtikel}>{item.judul_artikel}</Text>
-                    <Text
-                      style={styles.deskripsi}
-                      numberOfLines={1}
-                      ellipsizeMode="tail">
+                    <Text style={styles.judulartikel} numberOfLines={1} ellipsizeMode={'tail'}>
+                      {item.judul_artikel}
+                    </Text>
+                    <Text style={styles.deskripsi} numberOfLines={1} ellipsizeMode={'tail'}>
                       {item.deskripsi}
                     </Text>
+                    {kategoriArtikel == null ? (
+                      <ActivityIndicator size={'large'} />
+                    ) : (
+                      <ScrollView horizontal showsHorizontalScrollIndicator={false} >
+                        {kategoriArtikel.map((datakategori) => {
+                          return (
+                            item.id_artikel == datakategori.get_artikel.id_artikel ? (
+                              <View key={datakategori.id_grouping_artikel} style={{ marginTop: 15, marginHorizontal: 10 }}>
+                                <View style={styles.kategori}>
+                                  <Text style={styles.textkategori}>
+                                    {datakategori.get_kategori_artikel.nama_kategori.toUpperCase()}
+                                  </Text>
+                                </View>
+                              </View>
+                            ) : (
+                              <View />
+                            )
+                          )
+                        })}
+                      </ScrollView>
+                    )}
                   </View>
                 </TouchableOpacity>
               )
             })}
           </ScrollView>
         )}
-        {/* {showIndicator ? (
-          <FlatList
-            data={artikel}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            renderItem={({ item }) => (
-              
-            )}
-          />
-        ) : (
-          <View style={{ marginHorizontal: 15 }}>
-            <View style={styles.viewCard}>
-              <View style={styles.imageNotFound} />
-              <View style={styles.textNotFound} />
-              <View style={styles.subTextNotFound} />
-            </View>
-          </View>
-        )} */}
       </ScrollView>
     </View>
   );
@@ -521,25 +394,6 @@ const styles = StyleSheet.create({
     borderColor: '#D8D8D8',
     borderWidth: 2,
   },
-  viewArtikel: {
-    backgroundColor: 'white',
-    height: 300,
-    width: 300,
-    elevation: 5,
-    marginTop: 20,
-    marginHorizontal: 15,
-    marginBottom: 20,
-    borderRadius: 10,
-  },
-  judulArtikel: {
-    color: 'black',
-    paddingHorizontal: 10,
-    paddingTop: 10,
-    fontWeight: 'bold',
-    textAlign: 'justify',
-    fontSize: 16,
-    fontFamily: 'Poppins-Medium'
-  },
   deskripsi: {
     color: 'gray',
     paddingHorizontal: 10,
@@ -576,46 +430,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginHorizontal: 10,
   },
-  backgroundImageKosong: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.backgroundEmpty,
-    height: 100,
-  },
-  textImageKosong: {
-    backgroundColor: colors.backgroundEmpty,
-    height: 20,
-    width: 70,
-    borderRadius: 5,
-    marginTop: 10,
-    justifyContent: 'center',
-    marginHorizontal: 25,
-  },
-  textImageKosongKanan: {
-    backgroundColor: colors.backgroundEmpty,
-    height: 20,
-    width: 40,
-    borderRadius: 5,
-    marginTop: 10,
-    justifyContent: 'center',
-    marginHorizontal: 10,
-  },
-  buttonNotFound: {
-    marginTop: 10,
-    backgroundColor: colors.backgroundEmpty,
-    height: 30,
-    borderRadius: 5,
-    marginRight: 10,
-  },
-  produkNotFound: {
-    marginTop: 10,
-    marginHorizontal: 15,
-    backgroundColor: colors.backgroundEmpty,
-    borderWidth: 1,
-    borderColor: colors.backgroundEmpty,
-    height: 120,
-    borderRadius: 10,
-  },
   viewCard: {
     marginTop: 15,
     backgroundColor: 'white',
@@ -624,26 +438,86 @@ const styles = StyleSheet.create({
     width: 200,
     borderRadius: 10,
   },
-  imageNotFound: {
-    margin: 10,
-    backgroundColor: colors.backgroundEmpty,
+  viewartikel: {
+    backgroundColor: 'white',
+    height: 320,
+    width: 300,
+    elevation: 5,
+    marginTop: 20,
+    marginHorizontal: 15,
+    marginBottom: 20,
+    borderRadius: 10,
+  },
+  viewimage: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  image: {
+    width: '100%',
     height: 200,
-    borderRadius: 5,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    alignSelf: 'center',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
-  textNotFound: {
-    margin: 10,
-    backgroundColor: colors.backgroundEmpty,
-    height: 20,
-    width: 150,
-    borderRadius: 5,
+  judulartikel: {
+    color: 'black',
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    fontWeight: 'bold',
+    textAlign: 'justify',
+    fontSize: 16,
+    fontFamily: 'Poppins-Medium'
   },
-  subTextNotFound: {
-    marginHorizontal: 10,
-    backgroundColor: colors.backgroundEmpty,
-    height: 20,
-    width: 170,
-    borderRadius: 5,
+  deskripsi: {
+    color: 'gray',
+    paddingHorizontal: 10,
+    textAlign: 'justify',
   },
+  kategori: {
+    borderColor: 'blue',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingVertical: 5,
+    alignItems: 'center'
+  },
+  textkategori: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    fontFamily: 'Poppins-Medium',
+    color: 'blue',
+    paddingHorizontal: 10
+  },
+  viewkategori: {
+    marginTop: 10,
+    marginLeft: 5,
+    backgroundColor: 'blue',
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  active: {
+    backgroundColor: 'blue',
+  },
+  non_active: {
+    backgroundColor: 'white',
+  },
+  text_active: {
+    fontWeight: 'bold',
+    color: 'white',
+    fontSize: 12,
+    fontFamily: 'Poppins-Medium',
+  },
+  text_non_active: {
+    fontWeight: "bold",
+    color: 'black',
+    fontSize: 12,
+    fontFamily: 'Poppins-Medium'
+  }
 });
 
 export default DashboardMember;

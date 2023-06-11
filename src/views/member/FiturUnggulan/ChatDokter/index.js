@@ -49,6 +49,7 @@ const ChatDokter = ({ navigation, route }) => {
   };
 
   const listDokter = async () => {
+    setOption(0);
     try {
       const response = await axios({
         url: `${baseUrl.url}/akun/dokter/data`,
@@ -169,17 +170,21 @@ const ChatDokter = ({ navigation, route }) => {
                     {keahlian == null ? (
                       <ActivityIndicator />
                     ) : (
-                      keahlian.map((datakeahlian) => {
-                        return (
-                          item.id_dokter == datakeahlian.get_dokter.id_dokter ? (
-                            <Text style={{ color: 'black' }}>
-                              {datakeahlian.get_keahlian.nama_keahlian}
-                            </Text>
-                          ) : (
-                            <View />
+                      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                        {keahlian.map((datakeahlian) => {
+                          return (
+                            item.id_dokter == datakeahlian.get_dokter.id_dokter ? (
+                              <View key={datakeahlian.id_dokter_keahlian} style={{borderColor: 'blue', borderWidth: 1, paddingHorizontal: 10, borderRadius:5, paddingVertical: 3, alignItems: 'center', marginRight: 5, marginTop: 10}}>
+                                <Text style={{ color: 'blue', fontWeight: 'bold', fontFamily: 'Poppins-Medium', fontSize: 12 }}>
+                                  {datakeahlian.get_keahlian.nama_keahlian}
+                                </Text>
+                              </View>
+                            ) : (
+                              <View />
+                            )
                           )
-                        )
-                      })
+                        })}
+                      </ScrollView>
                     )}
                     <View style={{ flexDirection: 'row', marginTop: 15 }}>
                       <View style={{ width: 70, backgroundColor: colors.backgroundEmpty, borderRadius: 5, padding: 3, alignItems: 'center' }}>
@@ -342,7 +347,7 @@ const styles = StyleSheet.create({
     color: 'blue',
     fontSize: 14,
     fontWeight: 'bold'
-  }
+  },
 });
 
 export default ChatDokter;
