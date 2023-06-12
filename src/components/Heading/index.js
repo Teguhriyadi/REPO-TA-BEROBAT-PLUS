@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.backgroundPutih,
         flexDirection: 'row',
         padding: 10,
-        height: 50,
+        height: 60,
         elevation: 5,
         justifyContent: 'flex-start',
         alignItems: 'center'
@@ -38,7 +38,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontFamily: 'Poppins-Medium',
         color: 'black',
-        marginLeft: 10
+        marginLeft: 10,
+        marginRight: 10,
+        textAlign: 'justify'
     }
 });
 

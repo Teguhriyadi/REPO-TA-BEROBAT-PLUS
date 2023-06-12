@@ -61,7 +61,7 @@ const ChatDokter = ({ navigation, route }) => {
 
       const promises = response.data.data.map(async (item) => {
         const responsedata = await axios({
-          url: `${baseUrl.url}/master/dokter_keahlian/${item.id_dokter}`,
+          url: `${baseUrl.url}/master/ahli/keahlian/master/${item.user_id.id}/get`,
           headers: {
             Authorization: 'Bearer ' + dataPribadi.token
           },
@@ -91,7 +91,22 @@ const ChatDokter = ({ navigation, route }) => {
         method: "GET"
       });
 
+      const promises = response.data.data.map(async (item) => {
+        const responsedata = await axios({
+          url: `${baseUrl.url}/master/ahli/keahlian/master/${item.user.id}/get`,
+          headers: {
+            Authorization: 'Bearer ' + dataPribadi.token
+          },
+          method: "GET"
+        });
+
+        return responsedata.data.data;
+      });
+
+      const result = await Promise.all(promises);
+
       setListDataPerawat(response.data.data);
+      setListKeahlian(result.flat());
     } catch (error) {
       console.log(error);
     }
@@ -168,19 +183,19 @@ const ChatDokter = ({ navigation, route }) => {
                       {item.user_id.nama}
                     </Text>
                     {keahlian == null ? (
-                      <ActivityIndicator />
+                      <ActivityIndicator size={"large"} />
                     ) : (
                       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                         {keahlian.map((datakeahlian) => {
                           return (
-                            item.id_dokter == datakeahlian.get_dokter.id_dokter ? (
-                              <View key={datakeahlian.id_dokter_keahlian} style={{borderColor: 'blue', borderWidth: 1, paddingHorizontal: 10, borderRadius:5, paddingVertical: 3, alignItems: 'center', marginRight: 5, marginTop: 10}}>
-                                <Text style={{ color: 'blue', fontWeight: 'bold', fontFamily: 'Poppins-Medium', fontSize: 12 }}>
-                                  {datakeahlian.get_keahlian.nama_keahlian}
+                            item.user_id.id == datakeahlian.user.id ? (
+                              <View key={datakeahlian.id_master} style={styles.keahlian}>
+                                <Text style={styles.textkeahlian}>
+                                  {datakeahlian.keahlian_id.nama_keahlian.toUpperCase()}
                                 </Text>
                               </View>
                             ) : (
-                              <View />
+                              <View key={datakeahlian.id_master} />
                             )
                           )
                         })}
@@ -227,11 +242,27 @@ const ChatDokter = ({ navigation, route }) => {
                     </View>
                     <View style={{ flex: 2 }}>
                       <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
-                        {item.get_user.nama}
+                        {item.user.nama}
                       </Text>
-                      <Text style={{ color: 'black', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
-                        Perawat
-                      </Text>
+                      {keahlian == null ? (
+                        <ActivityIndicator/>
+                      ) : (
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                          {keahlian.map((datakeahlian) => {
+                            return (
+                              item.user.id == datakeahlian.user.id ? (
+                                <View key={datakeahlian.id_master} style={styles.keahlian}>
+                                <Text style={styles.textkeahlian}>
+                                  {datakeahlian.keahlian_id.nama_keahlian.toUpperCase()}
+                                </Text>
+                              </View>
+                              ) : (
+                                <View key={datakeahlian.id_master} />
+                              )
+                            )
+                          })}
+                        </ScrollView>
+                      ) }
                       <View style={{ flexDirection: 'row', marginTop: 15 }}>
                         <View style={{ width: 70, backgroundColor: colors.backgroundEmpty, borderRadius: 5, padding: 3, alignItems: 'center' }}>
                           <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
@@ -348,6 +379,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold'
   },
+  keahlian: {
+    borderColor: 'blue',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginTop: 5,
+    paddingVertical: 3,
+    paddingHorizontal: 5,
+    marginRight: 5
+  },
+  textkeahlian: {
+    color: 'blue',
+    fontSize: 10,
+    fontFamily: 'Poppins-Medium'
+  }
 });
 
 export default ChatDokter;

@@ -26,9 +26,8 @@ const DashboardMember = ({ navigation }) => {
   const [dataPribadi, setDataPribadi] = useState({});
   const [artikel, setArtikel] = useState(null);
   const [kategori, setKategori] = useState(null);
-  const [showIndicator, setShowIndicator] = useState(false);
   const [kategoriArtikel, setKategoriArtikel] = useState(null);
-  const [option, setoption] = useState(0);
+  const [option, setoption] = useState("KT-A-2003061");
 
   useEffect(() => {
     const getDataUserLocal = () => {
@@ -82,7 +81,7 @@ const DashboardMember = ({ navigation }) => {
   };
 
   const dataKategori = async () => {
-    setoption(0);
+    setoption("KT-A-2003061");
     try {
       const response = await axios({
         url: `${baseUrl.url}/master/kategori_artikel`,
@@ -130,8 +129,18 @@ const DashboardMember = ({ navigation }) => {
     }
   };
 
-  const klikKategori = (id_kategori_artikel) => {
-    console.log(id_kategori_artikel);
+  const klikKategori = async (id_kategori_artikel) => {
+    setoption(id_kategori_artikel);
+
+    const response = await axios({
+      url: `${baseUrl.url}/master/grouping_artikel/${id_kategori_artikel}/kategori`,
+      headers: {
+        Authorization: 'Bearer ' + dataPribadi.token
+      },
+      method: "GET"
+    });
+
+    setArtikel(response.data.data)
   }
 
   return (
@@ -264,14 +273,14 @@ const DashboardMember = ({ navigation }) => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               {kategori.map((item) => {
                 return (
-                  <TouchableOpacity onPress={() => {
+                  <TouchableOpacity key={item.id_kategori_artikel} onPress={() => {
                     klikKategori(item.id_kategori_artikel)
                   }}>
                     <View
-                      style={[styles.viewkategori, item.nama_kategori == "Semua" ? styles.active : styles.non_active]}
-                      key={item.id_kategori_artikel}>
+                      style={[styles.viewkategori, item.id_kategori_artikel == option ? styles.active : styles.non_active]}
+                      >
                       <Text
-                        style={[styles.textkategori, item.nama_kategori == "Semua" ? styles.text_active : styles.non_active]}>
+                        style={[styles.textkategori, item.id_kategori_artikel == option ? styles.text_active : styles.non_active]}>
                         {item.nama_kategori.toUpperCase()}
                       </Text>
                     </View>
@@ -313,16 +322,16 @@ const DashboardMember = ({ navigation }) => {
                       <ScrollView horizontal showsHorizontalScrollIndicator={false} >
                         {kategoriArtikel.map((datakategori) => {
                           return (
-                            item.id_artikel == datakategori.get_artikel.id_artikel ? (
+                            item.id_artikel == datakategori.id_artikel ? (
                               <View key={datakategori.id_grouping_artikel} style={{ marginTop: 15, marginHorizontal: 10 }}>
                                 <View style={styles.kategori}>
                                   <Text style={styles.textkategori}>
-                                    {datakategori.get_kategori_artikel.nama_kategori.toUpperCase()}
+                                    {datakategori.nama_kategori.toUpperCase()}
                                   </Text>
                                 </View>
                               </View>
                             ) : (
-                              <View />
+                              <View key={datakategori.id_grouping_artikel} />
                             )
                           )
                         })}
