@@ -18,12 +18,18 @@ import { baseUrl } from '../../../../utils';
 import Heading from '../../../../components/Heading';
 
 const ChatDokter = ({ navigation, route }) => {
+
+  const [form, setForm] = useState({
+    nama_keahlian: '',
+  });
+
   const [user, setUser] = useState({});
   const [dataPribadi, setDataPribadi] = useState({});
   const [listDataDokter, setListDataDokter] = useState(null);
   const [listDataPerawat, setListDataPerawat] = useState(null);
   const [keahlian, setListKeahlian] = useState(null);
   const [cekoption, setOption] = useState(0);
+  const [showindicator, setshowindicator] = useState(false);
 
   useEffect(() => {
     const debounceTimeout = setTimeout(() => {
@@ -112,6 +118,47 @@ const ChatDokter = ({ navigation, route }) => {
     }
   }
 
+  const textinput = async (value) => {
+    setForm({...form, nama_keahlian: value});
+    if (value == "") {
+      console.log("Kosong");
+    } else {
+      const response = await axios({
+        url: `${baseUrl.url}/master/cari/keahlian`,
+        headers: {
+          Authorization: 'Bearer ' + dataPribadi.token
+        },
+        method: "POST",
+        data: {
+          nama_keahlian: form.nama_keahlian,
+          role: cekoption
+        }
+      });
+
+      setshowindicator(true);
+      
+      if (response.data.status == 200) {
+        if (cekoption == 0) {
+          setTimeout(() => {
+            setshowindicator(false);
+            setListDataDokter(response.data.data);
+          }, 5000);
+        } else if (cekoption == 1) {
+          setTimeout(() => {
+            setshowindicator(false);
+            setListDataPerawat(response.data.data);
+          }, 5000);
+        }
+      }
+    
+      if (response.data.status == 200) {
+        
+      } else {
+        
+      }
+    }
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <StatusBarComponent />
@@ -126,6 +173,8 @@ const ChatDokter = ({ navigation, route }) => {
         </View>
         <View style={styles.contentSearch}>
           <TextInput
+            value={form.nama_keahlian}
+            onChangeText={textinput} 
             placeholder="Ex: Dr. Mohammad"
             placeholderTextColor="gray"
             style={{
@@ -167,102 +216,43 @@ const ChatDokter = ({ navigation, route }) => {
           </Text>
         </View>
       </View>
-      {cekoption == 0 ? (
-        listDataDokter == null ? (
-          <ActivityIndicator size={"large"} fontSize="20" />
-        ) : (
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {listDataDokter.map((item) => {
-              return (
-                <View style={{ marginHorizontal: 10, marginVertical: 10, backgroundColor: 'white', elevation: 5, padding: 10, borderRadius: 5, flexDirection: 'row' }} key={item.id_dokter}>
-                  <View style={{ flex: 1, justifyContent: 'center' }}>
-                    <Image source={require("../../../../assets/images/people.png")} style={{ width: 100, height: 100 }} />
-                  </View>
-                  <View style={{ flex: 2 }}>
-                    <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
-                      {item.user_id.nama}
-                    </Text>
-                    {keahlian == null ? (
-                      <ActivityIndicator size={"large"} />
-                    ) : (
-                      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                        {keahlian.map((datakeahlian) => {
-                          return (
-                            item.user_id.id == datakeahlian.user.id ? (
-                              <View key={datakeahlian.id_master} style={styles.keahlian}>
-                                <Text style={styles.textkeahlian}>
-                                  {datakeahlian.keahlian_id.nama_keahlian.toUpperCase()}
-                                </Text>
-                              </View>
-                            ) : (
-                              <View key={datakeahlian.id_master} />
-                            )
-                          )
-                        })}
-                      </ScrollView>
-                    )}
-                    <View style={{ flexDirection: 'row', marginTop: 15 }}>
-                      <View style={{ width: 70, backgroundColor: colors.backgroundEmpty, borderRadius: 5, padding: 3, alignItems: 'center' }}>
-                        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
-                          77 Tahun
-                        </Text>
-                      </View>
-                      <View style={{ width: 70, backgroundColor: colors.backgroundEmpty, borderRadius: 5, marginLeft: 5, padding: 3, alignItems: 'center' }}>
-                        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
-                          <Icon name="thumbs-up" style={{ color: 'white', fontWeight: 'bold' }} /> 100 %
-                        </Text>
-                      </View>
-                    </View>
-                    <View style={{ marginTop: 20, alignItems: 'flex-end' }}>
-                      <TouchableOpacity style={{ backgroundColor: 'purple', width: 100, borderRadius: 5, paddingVertical: 5, alignItems: 'center' }} onPress={() => navigation.navigate(Navigasi.DETAIL_CHAT, {
-                        data: item
-                      })}>
-                        <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
-                          KONSULTASI
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </View>
-              )
-            })}
-          </ScrollView>
-        )
+      {showindicator ? (
+        <ActivityIndicator size={"large"} />
       ) : (
-        cekoption == 1 ? (
-          listDataPerawat == null ? (
-            <ActivityIndicator size={"large"} color={"black"} />
+        cekoption == 0 ? (
+          listDataDokter == null ? (
+            <ActivityIndicator size={"large"} fontSize="20" />
           ) : (
             <ScrollView showsVerticalScrollIndicator={false}>
-              {listDataPerawat && listDataPerawat.map((item) => {
+              {listDataDokter.map((item) => {
                 return (
-                  <View style={{ marginHorizontal: 10, marginVertical: 10, backgroundColor: 'white', elevation: 5, padding: 10, borderRadius: 5, flexDirection: 'row' }} key={item.id_perawat}>
+                  <View style={{ marginHorizontal: 10, marginVertical: 10, backgroundColor: 'white', elevation: 5, padding: 10, borderRadius: 5, flexDirection: 'row' }} key={item.id_dokter}>
                     <View style={{ flex: 1, justifyContent: 'center' }}>
                       <Image source={require("../../../../assets/images/people.png")} style={{ width: 100, height: 100 }} />
                     </View>
                     <View style={{ flex: 2 }}>
                       <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
-                        {item.user.nama}
+                        {item.user_id.nama}
                       </Text>
                       {keahlian == null ? (
-                        <ActivityIndicator/>
+                        <ActivityIndicator size={"large"} />
                       ) : (
                         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                           {keahlian.map((datakeahlian) => {
                             return (
-                              item.user.id == datakeahlian.user.id ? (
+                              item.user_id.id == datakeahlian.user.id ? (
                                 <View key={datakeahlian.id_master} style={styles.keahlian}>
-                                <Text style={styles.textkeahlian}>
-                                  {datakeahlian.keahlian_id.nama_keahlian.toUpperCase()}
-                                </Text>
-                              </View>
+                                  <Text style={styles.textkeahlian}>
+                                    {datakeahlian.keahlian_id.nama_keahlian.toUpperCase()}
+                                  </Text>
+                                </View>
                               ) : (
                                 <View key={datakeahlian.id_master} />
                               )
                             )
                           })}
                         </ScrollView>
-                      ) }
+                      )}
                       <View style={{ flexDirection: 'row', marginTop: 15 }}>
                         <View style={{ width: 70, backgroundColor: colors.backgroundEmpty, borderRadius: 5, padding: 3, alignItems: 'center' }}>
                           <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
@@ -290,12 +280,74 @@ const ChatDokter = ({ navigation, route }) => {
               })}
             </ScrollView>
           )
-
         ) : (
-          <ActivityIndicator size={"large"} color={"black"} />
+          cekoption == 1 ? (
+            listDataPerawat == null ? (
+              <ActivityIndicator size={"large"} color={"black"} />
+            ) : (
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {listDataPerawat && listDataPerawat.map((item) => {
+                  return (
+                    <View style={{ marginHorizontal: 10, marginVertical: 10, backgroundColor: 'white', elevation: 5, padding: 10, borderRadius: 5, flexDirection: 'row' }} key={item.id_perawat}>
+                      <View style={{ flex: 1, justifyContent: 'center' }}>
+                        <Image source={require("../../../../assets/images/people.png")} style={{ width: 100, height: 100 }} />
+                      </View>
+                      <View style={{ flex: 2 }}>
+                        <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
+                          {item.user.nama}
+                        </Text>
+                        {keahlian == null ? (
+                          <ActivityIndicator/>
+                        ) : (
+                          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                            {keahlian.map((datakeahlian) => {
+                              return (
+                                item.user.id == datakeahlian.user.id ? (
+                                  <View key={datakeahlian.id_master} style={styles.keahlian}>
+                                  <Text style={styles.textkeahlian}>
+                                    {datakeahlian.keahlian_id.nama_keahlian.toUpperCase()}
+                                  </Text>
+                                </View>
+                                ) : (
+                                  <View key={datakeahlian.id_master} />
+                                )
+                              )
+                            })}
+                          </ScrollView>
+                        ) }
+                        <View style={{ flexDirection: 'row', marginTop: 15 }}>
+                          <View style={{ width: 70, backgroundColor: colors.backgroundEmpty, borderRadius: 5, padding: 3, alignItems: 'center' }}>
+                            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
+                              77 Tahun
+                            </Text>
+                          </View>
+                          <View style={{ width: 70, backgroundColor: colors.backgroundEmpty, borderRadius: 5, marginLeft: 5, padding: 3, alignItems: 'center' }}>
+                            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
+                              <Icon name="thumbs-up" style={{ color: 'white', fontWeight: 'bold' }} /> 100 %
+                            </Text>
+                          </View>
+                        </View>
+                        <View style={{ marginTop: 20, alignItems: 'flex-end' }}>
+                          <TouchableOpacity style={{ backgroundColor: 'purple', width: 100, borderRadius: 5, paddingVertical: 5, alignItems: 'center' }} onPress={() => navigation.navigate(Navigasi.DETAIL_CHAT, {
+                            data: item
+                          })}>
+                            <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
+                              KONSULTASI
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </View>
+                  )
+                })}
+              </ScrollView>
+            )
+  
+          ) : (
+            <ActivityIndicator size={"large"} color={"black"} />
+          )
         )
-      )}
-
+      ) }
     </View>
   );
 };

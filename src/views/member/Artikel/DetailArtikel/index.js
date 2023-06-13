@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Image, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import StatusBarComponent from '../../../../components/StatusBar/StatusBarComponent';
 import Heading from '../../../../components/Heading';
 import { baseUrl, getData } from '../../../../utils';
 import axios from 'axios';
+import Navigasi from '../../../../partials/navigasi';
 
 const Detail = ({ navigation, route }) => {
 
   const getArtikel = route.params;
 
   const [dataPribadi, setDataPribadi] = useState({});
+  const [kategori, setkategori] = useState(null);
 
   useEffect(() => {
     const debounceTimeout = setTimeout(() => {
@@ -36,7 +38,7 @@ const Detail = ({ navigation, route }) => {
         method: "GET"
       })
 
-      console.log(response.data.data);
+      setkategori(response.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -46,19 +48,35 @@ const Detail = ({ navigation, route }) => {
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <StatusBarComponent />
       <Heading navigasi={() => {
-        navigation.goBack();
+        navigation.navigate(Navigasi.MAIN_APP);
       }} textHeading={getArtikel.data.judul_artikel} />
       <ScrollView>
         <View style={{ paddingHorizontal: 10, paddingVertical: 10 }}>
           <Text style={styles.judul}>
             {getArtikel.data.judul_artikel}
           </Text>
-          <Text style={{ color: 'black', paddingTop: 10 }}>#Mohammad</Text>
+          {kategori == null ? (
+            <ActivityIndicator size={"large"} />
+          ) : (
+            <ScrollView ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {kategori.map((item) => {
+                return (
+                  <View key={item.id_grouping_artikel} style={styles.cardkategori}>
+                    <Text style={styles.textkategori}>
+                      {item.nama_kategori.toUpperCase()}
+                    </Text>
+                  </View>
+                )
+              })}
+            </ScrollView>
+          ) }
           <View style={{ flexDirection: 'row', paddingTop: 10 }}>
-            <Text style={{ color: 'purple' }}>
+            <Text style={styles.user}>
               {getArtikel.data.get_user.nama} :
             </Text>
-            <Text style={{ color: 'gray' }}> 22 Maret 2023</Text>
+            <Text style={styles.user}>
+              {getArtikel.data.tanggal}
+            </Text>
           </View>
           <View
             style={{
@@ -99,7 +117,29 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     color: 'black',
     textAlign: 'justify'
-  }
+  },
+  cardkategori: {
+    marginTop: 10,
+    borderColor: 'blue',
+    borderWidth: 1,
+    elevation: 5,
+    backgroundColor: 'white',
+    borderRadius: 5,
+    marginRight: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5
+  },
+  textkategori: {
+    color: 'blue',
+    fontSize: 10,
+    fontWeight: 'bold'
+  },
+  user: {
+    color: 'blue',
+    fontSize: 14,
+    fontWeight: 'bold',
+    fontFamily: 'Poppins-Medium'
+  },
 });
 
 export default Detail;

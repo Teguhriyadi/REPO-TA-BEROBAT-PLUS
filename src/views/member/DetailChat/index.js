@@ -1,44 +1,37 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Navigasi from '../../../partials/navigasi';
-import {colors} from '../../../utils/colors';
-import {ImageBackground} from 'react-native';
+import { colors } from '../../../utils/colors';
+import { ImageBackground } from 'react-native';
+import Button from '../../../components/Button';
 
-const DetailChatDokter = ({navigation, route}) => {
+const DetailChatDokter = ({ navigation, route }) => {
   const getDokter = route.params;
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={styles.background}>
       <StatusBarComponent />
       <ImageBackground
         source={require('../../../assets/images/people.png')}
-        style={{width: '100%', height: 250}}
+        style={{ width: '100%', height: 250 }}
         resizeMode="cover"
       />
-      <View style={{position: 'absolute'}}>
+      <View style={{ position: 'absolute' }}>
         <TouchableOpacity
           onPress={() => {
             navigation.goBack();
           }}>
-          <View
-            style={{
-              borderColor: 'black',
-              borderWidth: 1,
-              marginLeft: 10,
-              marginTop: 10,
-              padding: 10,
-              borderRadius: 50,
-            }}>
-            <Icon name="arrow-back" style={{fontSize: 20, color: 'black'}} />
+          <View style={styles.viewicon}>
+            <Icon name="arrow-back" style={{ fontSize: 20, color: 'black' }} />
           </View>
         </TouchableOpacity>
       </View>
       <View
         style={{
           flex: 1,
-          backgroundColor: 'green',
+          backgroundColor: 'blue',
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
         }}>
@@ -53,31 +46,17 @@ const DetailChatDokter = ({navigation, route}) => {
           Detail Data Dokter
         </Text>
         <View
-          style={{
-            flex: 1,
-            marginTop: 10,
-            backgroundColor: '#FDFDFD',
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-            paddingHorizontal: 15,
-            paddingVertical: 10,
-          }}>
-          <View style={{flex: 1}}>
-            <Text
-              style={{
-                color: 'black',
-                fontSize: 20,
-                fontWeight: 'bold',
-                textAlign: 'justify',
-              }}>
+          style={styles.carddetail}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.nama}>
               {getDokter.data.user_id.nama}
             </Text>
-            <Text style={{color: 'black', fontSize: 14}}>
+            <Text style={{ color: 'black', fontSize: 14 }}>
               {getDokter.data.user_id.kelas == 1
                 ? 'Dokter Spesialis'
                 : 'Dokter Umum'}
             </Text>
-            <View style={{flexDirection: 'row', marginTop: 10}}>
+            <View style={{ flexDirection: 'row', marginTop: 10 }}>
               <View
                 style={{
                   backgroundColor: colors.backgroundDasarBelakang,
@@ -115,15 +94,15 @@ const DetailChatDokter = ({navigation, route}) => {
                 </Text>
               </View>
             </View>
-            <View style={{marginTop: 20}}>
-              <View style={{flexDirection: 'row'}}>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <View style={{ marginTop: 20 }}>
+              <View style={{ flexDirection: 'row' }}>
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                   <Icon
                     name="md-school"
-                    style={{fontSize: 20, color: 'black'}}
+                    style={{ fontSize: 20, color: 'black' }}
                   />
                 </View>
-                <View style={{marginLeft: 10}}>
+                <View style={{ marginLeft: 10 }}>
                   <Text
                     style={{
                       color: 'black',
@@ -145,14 +124,14 @@ const DetailChatDokter = ({navigation, route}) => {
                 </View>
               </View>
 
-              <View style={{flexDirection: 'row', marginTop: 20}}>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                   <Icon
                     name="business"
-                    style={{fontSize: 20, color: 'black'}}
+                    style={{ fontSize: 20, color: 'black' }}
                   />
                 </View>
-                <View style={{marginLeft: 10}}>
+                <View style={{ marginLeft: 10 }}>
                   <Text
                     style={{
                       color: 'black',
@@ -174,14 +153,14 @@ const DetailChatDokter = ({navigation, route}) => {
                 </View>
               </View>
 
-              <View style={{flexDirection: 'row', marginTop: 20}}>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                   <Icon
                     name="create-outline"
-                    style={{fontSize: 20, color: 'black'}}
+                    style={{ fontSize: 20, color: 'black' }}
                   />
                 </View>
-                <View style={{marginLeft: 10}}>
+                <View style={{ marginLeft: 10 }}>
                   <Text
                     style={{
                       color: 'black',
@@ -207,34 +186,52 @@ const DetailChatDokter = ({navigation, route}) => {
           <View
             style={{
               justifyContent: 'flex-end',
-              backgroundColor: 'green',
+              backgroundColor: 'blue',
               borderRadius: 10,
             }}>
-            <TouchableOpacity onPress={() => {
+            <Button onpress={() => {
               navigation.navigate(Navigasi.CHATING, {
                 data: getDokter
               })
-            }}
-              style={{
-                paddingVertical: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 14,
-                  fontFamily: 'Poppins-Medium',
-                  fontWeight: 'bold',
-                }}>
-                Lanjutkan Pembayaran
-              </Text>
-            </TouchableOpacity>
+            }} textbutton={"Lanjutkan Pembayaran"} />
           </View>
         </View>
       </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    backgroundColor: 'white'
+  },
+
+  viewicon: {
+    borderColor: 'black',
+    borderWidth: 1,
+    marginLeft: 10,
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 50,
+  },
+
+  carddetail: {
+    flex: 1,
+    marginTop: 10,
+    backgroundColor: '#FDFDFD',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+  },
+
+  nama: {
+    color: 'black',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'justify',
+  }
+})
 
 export default DetailChatDokter;
