@@ -7,7 +7,8 @@ import {
   Image,
   PermissionsAndroid,
   ScrollView,
-  TextInput
+  TextInput,
+  ActivityIndicator
 } from 'react-native';
 import { colors, baseUrl, getData } from '../../../../../utils';
 import axios from 'axios';
@@ -20,7 +21,6 @@ import StatusBarComponent from '../../../../../components/StatusBar/StatusBarCom
 const AllData = ({ navigation }) => {
   const [dataPribadi, setDataPribadi] = useState({});
   const [rumah_sakit, setRumahSakit] = useState(null);
-  const [showIndicator, setShowIndicator] = useState(false);
 
   useEffect(() => {
     const debounceTimeout = setTimeout(() => {
@@ -58,7 +58,7 @@ const AllData = ({ navigation }) => {
             .get(url)
             .then((response) => {
               axios({
-                url: `${baseUrl.url}/master/rumah_sakit/data/find_nearest`,
+                url: `${baseUrl.url}/master/rumah_sakit/data/find_nearest/all`,
                 headers: {
                   Authorization: 'Bearer ' + dataPribadi.token
                 },
@@ -68,9 +68,7 @@ const AllData = ({ navigation }) => {
                   longitude: longitude
                 }
               }).then((response) => {
-                console.log(response.data.data);
-                setRumahSakit(response.data.data);
-                setShowIndicator(true);
+                setRumahSakit(response.data);
               }).catch((error) => {
                 console.log(error);
               })
@@ -110,175 +108,44 @@ const AllData = ({ navigation }) => {
         </View>
       </View>
       {rumah_sakit == null ? (
-        <>
-          <View style={styles.jarakHorizontal}>
-            <View style={{ flexDirection: 'row' }}>
-              <View style={styles.imageEmpty} />
-              <View style={{ flex: 2 }}>
-                <View style={styles.namaRsEmpty} />
-                <View style={styles.kategoriRsEmpty} />
-                <View style={{ flexDirection: 'row' }}>
-                  <View style={{ flex: 1 }}>
-                    <View style={styles.alamatRsEmpty} />
-                  </View>
-                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                    <View style={styles.KMEmpty} />
-                  </View>
-                </View>
-                <View style={{ flexDirection: 'row', marginTop: 20 }}>
-                  <View style={{ flex: 1 }}>
-                    <View style={styles.ratingEmpty} />
-                  </View>
-                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                    <View style={styles.buttonEmpty} />
-                  </View>
-                </View>
-              </View>
-            </View>
-          </View>
-
-          <View style={styles.jarakHorizontal}>
-            <View style={{ flexDirection: 'row' }}>
-              <View style={styles.imageEmpty} />
-              <View style={{ flex: 2 }}>
-                <View style={styles.namaRsEmpty} />
-                <View style={styles.kategoriRsEmpty} />
-                <View style={{ flexDirection: 'row' }}>
-                  <View style={{ flex: 1 }}>
-                    <View style={styles.alamatRsEmpty} />
-                  </View>
-                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                    <View style={styles.KMEmpty} />
-                  </View>
-                </View>
-                <View style={{ flexDirection: 'row', marginTop: 20 }}>
-                  <View style={{ flex: 1 }}>
-                    <View style={styles.ratingEmpty} />
-                  </View>
-                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                    <View style={styles.buttonEmpty} />
-                  </View>
-                </View>
-              </View>
-            </View>
-          </View>
-
-          <View style={styles.jarakHorizontal}>
-            <View style={{ flexDirection: 'row' }}>
-              <View style={styles.imageEmpty} />
-              <View style={{ flex: 2 }}>
-                <View style={styles.namaRsEmpty} />
-                <View style={styles.kategoriRsEmpty} />
-                <View style={{ flexDirection: 'row' }}>
-                  <View style={{ flex: 1 }}>
-                    <View style={styles.alamatRsEmpty} />
-                  </View>
-                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                    <View style={styles.KMEmpty} />
-                  </View>
-                </View>
-                <View style={{ flexDirection: 'row', marginTop: 20 }}>
-                  <View style={{ flex: 1 }}>
-                    <View style={styles.ratingEmpty} />
-                  </View>
-                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                    <View style={styles.buttonEmpty} />
-                  </View>
-                </View>
-              </View>
-            </View>
-          </View>
-
-          <View style={styles.jarakHorizontal}>
-            <View style={{ flexDirection: 'row' }}>
-              <View style={styles.imageEmpty} />
-              <View style={{ flex: 2 }}>
-                <View style={styles.namaRsEmpty} />
-                <View style={styles.kategoriRsEmpty} />
-                <View style={{ flexDirection: 'row' }}>
-                  <View style={{ flex: 1 }}>
-                    <View style={styles.alamatRsEmpty} />
-                  </View>
-                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                    <View style={styles.KMEmpty} />
-                  </View>
-                </View>
-                <View style={{ flexDirection: 'row', marginTop: 20 }}>
-                  <View style={{ flex: 1 }}>
-                    <View style={styles.ratingEmpty} />
-                  </View>
-                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                    <View style={styles.buttonEmpty} />
-                  </View>
-                </View>
-              </View>
-            </View>
-          </View>
-        </>
+        <ActivityIndicator size={"large"} color={colors.primary} />
       ) : (
         <ScrollView showsVerticalScrollIndicator={false}>
           {rumah_sakit.map((item) => {
             return (
-              <View key={item.id_rumah_sakit}>
-                <View style={styles.content}>
-                  <View style={{ flex: 1, marginRight: 10 }}>
-                    {item.foto_rs == null ? (
-                      <Image
-                        source={require('../../../../../assets/images/gambar-rs.jpg')}
-                        style={{ width: 100, height: 130, borderRadius: 10 }}
-                      />
-                    ) : (
-                      <Image
-                        source={{ uri: item.foto_rs }}
-                        style={{ width: 100, height: 150, borderRadius: 10 }}
-                      />
-                    )}
-                  </View>
-                  <View style={{ flex: 2 }}>
-                    <View style={{ marginBottom: 10 }}>
-                      <Text style={styles.namaRs}>{item.nama_rs}</Text>
-                      <Text style={{ color: 'black', fontSize: 12 }}>
-                        {item.kategori_rs == 1 ? 'Rumah Sakit Spesialis' : 'Rumah Sakit Umum'}
-                      </Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', marginBottom: 15, marginTop: 10 }}>
-                      <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'center' }}>
-                        <Text style={{ fontSize: 12, color: 'black', fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
-                          {item.deskripsi_rs}
+              <TouchableOpacity onPress={() => {
+                navigation.navigate(Navigasi.DETAIL_BUAT_JANJI, {
+                  data: item
+                })
+              }} key={item.id_rumah_sakit}>
+                <View style={styles.cardrumahsakit}>
+                  <Image source={require("../../../../../assets/images/gambar-rs.jpg")} style={{ height: 150, width: '100%', borderRadius: 10 }} />
+                  <Text style={styles.judulrs} numberOfLines={1} ellipsizeMode={'tail'}>
+                    {item.nama_rs}
+                  </Text>
+                  <Text style={styles.deskripsi} numberOfLines={1} ellipsizeMode={'tail'}>
+                    {item.deskripsi_rs}
+                  </Text>
+                  <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flex: 1 }}>
+                      <View style={styles.rated}>
+                        <Icon name="thumbs-up" style={{ fontSize: 15, color: 'blue', marginRight: 5 }} />
+                        <Text style={{ color: 'blue', fontSize: 12, fontFamily: 'Poppins-Medium', fontWeight: 'bold' }}>
+                          100%
                         </Text>
                       </View>
-                      <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
-                        <View style={{ backgroundColor: 'skyblue', width: 70, borderRadius: 10, paddingVertical: 2 }}>
-                          <Text style={{ color: 'black', fontSize: 12, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
-                            {Math.floor(item.jarak)} KM
-                          </Text>
-                        </View>
-                      </View>
                     </View>
-                    <View style={{ flexDirection: 'row' }}>
-                      <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'center' }}>
-                        <View style={{ backgroundColor: colors.backgroundEmpty, width: 100, borderRadius: 10, paddingVertical: 2 }}>
-                          <Text style={{ color: 'black', fontSize: 12, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
-                            <Icon name="thumbs-up" style={{color: 'black'}} /> 5, 7
-                          </Text>
-                        </View>
-                      </View>
-                      <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
-                        <TouchableOpacity style={{ backgroundColor: 'blue', width: 70, borderRadius: 10, paddingVertical: 3, elevation: 10 }} onPress={() => {
-                          navigation.navigate(Navigasi.DETAIL_BUAT_JANJI, {
-                            data: item
-                          })
-                        }} >
-                          <Text style={{ color: 'white', fontSize: 12, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
-                            Pilih
-                          </Text>
-                        </TouchableOpacity>
+                    <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end' }}>
+                      <View style={styles.jarak}>
+                        <Icon name="ios-location" style={{ fontSize: 15, color: 'blue', marginRight: 5 }} />
+                        <Text style={{ color: 'blue', fontSize: 12, fontFamily: 'Poppins-Medium', fontWeight: 'bold' }}>
+                          {item.jarak} KM
+                        </Text>
                       </View>
                     </View>
                   </View>
                 </View>
-                <View style={styles.viewBorder} />
-              </View>
+              </TouchableOpacity>
             )
           })}
         </ScrollView>
@@ -323,113 +190,48 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-start',
   },
-  imageEmpty: {
-    backgroundColor: colors.backgroundEmpty,
-    height: 150,
-    borderRadius: 10,
-    flex: 1,
-    marginRight: 10,
-  },
-  namaRsEmpty: {
-    width: 200,
-    backgroundColor: colors.backgroundEmpty,
-    height: 25,
-    borderRadius: 10,
-  },
-  kategoriRsEmpty: {
-    width: 100,
-    backgroundColor: colors.backgroundEmpty,
-    height: 20,
-    marginTop: 5,
-    borderRadius: 10,
-  },
-  alamatRsEmpty: {
-    height: 20,
-    backgroundColor: colors.backgroundEmpty,
-    marginTop: 20,
-    borderRadius: 10,
-    flex: 1,
-    width: 60,
-  },
-  KMEmpty: {
-    height: 20,
-    backgroundColor: colors.backgroundEmpty,
-    marginTop: 20,
-    borderRadius: 10,
-    width: 60,
-  },
-  ratingEmpty: {
-    height: 20,
-    backgroundColor: colors.backgroundEmpty,
-    marginTop: 20,
-    borderRadius: 10,
-    flex: 1,
-    width: 60,
-  },
-  buttonEmpty: {
-    height: 20,
-    backgroundColor: colors.backgroundEmpty,
-    marginTop: 20,
-    borderRadius: 10,
-    width: 60,
-  },
-  namaRs: {
-    color: 'black',
-    fontSize: 16,
-    fontWeight: 'bold',
-    fontFamily: 'Poppins-Medium'
-  },
-  viewKM: {
-    backgroundColor: colors.backgroundEmpty,
-    borderRadius: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-  },
-  viewAlamatRs: {
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    flex: 1,
-  },
-  textKM: {
-    marginLeft: 5,
-    color: 'black',
-    fontWeight: 'bold',
-    paddingVertical: 3,
-    fontSize: 10,
-  },
-  designButton: {
-    backgroundColor: '#188EE4',
-    paddingVertical: 5,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-  },
-  textButton: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 10,
-  },
-  viewBorder: {
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginHorizontal: 15,
-    marginVertical: 5,
-  },
-  textRating: {
-    color: 'white',
-    fontSize: 12,
-    paddingHorizontal: 10,
-    fontWeight: 'bold',
-    backgroundColor: '#4E9CD4',
+  cardrumahsakit: {
+    backgroundColor: 'white',
+    elevation: 5,
+    padding: 10,
+    marginVertical: 10,
     borderRadius: 5,
-    paddingVertical: 5,
+    marginHorizontal: 10
   },
-  viewRating: {
-    flex: 1,
+  judulrs: {
+    fontWeight: 'bold',
+    fontSize: 14,
+    marginTop: 5,
+    color: 'black',
+    fontFamily: 'Poppins-Medium',
+  },
+  deskripsi: {
+    color: 'grey',
+    fontSize: 12,
+    marginBottom: 10,
+    textAlign: 'justify',
+    fontFamily: "Poppins-Medium",
+  },
+  rated: {
+    borderColor: 'blue',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingVertical: 3,
+    paddingHorizontal: 5,
     justifyContent: 'center',
-    alignItems: 'flex-start',
+    flexDirection: 'row',
+    width: 80
   },
+  jarak: {
+    borderColor: 'blue',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingVertical: 3,
+    paddingHorizontal: 5,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    width: 100
+  }
 });
 
 export default AllData;

@@ -16,6 +16,7 @@ import { colors, getData } from '../../../../utils';
 import Navigasi from '../../../../partials/navigasi';
 import { baseUrl } from '../../../../utils';
 import Heading from '../../../../components/Heading';
+import LinearGradient from 'react-native-linear-gradient';
 
 const ChatDokter = ({ navigation, route }) => {
 
@@ -119,7 +120,7 @@ const ChatDokter = ({ navigation, route }) => {
   }
 
   const textinput = async (value) => {
-    setForm({...form, nama_keahlian: value});
+    setForm({ ...form, nama_keahlian: value });
     if (value == "") {
       console.log("Kosong");
     } else {
@@ -136,7 +137,7 @@ const ChatDokter = ({ navigation, route }) => {
       });
 
       setshowindicator(true);
-      
+
       if (response.data.status == 200) {
         if (cekoption == 0) {
           setTimeout(() => {
@@ -150,11 +151,11 @@ const ChatDokter = ({ navigation, route }) => {
           }, 5000);
         }
       }
-    
+
       if (response.data.status == 200) {
-        
+
       } else {
-        
+
       }
     }
   }
@@ -174,7 +175,7 @@ const ChatDokter = ({ navigation, route }) => {
         <View style={styles.contentSearch}>
           <TextInput
             value={form.nama_keahlian}
-            onChangeText={textinput} 
+            onChangeText={textinput}
             placeholder="Ex: Dr. Mohammad"
             placeholderTextColor="gray"
             style={{
@@ -265,14 +266,19 @@ const ChatDokter = ({ navigation, route }) => {
                           </Text>
                         </View>
                       </View>
+
                       <View style={{ marginTop: 20, alignItems: 'flex-end' }}>
-                        <TouchableOpacity style={{ backgroundColor: 'purple', width: 100, borderRadius: 5, paddingVertical: 5, alignItems: 'center' }} onPress={() => navigation.navigate(Navigasi.DETAIL_CHAT, {
-                          data: item
-                        })}>
-                          <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
-                            KONSULTASI
-                          </Text>
-                        </TouchableOpacity>
+                        <LinearGradient colors={['#FF6B6B', '#0000FF']}
+                          start={{ x: 0, y: 0 }}
+                          end={{ x: 1, y: 1 }} style={{borderRadius: 5}}>
+                          <TouchableOpacity style={{ width: 100, paddingVertical: 5, alignItems: 'center' }} onPress={() => navigation.navigate(Navigasi.DETAIL_CHAT, {
+                            data: item
+                          })}>
+                            <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
+                              KONSULTASI
+                            </Text>
+                          </TouchableOpacity>
+                        </LinearGradient>
                       </View>
                     </View>
                   </View>
@@ -297,24 +303,24 @@ const ChatDokter = ({ navigation, route }) => {
                           {item.user.nama}
                         </Text>
                         {keahlian == null ? (
-                          <ActivityIndicator/>
+                          <ActivityIndicator />
                         ) : (
                           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                             {keahlian.map((datakeahlian) => {
                               return (
                                 item.user.id == datakeahlian.user.id ? (
                                   <View key={datakeahlian.id_master} style={styles.keahlian}>
-                                  <Text style={styles.textkeahlian}>
-                                    {datakeahlian.keahlian_id.nama_keahlian.toUpperCase()}
-                                  </Text>
-                                </View>
+                                    <Text style={styles.textkeahlian}>
+                                      {datakeahlian.keahlian_id.nama_keahlian.toUpperCase()}
+                                    </Text>
+                                  </View>
                                 ) : (
                                   <View key={datakeahlian.id_master} />
                                 )
                               )
                             })}
                           </ScrollView>
-                        ) }
+                        )}
                         <View style={{ flexDirection: 'row', marginTop: 15 }}>
                           <View style={{ width: 70, backgroundColor: colors.backgroundEmpty, borderRadius: 5, padding: 3, alignItems: 'center' }}>
                             <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
@@ -342,12 +348,12 @@ const ChatDokter = ({ navigation, route }) => {
                 })}
               </ScrollView>
             )
-  
+
           ) : (
             <ActivityIndicator size={"large"} color={"black"} />
           )
         )
-      ) }
+      )}
     </View>
   );
 };

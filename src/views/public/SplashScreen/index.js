@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, Image, StatusBar} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, StatusBar } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Navigasi from '../../../partials/navigasi';
-import {getData, baseUrl} from '../../../utils';
+import { getData, baseUrl } from '../../../utils';
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
 
-const Splash = ({navigation}) => {
+const Splash = ({ navigation }) => {
   useEffect(() => {
     setTimeout(async () => {
       getData('dataUser')
@@ -30,10 +30,12 @@ const Splash = ({navigation}) => {
   });
 
   return (
-    <View style={styles.background}>
+    <LinearGradient colors={['#FF6B6B', '#0000FF']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }} style={styles.background}>
       <StatusBarComponent />
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Image source={require("../../../assets/images/group-satu-new.png")} style={{width: 150, height: 150}} />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Image source={require("../../../assets/images/group-satu-new.png")} style={{ width: 150, height: 150 }} />
         <Text style={styles.title}>
           Solusi Kesehatan Anda
         </Text>
@@ -41,14 +43,13 @@ const Splash = ({navigation}) => {
           " Melayani Konsultasi dan Reservasi Secara Online "
         </Text>
       </View>
-    </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    backgroundColor: 'blue'
   },
 
   title: {

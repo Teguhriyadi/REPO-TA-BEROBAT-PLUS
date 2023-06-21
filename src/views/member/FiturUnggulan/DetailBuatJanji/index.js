@@ -118,6 +118,7 @@ const DetailBuatJanji = ({navigation, route, props}) => {
                 borderRadius: 10,
                 fontSize: 10,
                 marginHorizontal: 5,
+                fontWeight: 'bold'
               }}>
               <Icon
                 name="ios-location"

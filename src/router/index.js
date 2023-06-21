@@ -56,6 +56,8 @@ import DashboardPerawat from '../views/perawat/Dashboard';
 import Profile from '../views/perawat/Profile';
 import Riwayat from '../views/perawat/Riwayat';
 import Reservasi from '../views/member/FiturUnggulan/Reservasi';
+import SpesialisBuatJanji from '../views/member/FiturUnggulan/InformasiBuatJanji/SpesialisBuatJanji';
+import DetailPraktek from '../views/member/FiturUnggulan/InformasiBuatJanji/SpesialisBuatJanji/DetailPraktek';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -267,10 +269,15 @@ const Router = () => {
         component={MainPerawat}
         options={{headerShown: false}}
       />
+      <Stack.Screen 
+        name={Navigasi.SPESIALIS_BUAT_JANJI}
+        component={SpesialisBuatJanji}
+        options={{headerShown: false}}
+      />
       <Stack.Screen
-        name={Navigasi.SPESIALIS_DOKTER}
-        component={SpesialisDokter}
-        options={{ headerShown: false }}
+        name={Navigasi.DETAIL_PRAKTEK}
+        component={DetailPraktek}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name={Navigasi.LOGIN}

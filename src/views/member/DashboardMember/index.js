@@ -19,6 +19,7 @@ import Navigasi from '../../../partials/navigasi';
 import { baseUrl } from '../../../utils';
 import ButtonAllData from '../../../components/ButtonAllData';
 import ListFitur from '../../../components/ListFitur';
+import LinearGradient from 'react-native-linear-gradient';
 
 const DashboardMember = ({ navigation }) => {
   const [user, setUser] = useState({});
@@ -28,6 +29,18 @@ const DashboardMember = ({ navigation }) => {
   const [kategori, setKategori] = useState(null);
   const [kategoriArtikel, setKategoriArtikel] = useState(null);
   const [option, setoption] = useState("KT-A-2003061");
+  const currenttime = new Date().getHours();
+  let greeting;
+
+  if (currenttime < 10) {
+    greeting = "Selamat Pagi";
+  } else if (currenttime < 15) {
+    greeting = "Selamat Siang";
+  } else if (currenttime < 18) {
+    greeting = "Selamat Sore";
+  } else {
+    greeting = "Selamat Malam";
+  }
 
   useEffect(() => {
     const getDataUserLocal = () => {
@@ -146,48 +159,18 @@ const DashboardMember = ({ navigation }) => {
   return (
     <View style={styles.background}>
       <StatusBarComponent />
-      <View style={{ backgroundColor: 'blue', height: 70 }}>
-        <View
+      <LinearGradient colors={['#FF6B6B', '#0000FF']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }} style={{ height: 70, justifyContent: 'center', alignItems: 'center' }}>
+          <View
           style={{
             marginHorizontal: 10,
-            marginVertical: 10,
+            marginVertical: 20,
             flexDirection: 'row',
           }}>
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'flex-start',
-              marginRight: 10,
-            }}>
-            <Image
-              source={require('../../../assets/images/people.png')}
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: 50,
-                borderColor: 'white',
-                borderWidth: 1,
-              }}
-            />
-          </View>
-          <View style={{ justifyContent: 'center', alignItems: 'flex-start' }}>
-            <Text
-              style={{
-                color: 'white',
-                fontSize: 14,
-                fontWeight: 'bold',
-                fontFamily: 'Poppins-Medium',
-              }}>
-              {dataPribadi.nama}
-            </Text>
-            <Text
-              style={{
-                color: 'white',
-                fontSize: 12,
-                fontWeight: 'bold',
-                fontFamily: 'Poppins-Medium',
-              }}>
-              {dataPribadi.nomor_hp}
+          <View style={{ justifyContent: 'center', alignItems: 'flex-start', flex: 2 }}>
+            <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }}>
+              {greeting} , {dataPribadi.nama}
             </Text>
           </View>
           <View
@@ -210,10 +193,28 @@ const DashboardMember = ({ navigation }) => {
             </View>
           </View>
         </View>
-      </View>
+        </LinearGradient>
+
+      <LinearGradient colors={['#FF6B6B', '#0000FF']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }} style={{ marginTop: 20, marginHorizontal: 10, borderRadius: 10, elevation: 5, marginBottom: 10 }}>
+        <View style={{ paddingHorizontal: 10, paddingVertical: 10, flexDirection: 'row' }}>
+          <View style={{justifyContent: 'center', alignItems: 'flex-start'}}>
+            <Image source={require("../../../assets/images/people.png")} style={{ width: 50, height: 50, borderRadius: 100, borderColor: 'white', borderWidth: 1 }} />
+          </View>
+          <View style={{ justifyContent: 'center', alignItems: 'flex-start', flex: 2, marginLeft: 10 }}>
+            <Text style={{color: 'white', fontWeight: 'bold', fontSize: 14, fontFamily: 'Poppins-Medium'}}>
+              {dataPribadi.email}
+            </Text>
+            <Text style={{color: 'white', fontWeight: 'bold', fontFamily: 'Poppins-Medium', fontSize: 12}}>
+              {dataPribadi.nomor_hp}
+            </Text>
+          </View>
+        </View>
+      </LinearGradient>
 
       <ScrollView showsHorizontalScrollIndicator={false}>
-        <View style={{ paddingTop: 10, paddingHorizontal: 10 }}>
+        <View style={{ paddingTop: 0, paddingHorizontal: 10 }}>
           <View>
             <Text style={styles.judulTextMenu}>Fitur Unggulan Kami</Text>
           </View>
@@ -278,7 +279,7 @@ const DashboardMember = ({ navigation }) => {
                   }}>
                     <View
                       style={[styles.viewkategori, item.id_kategori_artikel == option ? styles.active : styles.non_active]}
-                      >
+                    >
                       <Text
                         style={[styles.textkategori, item.id_kategori_artikel == option ? styles.text_active : styles.non_active]}>
                         {item.nama_kategori.toUpperCase()}
@@ -351,7 +352,7 @@ const DashboardMember = ({ navigation }) => {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: 'white'
   },
   heading: {
     backgroundColor: 'blue',

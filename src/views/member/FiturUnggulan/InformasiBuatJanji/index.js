@@ -1,23 +1,21 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TextInput,
-  Image,
-  FlatList,
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import {colors} from '../../../../utils';
+import { colors } from '../../../../utils';
 import axios from 'axios';
-import {getData} from '../../../../utils';
-import {baseUrl} from '../../../../utils';
+import { getData } from '../../../../utils';
+import { baseUrl } from '../../../../utils';
 import Navigasi from '../../../../partials/navigasi';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const InformasiBuatJanji = ({route}) => {
+const InformasiBuatJanji = ({route }) => {
   const navigation = useNavigation();
   const [dataPribadi, setDataPribadi] = useState({});
   const [spesialis, setSpesialis] = useState([]);
@@ -54,40 +52,13 @@ const InformasiBuatJanji = ({route}) => {
       } else {
         setTimeout(() => {
           setShowIndicator(false);
+          console.log(response.data.data);
           setSpesialis(response.data.data);
         }, 1000);
       }
     } catch (error) {
       console.log(error);
     }
-    // try {
-    //   setShowIndicator(true);
-    //   await axios({
-    //     url: `${baseUrl.url}/master/rumah_sakit/spesialis/${route.data.data.id_rumah_sakit}`,
-    //     headers: {
-    //       Authorization: 'Bearer ' + dataPribadi.token,
-    //     },
-    //     method: 'GET',
-    //   })
-    //     .then(response => {
-    //       if (response.data.data == []) {
-    //         setTimeout(() => {
-    //           setOutput(true);
-    //           setShowIndicator(false);
-    //         }, 1000);
-    //       } else {
-    //         setTimeout(() => {
-    //           setShowIndicator(false);
-    //           setSpesialis(response.data.data);
-    //         }, 1000);
-    //       }
-    //     })
-    //     .catch(error => {
-    //       console.log(error);
-    //     });
-    // } catch (error) {
-    //   console.log(error);
-    // }
   };
 
   return (
@@ -103,73 +74,62 @@ const InformasiBuatJanji = ({route}) => {
           }}
         />
       </View>
-      <Text style={{color: 'black', fontWeight: 'bold', fontSize: 16}}>
+      <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}>
         Cari Dokter Spesialis
       </Text>
-      <Text style={{fontSize: 12, color: 'black'}}>
+      <Text style={{ fontSize: 12, color: 'black' }}>
         Ayo buat janji dengan dokter spesialis yang anda butuhkan.
       </Text>
-      {spesialis.length ? (
-        <View>
-          <FlatList
-            data={spesialis}
-            numColumns={4}
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={item => item.id_spesialis}
-            renderItem={({item}) => (
-              <View style={styles.cardBackground}>
-                <TouchableOpacity
-                  style={styles.cardTouchable}
-                  onPress={() => {
-                    navigation.navigate(Navigasi.SPESIALIS_DOKTER, {
-                      data: item,
-                    });
-                  }}>
-                  <View style={styles.cardCircle}>
-                    <Image
-                      source={require('../../../../assets/images/auth-new.png')}
-                      resizeMode="cover"
-                      style={styles.image}
-                    />
-                  </View>
-                  <Text style={styles.textSpesialis}>
-                    {item.penyakit.nama_spesialis}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          />
-        </View>
-      ) : showIndicator ? (
-        <View style={{marginVertical: 10}}>
-          <ActivityIndicator size={'large'} color={colors.primary} />
-        </View>
-      ) : output ? (
-        <View
-          style={{
-            marginVertical: 10,
-            justifyContent: 'center',
-            alignItems: 'center',
-            flex: 1,
-          }}>
-          <Icon name="search" style={{fontSize: 50, color: colors.primary}} />
-          <Text
+      <View style={styles.viewcontainer}>
+        {spesialis.length ? (
+          spesialis.map((item) => {
+            return (
+              <TouchableOpacity 
+                onPress={() => {
+                  navigation.navigate(Navigasi.SPESIALIS_BUAT_JANJI, {
+                    data: item
+                  })
+                }}
+                style={styles.cardspesialis} 
+                key={item.id_spesialis}
+              >
+                <Text style={styles.textspesialis}>
+                  {item.penyakit.nama_spesialis}
+                </Text>
+              </TouchableOpacity>
+            )
+          })
+        ) : showIndicator ? (
+          <View style={{ marginVertical: 10 }}>
+            <ActivityIndicator size={'large'} color={colors.primary} style={{ justifyContent: 'center', alignItems: 'center' }} />
+          </View>
+        ) : output ? (
+          <View
             style={{
-              color: colors.primary,
-              textAlign: 'center',
-              fontWeight: 'bold',
-              fontSize: 18,
-              fontFamily: 'Poppins-Medium'
+              marginVertical: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
+              flex: 1,
             }}>
-            Maaf, Spesialis Tidak Tersedia
-          </Text>
-          <Text style={{color: 'black', fontSize: 14, fontFamily: 'Poppins-Medium'}}>
-            Silahkan Cari Spesialis Di Rumah Sakit Lain.
-          </Text>
-        </View>
-      ) : (
-        <View />
-      )}
+            <Icon name="search" style={{ fontSize: 50, color: colors.primary }} />
+            <Text
+              style={{
+                color: colors.primary,
+                textAlign: 'center',
+                fontWeight: 'bold',
+                fontSize: 18,
+                fontFamily: 'Poppins-Medium'
+              }}>
+              Maaf, Spesialis Tidak Tersedia
+            </Text>
+            <Text style={{ color: 'black', fontSize: 14, fontFamily: 'Poppins-Medium' }}>
+              Silahkan Cari Spesialis Di Rumah Sakit Lain.
+            </Text>
+          </View>
+        ) : (
+          <View />
+        )}
+      </View>
     </View>
   );
 };
@@ -231,6 +191,30 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  cardspesialis: {
+    width: '45%',
+    backgroundColor: 'white',
+    elevation: 5,
+    marginRight: 5,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+    paddingVertical: 10
+  },
+  viewcontainer: {
+    marginTop: 10,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  textspesialis: {
+    color: 'blue',
+    fontSize: 12,
+    fontWeight: 'bold',
+    fontFamily: 'Poppins-Medium'
+  }
 });
 
 export default InformasiBuatJanji;

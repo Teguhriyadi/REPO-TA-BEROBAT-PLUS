@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   ScrollView,
   Alert,
+  Switch
 } from 'react-native';
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
 import {baseUrl, getData} from '../../../utils';
@@ -26,6 +27,7 @@ const Dashboard = ({navigation}) => {
   const [apotek, setApotek] = useState(null);
   const [rumah_sakit, setRumahSakit] = useState(null);
   const [showIndicator, setShowIndicator] = useState(false);
+  const [getswitch, setswitch] = useState(false);
 
   useEffect(() => {
     const debounceTimeout = setTimeout(() => {
@@ -103,6 +105,10 @@ const Dashboard = ({navigation}) => {
       console.log(error);
     }
   };
+
+  const toggleswitch = () => {
+    setswitch(previous => !previous);
+  }
 
   const logout = async () => {
     Alert.alert(

@@ -19,6 +19,8 @@ export default {
   INFORMASI_BUAT_JANJI: 'InformasiBuatJanji',
   TOKO_KESEHATAN_PRODUK: 'TokoKesehatanProduk',
   SPESIALIS_DOKTER: 'SpesialisDokter',
+  SPESIALIS_BUAT_JANJI: "SpesialisBuatJanji",
+  DETAIL_PRAKTEK: "DetailPraktek",
   LANJUTKAN_PEMBAYARAN: 'LanjutkanPembayaran',
   DETAIL_PRODUK: 'DetailProduk',
   KERANJANG: 'Keranjang',

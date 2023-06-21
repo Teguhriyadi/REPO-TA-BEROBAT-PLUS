@@ -2,23 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { colors } from '../../utils';
 import Icon from 'react-native-vector-icons/Ionicons';
+import LinearGradient from 'react-native-linear-gradient';
 
 const Heading = ({ textHeading, navigasi }) => {
     return (
-        <View style={styles.heading}>
+        <LinearGradient colors={['#FF6B6B', '#0000FF']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }} style={styles.heading}>
             <TouchableOpacity onPress={navigasi}>
                 <Icon name='arrow-back' style={styles.icon} />
             </TouchableOpacity>
             <Text style={styles.textHeading}>
                 {textHeading}
             </Text>
-        </View>
+        </LinearGradient>
     );
 }
 
 const styles = StyleSheet.create({
     heading: {
-        backgroundColor: colors.backgroundPutih,
         flexDirection: 'row',
         padding: 10,
         height: 60,
@@ -29,7 +31,7 @@ const styles = StyleSheet.create({
 
     icon: {
         fontSize: 20,
-        color: 'black',
+        color: 'white',
         fontWeight: 'bold'
     },
 
@@ -37,7 +39,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold',
         fontFamily: 'Poppins-Medium',
-        color: 'black',
+        color: 'white',
         marginLeft: 10,
         marginRight: 10,
         textAlign: 'justify'
