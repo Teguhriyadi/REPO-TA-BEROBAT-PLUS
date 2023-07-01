@@ -6,6 +6,7 @@ import Heading from '../../../../../components/Heading';
 import Navigasi from '../../../../../partials/navigasi';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
+import LinearGradient from 'react-native-linear-gradient';
 
 const SpesialisBuatJanji = ({ navigation, route }) => {
 
@@ -52,23 +53,23 @@ const SpesialisBuatJanji = ({ navigation, route }) => {
                 navigation.goBack()
             }} />
             {dokter == null ? (
-                <ActivityIndicator size={"large"} color={colors.primary} style={{alignItems: 'center', flex: 1}} />
+                <ActivityIndicator size={"large"} color={colors.primary} style={{ alignItems: 'center', flex: 1 }} />
             ) : (
                 <ScrollView showsVerticalScrollIndicator={false}>
                     {dokter.map((item) => {
                         return (
                             <View key={item.id_praktek} style={styles.card}>
-                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                    <Image source={require("../../../../../assets/images/people.png")} style={{width: 100, height: 100}} />
+                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Image source={require("../../../../../assets/images/people.png")} style={{ width: 100, height: 100 }} />
                                 </View>
-                                <View style={{flex: 2}}>
+                                <View style={{ flex: 2 }}>
                                     <Text style={styles.namadokter}>
                                         {item.nama_dokter}
                                     </Text>
                                     <Text style={styles.nomorhp}>
                                         {item.nomor_hp}
                                     </Text>
-                                    <View style={{flexDirection: 'row'}}>
+                                    <View style={{ flexDirection: 'row' }}>
                                         <View style={styles.tahun}>
                                             <Text style={styles.texttahun}>
                                                 100 Tahun
@@ -76,27 +77,31 @@ const SpesialisBuatJanji = ({ navigation, route }) => {
                                         </View>
                                         <View style={styles.rating}>
                                             <Text style={styles.textrating}>
-                                                <Icon name="thumbs-up" style={{color: 'blue'}} /> 100%
+                                                <Icon name="thumbs-up" style={{ color: 'blue' }} /> 100%
                                             </Text>
                                         </View>
                                     </View>
-                                    <View style={{alignItems: 'flex-end'}}>
-                                    <TouchableOpacity style={styles.button} onPress={() => {
-                                        navigation.navigate(Navigasi.DETAIL_PRAKTEK, {
-                                            data: item
-                                        })
-                                    }}>
-                                        <Text style={styles.textbutton}>
-                                            Pilih
-                                        </Text>
-                                    </TouchableOpacity>
+                                    <View style={{ alignItems: 'flex-end' }}>
+                                        <LinearGradient colors={['#FF6B6B', '#0000FF']}
+                                            start={{ x: 0, y: 0 }}
+                                            end={{ x: 1, y: 1 }} style={styles.button}>
+                                                <TouchableOpacity onPress={() => {
+                                            navigation.navigate(Navigasi.DETAIL_PRAKTEK, {
+                                                data: item
+                                            })
+                                        }}>
+                                            <Text style={styles.textbutton}>
+                                                Pilih
+                                            </Text>
+                                        </TouchableOpacity>
+                                        </LinearGradient>
                                     </View>
                                 </View>
                             </View>
                         )
                     })}
                 </ScrollView>
-            ) }
+            )}
         </View>
     )
 }

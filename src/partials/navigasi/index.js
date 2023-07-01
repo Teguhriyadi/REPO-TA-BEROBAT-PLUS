@@ -37,6 +37,7 @@ export default {
   LoadingScreen: "LoadingScreen",
   ALL_ARTIKEL: "AllArtikel",
   CHAT_PUSHER: "ChatPusher",
+  DATA_ALAMAT: "DataAlamat",
 
   // Dokter
   DASHBOARD_DOKTER: 'DashboardDokter',

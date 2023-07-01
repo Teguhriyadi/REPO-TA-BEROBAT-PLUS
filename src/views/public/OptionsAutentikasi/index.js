@@ -7,7 +7,7 @@ import { colors } from "../../../utils/colors"
 const OptionsAutentikasi = ({ navigation }) => {
   return (
     <View>
-      <ImageBackground resizeMode='cover' source={require("../../../assets/images/background.png")} style={styles.backgroundimage} />
+      <ImageBackground resizeMode='cover' source={require("../../../assets/images/background-autentikasi.jpg")} style={styles.backgroundimage} />
       <View style={styles.content}>
         <TouchableOpacity
           onPress={() => {
@@ -18,11 +18,12 @@ const OptionsAutentikasi = ({ navigation }) => {
             borderWidth: 1,
             marginHorizontal: 20,
             padding: 10,
-            borderRadius: 10,
             width: '80%',
+            borderColor: 'white',
+            borderRadius: 10
           }}>
           <Text
-            style={{ textAlign: 'center', color: 'black', fontWeight: 'bold' }}>
+            style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>
             Masuk
           </Text>
         </TouchableOpacity>
@@ -33,6 +34,8 @@ const OptionsAutentikasi = ({ navigation }) => {
           style={{
             backgroundColor: 'green',
             marginHorizontal: 20,
+            borderColor: 'white',
+            borderWidth: 1,
             marginTop: 10,
             padding: 10,
             borderRadius: 10,
@@ -52,7 +55,7 @@ const styles = StyleSheet.create({
   backgroundimage: {
     width: '100%',
     height: '100%',
-    opacity: 0.5
+    opacity: 1
   },
 
   content: {

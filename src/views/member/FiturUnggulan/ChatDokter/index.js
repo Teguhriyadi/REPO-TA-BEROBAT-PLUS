@@ -229,7 +229,7 @@ const ChatDokter = ({ navigation, route }) => {
                 return (
                   <View style={{ marginHorizontal: 10, marginVertical: 10, backgroundColor: 'white', elevation: 5, padding: 10, borderRadius: 5, flexDirection: 'row' }} key={item.id_dokter}>
                     <View style={{ flex: 1, justifyContent: 'center' }}>
-                      <Image source={require("../../../../assets/images/people.png")} style={{ width: 100, height: 100 }} />
+                      <Image source={require("../../../../assets/images/background-doctor.png")} style={{ width: 100, height: 100 }} />
                     </View>
                     <View style={{ flex: 2 }}>
                       <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>

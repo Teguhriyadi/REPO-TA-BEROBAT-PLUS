@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   button: {
-    borderColor: 'blue',
+    borderColor: 'purple',
     borderWidth: 2,
     margin: 10,
     padding: 10,
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textButton: {
-    color: 'blue',
+    color: 'purple',
     fontWeight: 'bold',
     fontSize: 14,
     fontFamily: 'Poppins-Medium'

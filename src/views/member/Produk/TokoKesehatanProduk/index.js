@@ -192,8 +192,15 @@ const TokoKesehatanProduk = ({navigation}) => {
                 flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
+                position: 'relative'
               }}>
               <Icon name="cart-sharp" style={{color: 'red', fontSize: 20}} />
+
+              <View style={{position: 'absolute', top: -5, right: -5, backgroundColor: 'red', borderRadius: 10, width: 20, height: 15, justifyContent: 'center', alignItems: 'center'}}>
+                <Text style={{color: 'red', fontSize: 12}}>
+                  0
+                </Text>
+              </View>
             </View>
           </TouchableOpacity>
         </View>
@@ -353,23 +360,6 @@ const TokoKesehatanProduk = ({navigation}) => {
           <ActivityIndicator size="large" color="#0000FF"></ActivityIndicator>
         </View>
       )}
-      <View style={styles.viewUnggahResep}>
-        <View style={{flex: 2}}>
-          <Text style={{color: 'black', fontWeight: 'bold'}}>
-            Unggap Resep Anda
-          </Text>
-          <Text style={{color: 'black', fontSize: 10}}>
-            Silahkan upload resep anda dengan jelas
-          </Text>
-        </View>
-        <View
-          style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}>
-          <Icon
-            name="ios-arrow-forward"
-            style={{fontSize: 20, color: 'black'}}
-          />
-        </View>
-      </View>
     </View>
   );
 };
@@ -504,15 +494,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-  },
-  viewUnggahResep: {
-    backgroundColor: 'white',
-    elevation: 5,
-    marginHorizontal: 15,
-    borderRadius: 10,
-    padding: 10,
-    flexDirection: 'row',
-    marginBottom: 20,
   },
   viewLingkaran: {
     backgroundColor: 'red',

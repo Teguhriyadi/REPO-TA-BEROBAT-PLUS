@@ -58,6 +58,7 @@ import Riwayat from '../views/perawat/Riwayat';
 import Reservasi from '../views/member/FiturUnggulan/Reservasi';
 import SpesialisBuatJanji from '../views/member/FiturUnggulan/InformasiBuatJanji/SpesialisBuatJanji';
 import DetailPraktek from '../views/member/FiturUnggulan/InformasiBuatJanji/SpesialisBuatJanji/DetailPraktek';
+import DataAlamat from '../views/member/ProfileAkun/AlamatTersimpan/DataAlamat';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -442,6 +443,12 @@ const Router = () => {
         name={Navigasi.ALL_DATA_APOTEK_TERDEKAT}
         component={AllDataApotek}
         options={{ headerShown: false }}
+      />
+      
+      <Stack.Screen
+        name={Navigasi.DATA_ALAMAT}
+        component={DataAlamat}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );

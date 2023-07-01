@@ -135,7 +135,7 @@ const DashboardMember = ({ navigation }) => {
             })
         });
       } else {
-        console.log('Tidak Ditemukan');
+        console.log('Tidak Ditemukan ');
       }
     } catch (error) {
       console.log(error);

@@ -6,13 +6,13 @@ import 'firebase/compat/database';
 import 'firebase/compat/app-check';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDEa92eDUEuAt1DZX0L520AN0nplfG1yas",
-  authDomain: "chatberobatplusapp.firebaseapp.com",
-  projectId: "chatberobatplusapp",
-  storageBucket: "chatberobatplusapp.appspot.com",
-  messagingSenderId: "206847799116",
-  appId: "1:206847799116:web:78dfdcc795d4076c7929e9",
-  measurementId: "G-2EWNVF42HX"
+  apiKey: "AIzaSyB3PzdWn_LZ-iPGwYXb3oV8UgQ1UYsyLQ0",
+  authDomain: "berobatta.firebaseapp.com",
+  projectId: "berobatta",
+  storageBucket: "berobatta.appspot.com",
+  messagingSenderId: "609711793746",
+  appId: "1:609711793746:web:90c0831069044374c9618b",
+  measurementId: "G-RRPKWNGNDZ"
 };
 
 firebase.initializeApp(firebaseConfig);

@@ -167,7 +167,7 @@ const Chating = ({navigation, route}) => {
               alignItems: 'flex-end',
             }}>
             <Image
-              source={require('../../../assets/images/people.png')}
+              source={require('../../../assets/images/background-doctor.png')}
               style={{
                 width: 50,
                 height: 50,
