@@ -4,7 +4,7 @@ export default {
   OPTIONS_AUTENTIKASI: 'OptionsAutentikasi',
   MAIN_APP: 'MainApp',
   LOGIN: 'Login',
-  DAFTAR: 'Daftar',
+  DAFTAR_AKUN_KONSUMEN: 'DaftarAkunKonsumen',
   DASHBOARD_MEMBER: 'Beranda',
   TRANSAKSI_MEMBER: 'Transaksi',
   PROFILE_MEMBER: 'ProfileMember',
@@ -42,6 +42,7 @@ export default {
   // Dokter
   DASHBOARD_DOKTER: 'DashboardDokter',
   MAIN_DOKTER: 'MainDokter',
+  PRODUK_DOKTER: "ProdukDokter",
   CHATING_DOKTER: 'ChatingDokter',
   KONSULTASI_DOKTER: "KonsultasiDokter",
   PROFILE_DOKTER: "ProfileAkunDokter",
@@ -50,6 +51,7 @@ export default {
   ALL_DATA_APOTEK_TERDEKAT: "AllDataApotekTerdekat",
   PUSHER: "Pusher",
   RESERVASI: "Reservasi",
+  TAMBAH_REKOMENDASI: "TambahRekomendasi",
 
   // Perawat
   DASHBOARD_PERAWAT: "DashboardPerawat",

@@ -10,7 +10,7 @@ import OptionsAutentikasi from '../views/public/OptionsAutentikasi';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Navigasi from '../partials/navigasi/';
 import Login from '../views/public/Autentikasi/Login';
-import Daftar from '../views/public/Autentikasi/Daftar';
+import DaftarAkun from "../views/public/Autentikasi/DaftarAkun";
 import DashboardMember from '../views/member/DashboardMember';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Transaksi from '../views/member/Transaksi';
@@ -59,6 +59,8 @@ import Reservasi from '../views/member/FiturUnggulan/Reservasi';
 import SpesialisBuatJanji from '../views/member/FiturUnggulan/InformasiBuatJanji/SpesialisBuatJanji';
 import DetailPraktek from '../views/member/FiturUnggulan/InformasiBuatJanji/SpesialisBuatJanji/DetailPraktek';
 import DataAlamat from '../views/member/ProfileAkun/AlamatTersimpan/DataAlamat';
+import ProdukDokter from '../views/dokter/ProdukDokter';
+import TambahRekomendasi from '../views/dokter/ProdukDokter/TambahRekomendasi';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -90,7 +92,7 @@ const MainApp = () => {
           paddingTop: 5,
           paddingBottom: 5,
         },
-        tabBarActiveTintColor: 'blue',
+        tabBarActiveTintColor: '#051f84',
         tabBarInactiveTintColor: 'black',
       })}>
       <Tab.Screen
@@ -132,8 +134,8 @@ const MainDokter = () => {
             iconName = focused ? 'people' : 'people-outline';
           } else if (route.name == 'KonsultasiDokter') {
             iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
-          } else if (route.name == 'Transaksi') {
-            iconName = focused ? 'book' : 'book-outline';
+          } else if (route.name == 'ProdukDokter') {
+            iconName = focused ? 'cart' : 'cart-outline';
           }
 
           return <Icon name={iconName} size={size} color={color} />;
@@ -144,7 +146,7 @@ const MainDokter = () => {
           paddingTop: 5,
           paddingBottom: 5,
         },
-        tabBarActiveTintColor: 'blue',
+        tabBarActiveTintColor: '#051f84',
         tabBarInactiveTintColor: 'black',
       })}>
       <Tab.Screen
@@ -158,9 +160,9 @@ const MainDokter = () => {
         options={{ headerShown: false }}
       /> */}
       <Tab.Screen 
-        name={Navigasi.PUSHER} 
-        component={ClassPusher}
-        options={{headerSHow: false, tilte: 'Transaksi' }}
+        name={Navigasi.PRODUK_DOKTER} 
+        component={ProdukDokter}
+        options={{headerShown: false, title: 'Produk' }}
       />
       <Tab.Screen
         name={Navigasi.KONSULTASI_DOKTER}
@@ -203,7 +205,7 @@ const MainPerawat = () => {
           paddingTop: 5,
           paddingBottom: 5,
         },
-        tabBarActiveTintColor: 'blue',
+        tabBarActiveTintColor: '#051f84',
         tabBarInactiveTintColor: 'black',
       })}>
       <Tab.Screen
@@ -290,8 +292,8 @@ const Router = () => {
         }}
       />
       <Stack.Screen
-        name={Navigasi.DAFTAR}
-        component={Daftar}
+        name={Navigasi.DAFTAR_AKUN_KONSUMEN}
+        component={DaftarAkun}
         options={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
@@ -448,6 +450,12 @@ const Router = () => {
       <Stack.Screen
         name={Navigasi.DATA_ALAMAT}
         component={DataAlamat}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name={Navigasi.TAMBAH_REKOMENDASI}
+        component={TambahRekomendasi}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

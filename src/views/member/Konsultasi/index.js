@@ -9,7 +9,7 @@ import {
   ScrollView,
 } from 'react-native';
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
-import Firebase from '../../../firebase/firebaseConfig';
+import { configfirebase } from '../../../firebase/firebaseConfig';
 import {colors, getData, baseUrl} from '../../../utils';
 import Navigasi from '../../../partials/navigasi';
 
@@ -24,7 +24,7 @@ const Konsultasi = ({navigation}) => {
 
     getDataUserLocal();
 
-    const rootDB = Firebase.database().ref();
+    const rootDB = configfirebase.database().ref();
     const urlHistory = `messages/${user.uid}/`;
     const messagesDB = rootDB.child(urlHistory);
 
@@ -67,9 +67,9 @@ const Konsultasi = ({navigation}) => {
     <View style={styles.backgroundBelakang}>
       <StatusBarComponent />
       <View style={styles.heading}>
-        <Text style={styles.textHeading}>Konsultasi</Text>
+        <Text style={styles.textHeading}>Konsultasi Ahli</Text>
       </View>
-      <View style={{marginTop: 3, backgroundColor: 'white'}}>
+      <View style={{marginTop: 3, backgroundColor: '#EBE1EF '}}>
         <View
           style={{
             flexDirection: 'row',
@@ -94,7 +94,7 @@ const Konsultasi = ({navigation}) => {
               <View
                 key={chat.id}
                 style={{
-                  backgroundColor: 'white',
+                  backgroundColor: '#051f84',
                   borderRadius: 10,
                   marginVertical: 10,
                   marginHorizontal: 10,
@@ -107,14 +107,14 @@ const Konsultasi = ({navigation}) => {
                   }}>
                   <Text
                     style={{
-                      color: 'black',
+                      color: 'white',
                       fontWeight: 'bold',
                       fontSize: 16,
                       flex: 1,
                     }}>
                     TANGGAL :
                   </Text>
-                  <Text style={{color: 'black', fontSize: 16}}>
+                  <Text style={{color: 'white', fontSize: 16}}>
                     08 September 2023
                   </Text>
                 </View>
@@ -143,7 +143,7 @@ const Konsultasi = ({navigation}) => {
                         width: 40,
                         height: 40,
                         borderRadius: 50,
-                        borderColor: 'gray',
+                        borderColor: 'white',
                         borderWidth: 1,
                         marginRight: 10,
                       }}
@@ -151,7 +151,7 @@ const Konsultasi = ({navigation}) => {
                     <View>
                       <Text
                         style={{
-                          color: 'black',
+                          color: 'white',
                           fontSize: 16,
                           fontWeight: 'bold',
                           fontFamily: 'Poppins-Medium',
@@ -160,7 +160,7 @@ const Konsultasi = ({navigation}) => {
                       </Text>
                       <Text
                         style={{
-                          color: 'black',
+                          color: 'white',
                           fontSize: 12,
                           fontFamily: 'Poppins-Medium',
                         }}>
@@ -168,10 +168,10 @@ const Konsultasi = ({navigation}) => {
                       </Text>
                     </View>
                   </View>
-                  <View style={{borderColor: 'gray', borderWidth: 1}} />
+                  <View style={{borderColor: 'white', borderWidth: 1}} />
                   <Text
                     style={{
-                      color: 'gray',
+                      color: 'white',
                       fontSize: 12,
                       fontWeight: 'bold',
                       fontFamily: 'Poppins-Medium',
@@ -189,13 +189,13 @@ const Konsultasi = ({navigation}) => {
                   }}>
                   <TouchableOpacity
                     style={{
-                      borderColor: 'purple',
+                      borderColor: 'white',
                       borderWidth: 1,
                       borderRadius: 10,
                     }}>
                     <Text
                       style={{
-                        color: 'purple',
+                        color: 'white',
                         paddingHorizontal: 20,
                         paddingVertical: 5,
                         fontSize: 10,
@@ -256,20 +256,20 @@ const Konsultasi = ({navigation}) => {
 const styles = StyleSheet.create({
   backgroundBelakang: {
     flex: 1,
-    backgroundColor: colors.backgroundDasarBelakang,
+    backgroundColor: colors.backgroundPutih,
   },
   heading: {
     height: 50,
-    backgroundColor: colors.background,
+    backgroundColor: '#051f84',
     justifyContent: 'center',
     alignItems: 'flex-start',
     elevation: 5,
     padding: 10,
   },
   textHeading: {
-    color: 'black',
+    color: 'white',
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 16,
     fontFamily: 'Poppins-Medium',
   },
 });

@@ -204,7 +204,7 @@ const Keranjang = ({navigation}) => {
           }}>
           <Icon name="arrow-back" style={{color: 'black', fontSize: 20}} />
         </TouchableOpacity>
-        <Text style={styles.textHeading}>Keranjang</Text>
+        <Text style={styles.textHeading}>Keranjang Belanja Anda</Text>
         <TouchableOpacity
           style={{flex: 1, alignItems: 'flex-end'}}
           onPress={() => {
@@ -370,7 +370,7 @@ const Keranjang = ({navigation}) => {
 const styles = StyleSheet.create({
   backgroundBelakang: {
     flex: 1,
-    backgroundColor: colors.backgroundDasarBelakang,
+    backgroundColor: colors.backgroundPutih,
   },
   heading: {
     backgroundColor: colors.background,

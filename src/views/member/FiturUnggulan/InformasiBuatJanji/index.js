@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import { colors } from '../../../../utils';
 import axios from 'axios';
@@ -15,7 +16,7 @@ import Navigasi from '../../../../partials/navigasi';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const InformasiBuatJanji = ({route }) => {
+const InformasiBuatJanji = ({ route }) => {
   const navigation = useNavigation();
   const [dataPribadi, setDataPribadi] = useState({});
   const [spesialis, setSpesialis] = useState([]);
@@ -52,7 +53,6 @@ const InformasiBuatJanji = ({route }) => {
       } else {
         setTimeout(() => {
           setShowIndicator(false);
-          console.log(response.data.data);
           setSpesialis(response.data.data);
         }, 1000);
       }
@@ -82,26 +82,41 @@ const InformasiBuatJanji = ({route }) => {
       </Text>
       <View style={styles.viewcontainer}>
         {spesialis.length ? (
-          spesialis.map((item) => {
-            return (
-              <TouchableOpacity 
-                onPress={() => {
-                  navigation.navigate(Navigasi.SPESIALIS_BUAT_JANJI, {
-                    data: item
-                  })
-                }}
-                style={styles.cardspesialis} 
-                key={item.id_spesialis}
-              >
-                <Text style={styles.textspesialis}>
-                  {item.penyakit.nama_spesialis}
-                </Text>
-              </TouchableOpacity>
-            )
-          })
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              justifyContent: 'flex-start',
+              marginTop: 5
+            }}>
+              {spesialis.map((item) => {
+                return (
+                  <TouchableOpacity onPress={() => {
+                    navigation.navigate(Navigasi.SPESIALIS_BUAT_JANJI, {
+                      data: item
+                    })
+                  }} key={item.id_spesialis}>
+                    <View style={{
+                      backgroundColor: 'white',
+                      borderRadius: 5,
+                      paddingVertical: 7,
+                      paddingHorizontal: 10,
+                      margin: 5,
+                      borderColor: 'black',
+                      borderWidth: 1
+                    }}>
+                      <Text style={{ color: 'black' }}>
+                        {item.penyakit.nama_spesialis}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                )
+              })}
+            </View>
+          </ScrollView>
         ) : showIndicator ? (
-          <View style={{ marginVertical: 10 }}>
-            <ActivityIndicator size={'large'} color={colors.primary} style={{ justifyContent: 'center', alignItems: 'center' }} />
+          <View style={{ marginVertical: 10, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size={'large'} color={colors.primary} />
           </View>
         ) : output ? (
           <View
@@ -182,25 +197,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 5,
   },
-  textSpesialis: {
-    color: 'black',
-    fontSize: 10,
-    textAlign: 'center',
-  },
   image: {
     width: '100%',
     height: '100%',
-  },
-  cardspesialis: {
-    width: '45%',
-    backgroundColor: 'white',
-    elevation: 5,
-    marginRight: 5,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 10,
-    paddingVertical: 10
   },
   viewcontainer: {
     marginTop: 10,
@@ -209,12 +208,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 20,
   },
-  textspesialis: {
-    color: 'blue',
-    fontSize: 12,
-    fontWeight: 'bold',
-    fontFamily: 'Poppins-Medium'
-  }
 });
 
 export default InformasiBuatJanji;

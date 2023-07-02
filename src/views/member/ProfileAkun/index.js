@@ -1,15 +1,15 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
-import {colors} from '../../../utils';
-import {getData} from '../../../utils';
+import { colors } from '../../../utils';
+import { getData } from '../../../utils';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Navigasi from '../../../partials/navigasi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import {baseUrl} from '../../../utils';
+import { baseUrl } from '../../../utils';
 
-const ProfileAkun = ({navigation}) => {
+const ProfileAkun = ({ navigation }) => {
   const [user, setUser] = useState({});
   const [dataPribadi, setDataPribadi] = useState({});
   const [showIndicator, setShowIndicator] = useState(true);
@@ -33,25 +33,40 @@ const ProfileAkun = ({navigation}) => {
   };
 
   const logout = () => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        AsyncStorage.removeItem('dataUser');
-        AsyncStorage.removeItem('user');
-        AsyncStorage.removeItem('isLoggedIn');
+    Alert.alert(
+      'Konfirmasi',
+      'Apakah Anda Yakin Untuk Keluar ?',
+      [
+        {
+          text: 'Batal',
+          style: 'cancel'
+        },
+        {
+          text: 'Setuju',
+          onPress: () => {
+            return new Promise(async (resolve, reject) => {
+              try {
+                AsyncStorage.removeItem('dataUser');
+                AsyncStorage.removeItem('user');
+                AsyncStorage.removeItem('isLoggedIn');
 
-        await axios({
-          url: `${baseUrl.url}/logout`,
-          headers: {
-            Authorization: 'Bearer ' + dataPribadi.token,
-          },
-          method: 'GET',
-        });
+                await axios({
+                  url: `${baseUrl.url}/logout`,
+                  headers: {
+                    Authorization: 'Bearer ' + dataPribadi.token,
+                  },
+                  method: 'GET',
+                });
 
-        navigation.navigate(Navigasi.LOGIN);
-      } catch (error) {
-        console.log(error);
-      }
-    });
+                navigation.navigate(Navigasi.LOGIN);
+              } catch (error) {
+                console.log(error);
+              }
+            });
+          }
+        }
+      ]
+    )
   };
 
   return (
@@ -63,11 +78,11 @@ const ProfileAkun = ({navigation}) => {
             {showIndicator
               ? 'Tunggu Sebentar'
               : dataPribadi.nama == null
-              ? ''
-              : dataPribadi.nama}
+                ? ''
+                : dataPribadi.nama}
           </Text>
         </View>
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <View style={styles.viewFoundLogin}>
             <View
               style={{
@@ -90,10 +105,10 @@ const ProfileAkun = ({navigation}) => {
                 <Image
                   source={require('../../../assets/images/people.png')}
                   resizeMode="cover"
-                  style={{width: 60, height: 60}}
+                  style={{ width: 60, height: 60 }}
                 />
               </View>
-              <View style={{paddingHorizontal: 15, flex: 2}}>
+              <View style={{ paddingHorizontal: 15, flex: 2 }}>
                 <Text
                   style={{
                     color: 'black',
@@ -102,7 +117,7 @@ const ProfileAkun = ({navigation}) => {
                   }}>
                   {dataPribadi.nama}
                 </Text>
-                <Text style={{color: 'black', fontSize: 14}}>{dataPribadi.nomor_hp}</Text>
+                <Text style={{ color: 'black', fontSize: 14 }}>{dataPribadi.nomor_hp}</Text>
                 <TouchableOpacity
                   onPress={() => {
                     navigation.replace(Navigasi.EDIT_PROFILE);
@@ -125,15 +140,15 @@ const ProfileAkun = ({navigation}) => {
                 </TouchableOpacity>
               </View>
             </View>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <View
                 style={{
                   flex: 1,
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Icon name="home" style={{fontSize: 20, color: 'black'}} />
-                <Text style={{color: 'black', fontWeight: 'bold'}}>55 KG</Text>
+                <Icon name="home" style={{ fontSize: 20, color: 'black' }} />
+                <Text style={{ color: 'black', fontWeight: 'bold' }}>55 KG</Text>
               </View>
               <View
                 style={{
@@ -141,8 +156,8 @@ const ProfileAkun = ({navigation}) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Icon name="home" style={{fontSize: 20, color: 'black'}} />
-                <Text style={{color: 'black', fontWeight: 'bold'}}>170 CM</Text>
+                <Icon name="home" style={{ fontSize: 20, color: 'black' }} />
+                <Text style={{ color: 'black', fontWeight: 'bold' }}>170 CM</Text>
               </View>
               <View
                 style={{
@@ -150,8 +165,8 @@ const ProfileAkun = ({navigation}) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Icon name="home" style={{fontSize: 20, color: 'black'}} />
-                <Text style={{color: 'black', fontWeight: 'bold'}}>
+                <Icon name="home" style={{ fontSize: 20, color: 'black' }} />
+                <Text style={{ color: 'black', fontWeight: 'bold' }}>
                   20 Tahun
                 </Text>
               </View>
@@ -163,12 +178,12 @@ const ProfileAkun = ({navigation}) => {
             }}>
             <View style={styles.buttonListMenu}>
               <View style={styles.viewButtonListMenu}>
-                <Text style={{color: 'black'}}>Ubah Password</Text>
+                <Text style={{ color: 'black' }}>Ubah Password</Text>
               </View>
               <View style={styles.iconButtonListMenu}>
                 <Icon
                   name="arrow-forward"
-                  style={{fontSize: 20, color: 'black'}}
+                  style={{ fontSize: 20, color: 'black' }}
                 />
               </View>
             </View>
@@ -176,12 +191,12 @@ const ProfileAkun = ({navigation}) => {
           <TouchableOpacity>
             <View style={styles.buttonListMenu}>
               <View style={styles.viewButtonListMenu}>
-                <Text style={{color: 'black'}}>Riwayat Transaksi</Text>
+                <Text style={{ color: 'black' }}>Riwayat Transaksi</Text>
               </View>
               <View style={styles.iconButtonListMenu}>
                 <Icon
                   name="arrow-forward"
-                  style={{fontSize: 20, color: 'black'}}
+                  style={{ fontSize: 20, color: 'black' }}
                 />
               </View>
             </View>
@@ -189,12 +204,12 @@ const ProfileAkun = ({navigation}) => {
           <TouchableOpacity>
             <View style={styles.buttonListMenu}>
               <View style={styles.viewButtonListMenu}>
-                <Text style={{color: 'black'}}>Pusat Bantuan</Text>
+                <Text style={{ color: 'black' }}>Pusat Bantuan</Text>
               </View>
               <View style={styles.iconButtonListMenu}>
                 <Icon
                   name="arrow-forward"
-                  style={{fontSize: 20, color: 'black'}}
+                  style={{ fontSize: 20, color: 'black' }}
                 />
               </View>
             </View>
@@ -205,12 +220,12 @@ const ProfileAkun = ({navigation}) => {
             }}>
             <View style={styles.buttonListMenu}>
               <View style={styles.viewButtonListMenu}>
-                <Text style={{color: 'black'}}>Alamat Tersimpan</Text>
+                <Text style={{ color: 'black' }}>Alamat Tersimpan</Text>
               </View>
               <View style={styles.iconButtonListMenu}>
                 <Icon
                   name="arrow-forward"
-                  style={{fontSize: 20, color: 'black'}}
+                  style={{ fontSize: 20, color: 'black' }}
                 />
               </View>
             </View>
@@ -222,7 +237,7 @@ const ProfileAkun = ({navigation}) => {
             style={styles.buttonLogout}>
             <Text style={styles.textButtonLogout}>Keluar</Text>
           </TouchableOpacity>
-          <View style={{marginTop: 5}}>
+          <View style={{ marginTop: 5 }}>
             <Text
               style={{
                 color: 'black',
@@ -244,7 +259,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   heading: {
-    backgroundColor: 'blue',
+    backgroundColor: '#051f84',
     padding: 15,
     height: 50,
   },

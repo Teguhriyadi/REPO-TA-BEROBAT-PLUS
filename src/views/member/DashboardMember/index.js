@@ -159,17 +159,15 @@ const DashboardMember = ({ navigation }) => {
   return (
     <View style={styles.background}>
       <StatusBarComponent />
-      <LinearGradient colors={['#FF6B6B', '#0000FF']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }} style={{ height: 70, justifyContent: 'center', alignItems: 'center' }}>
-          <View
+      <View style={{ height: 70, justifyContent: 'center', alignItems: 'center', backgroundColor: '#051f84' }}>
+        <View
           style={{
             marginHorizontal: 10,
             marginVertical: 20,
             flexDirection: 'row',
           }}>
           <View style={{ justifyContent: 'center', alignItems: 'flex-start', flex: 2 }}>
-            <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }}>
+            <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold' }}>
               {greeting} , {dataPribadi.nama}
             </Text>
           </View>
@@ -193,25 +191,23 @@ const DashboardMember = ({ navigation }) => {
             </View>
           </View>
         </View>
-        </LinearGradient>
+      </View>
 
-      <LinearGradient colors={['#FF6B6B', '#0000FF']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }} style={{ marginTop: 20, marginHorizontal: 10, borderRadius: 10, elevation: 5, marginBottom: 10 }}>
+      <View style={{ marginTop: 20, marginHorizontal: 10, borderRadius: 10, elevation: 5, marginBottom: 10, backgroundColor: '#051f84' }}>
         <View style={{ paddingHorizontal: 10, paddingVertical: 10, flexDirection: 'row' }}>
-          <View style={{justifyContent: 'center', alignItems: 'flex-start'}}>
+          <View style={{ justifyContent: 'center', alignItems: 'flex-start' }}>
             <Image source={require("../../../assets/images/people.png")} style={{ width: 50, height: 50, borderRadius: 100, borderColor: 'white', borderWidth: 1 }} />
           </View>
           <View style={{ justifyContent: 'center', alignItems: 'flex-start', flex: 2, marginLeft: 10 }}>
-            <Text style={{color: 'white', fontWeight: 'bold', fontSize: 14, fontFamily: 'Poppins-Medium'}}>
+            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 14, fontFamily: 'Poppins-Medium' }}>
               {dataPribadi.email}
             </Text>
-            <Text style={{color: 'white', fontWeight: 'bold', fontFamily: 'Poppins-Medium', fontSize: 12}}>
+            <Text style={{ color: 'white', fontWeight: 'bold', fontFamily: 'Poppins-Medium', fontSize: 12 }}>
               {dataPribadi.nomor_hp}
             </Text>
           </View>
         </View>
-      </LinearGradient>
+      </View>
 
       <ScrollView showsHorizontalScrollIndicator={false}>
         <View style={{ paddingTop: 0, paddingHorizontal: 10 }}>

@@ -268,17 +268,13 @@ const ChatDokter = ({ navigation, route }) => {
                       </View>
 
                       <View style={{ marginTop: 20, alignItems: 'flex-end' }}>
-                        <LinearGradient colors={['#FF6B6B', '#0000FF']}
-                          start={{ x: 0, y: 0 }}
-                          end={{ x: 1, y: 1 }} style={{borderRadius: 5}}>
-                          <TouchableOpacity style={{ width: 100, paddingVertical: 5, alignItems: 'center' }} onPress={() => navigation.navigate(Navigasi.DETAIL_CHAT, {
-                            data: item
-                          })}>
-                            <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
-                              KONSULTASI
-                            </Text>
-                          </TouchableOpacity>
-                        </LinearGradient>
+                        <TouchableOpacity style={{ width: 100, paddingVertical: 5, alignItems: 'center', backgroundColor: '#051f84', borderRadius: 5 }} onPress={() => navigation.navigate(Navigasi.DETAIL_CHAT, {
+                          data: item
+                        })}>
+                          <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
+                            KONSULTASI
+                          </Text>
+                        </TouchableOpacity>
                       </View>
                     </View>
                   </View>

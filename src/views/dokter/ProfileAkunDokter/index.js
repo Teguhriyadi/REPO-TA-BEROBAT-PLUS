@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   heading: {
-    backgroundColor: 'blue',
+    backgroundColor: '#051f84',
     padding: 15,
     height: 50,
     flexDirection: 'row',

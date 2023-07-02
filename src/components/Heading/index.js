@@ -6,16 +6,14 @@ import LinearGradient from 'react-native-linear-gradient';
 
 const Heading = ({ textHeading, navigasi }) => {
     return (
-        <LinearGradient colors={['#FF6B6B', '#0000FF']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }} style={styles.heading}>
+        <View style={styles.heading}>
             <TouchableOpacity onPress={navigasi}>
                 <Icon name='arrow-back' style={styles.icon} />
             </TouchableOpacity>
             <Text style={styles.textHeading}>
                 {textHeading}
             </Text>
-        </LinearGradient>
+        </View>
     );
 }
 
@@ -26,7 +24,8 @@ const styles = StyleSheet.create({
         height: 60,
         elevation: 5,
         justifyContent: 'flex-start',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: '#051f84'
     },
 
     icon: {

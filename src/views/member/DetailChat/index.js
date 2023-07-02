@@ -14,7 +14,7 @@ const DetailChatDokter = ({ navigation, route }) => {
     <View style={styles.background}>
       <StatusBarComponent />
       <ImageBackground
-        source={require('../../../assets/images/people.png')}
+        source={require('../../../assets/images/background-doctor.png')}
         style={{ width: '100%', height: 250 }}
         resizeMode="cover"
       />
@@ -31,7 +31,7 @@ const DetailChatDokter = ({ navigation, route }) => {
       <View
         style={{
           flex: 1,
-          backgroundColor: 'blue',
+          backgroundColor: '#051f84',
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
         }}>

@@ -4,7 +4,7 @@ import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent
 import Icon from 'react-native-vector-icons/Ionicons';
 import ChatItem from '../../../components/ChatItem';
 import InputChat from '../../../components/InputChat';
-import Firebase from '../../../firebase/firebaseConfig';
+import { configfirebase } from '../../../firebase/firebaseConfig';
 import {
   getChatTime,
   getData,
@@ -31,7 +31,7 @@ const Chating = ({navigation, route}) => {
   useEffect(() => {
     getDataUserLocal();
     const urlFirebase = `chatting/${user.uid}_${getDokter.data.data.id_dokter}/allChat/`;
-    Firebase.database()
+    configfirebase.database()
       .ref(urlFirebase)
       .on('value', snapshot => {
         console.log(snapshot.val());
@@ -104,13 +104,13 @@ const Chating = ({navigation, route}) => {
       uidPartner: user.uid,
     };
 
-    Firebase.database()
+    configfirebase.database()
       .ref(urlFirebase)
       .push(data)
       .then(response => {
         setChatContent('');
-        Firebase.database().ref(urlMessageUser).set(dataHistoryChatForUser);
-        Firebase.database().ref(urlMessageDokter).set(dataHistoryChatForDokter);
+        configfirebase.database().ref(urlMessageUser).set(dataHistoryChatForUser);
+        configfirebase.database().ref(urlMessageDokter).set(dataHistoryChatForDokter);
       })
       .catch(error => {
         console.log(error);
