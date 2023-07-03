@@ -29,7 +29,7 @@ const Other = ({text, date}) => {
             backgroundColor: 'blue',
             borderRadius: 10,
             borderBottomLeftRadius: 0,
-            maxWidth: '80%',
+            maxWidth: '100%',
           }}>
           <Text style={{color: 'black', fontSize: 14, color: 'white'}}>
             {text}

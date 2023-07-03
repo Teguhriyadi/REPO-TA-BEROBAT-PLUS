@@ -16,7 +16,7 @@ import axios from 'axios';
 import Navigasi from '../../../partials/navigasi';
 
 const Chating = ({navigation, route}) => {
-  const getDokter = route.params;
+  const getDokter = route.params.data;
 
   const [form, setForm] = useForm({
     id_dokter: '',
@@ -30,7 +30,7 @@ const Chating = ({navigation, route}) => {
 
   useEffect(() => {
     getDataUserLocal();
-    const urlFirebase = `chatting/${user.uid}_${getDokter.data.data.id_dokter}/allChat/`;
+    const urlFirebase = `chatting/${user.uid}_${getDokter.uid}/allChat/`;
     configfirebase.database()
       .ref(urlFirebase)
       .on('value', snapshot => {
@@ -59,7 +59,6 @@ const Chating = ({navigation, route}) => {
       });
   }, [
     user.uid,
-    getDokter.data.data.id_dokter,
     dataPribadi.idx,
     dataPribadi.token,
   ]);
@@ -85,17 +84,16 @@ const Chating = ({navigation, route}) => {
       chatContent: chatContent,
     };
 
-    const chatID = `${user.uid}_${getDokter.data.data.id_dokter}`;
+    const chatID = `${user.uid}_${getDokter.uid}`;
 
     const urlFirebase = `chatting/${chatID}/allChat/${setDateChat(today)}`;
 
     const urlMessageUser = `messages/${user.uid}/${chatID}`;
-    const urlMessageDokter = `messages/${getDokter.data.data.id_dokter}/${chatID}`;
+    const urlMessageDokter = `messages/${getDokter.uid}/${chatID}`;
     const dataHistoryChatForUser = {
       lastContentChat: chatContent,
       lastChatDate: today.getTime(),
-      uidPartner: getDokter.data.data.id_dokter,
-      namePartner: getDokter.data.data.user_id.nama,
+      uidPartner: getDokter.uid
     };
 
     const dataHistoryChatForDokter = {
@@ -154,10 +152,10 @@ const Chating = ({navigation, route}) => {
                 fontFamily: 'Poppins-Medium',
                 fontWeight: 'bold',
               }}>
-                {getDokter.data.data.user_id.nama}
+                {getDokter.nama}
             </Text>
             <Text style={{color: 'gray', fontSize: 12}}>
-              {getDokter.data.data.kelas == 1 ? 'Dokter Spesialis' : 'Dokter Umum' }
+              {getDokter.kelas == 1 ? 'Dokter Spesialis' : 'Dokter Umum' }
             </Text>
           </View>
           <View

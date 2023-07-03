@@ -10,10 +10,7 @@ import {baseUrl, colors, getData} from '../../../../../utils';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Navigasi from '../../../../../partials/navigasi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {TabView, TabBar, SceneMap} from 'react-native-tab-view';
 import axios from 'axios';
-import Banks from '../../../../member/Produk/TokoKesehatanProduk/RingkasanPembayaranProduk/Banks';
-import EWallet from './E-Wallet';
 
 const RingkasanPembayaranProduk = ({navigation}) => {
   const [dataPribadi, setDataPribadi] = useState({});
@@ -39,33 +36,6 @@ const RingkasanPembayaranProduk = ({navigation}) => {
       console.log('Error retrieving data:', error);
     }
   };
-
-  const [routes] = useState([
-    {key: 'first', title: 'E - Wallet'},
-    {key: 'second', title: 'Bank'},
-  ]);
-
-  const renderScene = SceneMap({
-    first: EWallet,
-    second: Banks,
-  });
-
-  const renderTabBar = props => (
-    <TabBar
-      {...props}
-      tabStyle={{elevation: 0, fontSize: 12}}
-      labelStyle={{
-        fontSize: 12,
-        textTransform: 'capitalize',
-        fontWeight: 'bold',
-      }}
-      indicatorContainerStyle={{backgroundColor: 'white'}}
-      indicatorStyle={{backgroundColor: 'red'}}
-      activeColor={'red'}
-      inactiveColor={'black'}
-      style={{marginTop: 10}}
-    />
-  );
 
   useEffect(() => {
     const debounceTimeout = setTimeout(() => {
@@ -193,14 +163,6 @@ const RingkasanPembayaranProduk = ({navigation}) => {
             </View>
           </View>
         </View>
-        <TabView
-          navigationState={{index: index, routes: routes}}
-          renderScene={renderScene}
-          renderTabBar={renderTabBar}
-          onIndexChange={setIndex}
-          initialLayout={{width: layouts.width}}
-          style={{marginVertical: 15, marginHorizontal: 15}}
-        />
       </View>
       <View
         style={{

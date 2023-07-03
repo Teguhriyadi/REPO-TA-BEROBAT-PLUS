@@ -12,6 +12,7 @@ import {colors, baseUrl, getData} from '../../../utils';
 import axios from 'axios';
 import {WebView} from "react-native-webview";
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
+import WS from 'react-native-websocket';
 
 const Transaksi = () => {
   // const [countdown, setCountdown] = useState(1800);
@@ -22,11 +23,36 @@ const Transaksi = () => {
 
   useEffect(() => {
     getUserLocal();
-    const debounceTimeout = setTimeout(() => {
-      fetchData();
-    }, 300);
 
-    return () => clearTimeout(debounceTimeout);
+    const socket = new WebSocket('ws://https://berobatplus.shop/api/send-message'); 
+
+    socket.onopen = () => {
+      console.log('Koneksi WebSocket terbuka');
+    };
+
+    socket.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      console.log('Menerima pesan dari server:', message);
+
+      // Proses pesan yang diterima dari server di sini
+    };
+
+    socket.onerror = (error) => {
+      console.error('Terjadi kesalahan pada koneksi WebSocket:', error);
+    };
+
+    socket.onclose = () => {
+      console.log('Koneksi WebSocket ditutup');
+    };
+
+    // const interval = setInterval(() => {
+    //   fetchData();
+    // }, 5000);
+
+    return () => {
+      socket.close();
+      // clearInterval(fetchData);
+    }
     // let interval;
     // if (countdown > 0) {
     //   interval = setInterval(() => {
@@ -46,27 +72,42 @@ const Transaksi = () => {
     });
   };
 
-  const fetchData = () => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        await axios({
-          url: `${baseUrl.url}/master/role`,
-          headers: {
-            Authorization: 'Bearer ' + dataPribadi.token,
-          },
-          method: 'GET',
-        })
-          .then(response => {
-            setShowIndicator(false);
-            setData(response.data.data);
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      } catch (error) {
-        console.log(error);
-      }
-    });
+  const fetchData = async () => {
+    try {
+      const response = await axios({
+        url: `${baseUrl.url}/master/role`,
+        headers: {
+          Authorization: 'Bearer ' + dataPribadi.token
+        },
+        method: "GET"
+      });
+
+      console.log("----");
+      console.log(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+    // return new Promise(async (resolve, reject) => {
+    //   try {
+    //     await axios({
+    //       url: `${baseUrl.url}/master/role`,
+    //       headers: {
+    //         Authorization: 'Bearer ' + dataPribadi.token,
+    //       },
+    //       method: 'GET',
+    //     })
+    //       .then(response => {
+    //         console.log(response.data.data)
+    //         setShowIndicator(false);
+    //         setData(response.data.data);
+    //       })
+    //       .catch(error => {
+    //         console.log(error);
+    //       });
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // });
   };
   // const formatTime = timeInSeconds => {
   //   const minutes = Math.floor(timeInSeconds / 60);

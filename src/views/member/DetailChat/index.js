@@ -190,8 +190,13 @@ const DetailChatDokter = ({ navigation, route }) => {
               borderRadius: 10,
             }}>
             <Button onpress={() => {
+              const detaildatadokter = {
+                uid: getDokter.data.user_id.uid_firebase,
+                nama: getDokter.data.user_id.nama,
+                kelas: getDokter.data.kelas
+              };
               navigation.navigate(Navigasi.CHATING, {
-                data: getDokter
+                data: detaildatadokter
               })
             }} textbutton={"Lanjutkan Pembayaran"} />
           </View>

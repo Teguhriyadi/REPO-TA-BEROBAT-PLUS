@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,15 +11,15 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import StatusBarComponent from '../../../../../components/StatusBar/StatusBarComponent';
-import {colors, getData, showSuccess} from '../../../../../utils';
+import { colors, getData, showSuccess } from '../../../../../utils';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Navigasi from '../../../../../partials/navigasi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {FlatList} from 'react-native-gesture-handler';
+import { FlatList } from 'react-native-gesture-handler';
 import Geocoder from 'react-native-geocoding';
 import Geolocation from '@react-native-community/geolocation';
 
-const Keranjang = ({navigation}) => {
+const Keranjang = ({ navigation }) => {
   const [dataPribadi, setDataPribadi] = useState({});
   const [keranjang, setKeranjang] = useState([]);
   const [alamat, setAlamat] = useState(null);
@@ -59,13 +59,13 @@ const Keranjang = ({navigation}) => {
 
       const produk = await AsyncStorage.getItem(`produk_${dataPribadi.idx}`);
       const arrayProduk = JSON.parse(produk);
-      
+
       if (arrayProduk !== null) {
         arrayProduk.forEach(item => {
           totalHarga += item.harga * item.count;
         })
       }
-      
+
       setHarga(totalHarga);
 
     } catch (error) {
@@ -115,7 +115,7 @@ const Keranjang = ({navigation}) => {
           `produk_${dataPribadi.idx}`,
           JSON.stringify(updateArray),
         );
-        
+
         showSuccess("Berhasil", "Data Keranjang Telah di Hapus");
         setKeranjang(updateArray);
         getTotalHarga();
@@ -142,7 +142,7 @@ const Keranjang = ({navigation}) => {
   const show = () => {
     return (
       <>
-        <View style={styles.content}>
+        {/* <View style={styles.content}>
           <View style={styles.infoUser}>
             <View style={{flexDirection: 'row'}}>
               <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold'}}>
@@ -184,9 +184,36 @@ const Keranjang = ({navigation}) => {
                   </Text>
                 </View>
                 <TouchableOpacity style={{justifyContent: 'center'}}>
-                  <Icon name="pencil" style={{color: 'black', fontSize: 20}} />
+                  <Icon name="exit-outline" style={{color: 'black', fontSize: 20}} />
                 </TouchableOpacity>
               </View>
+            </View>
+          </View>
+        </View> */}
+        <View style={{ marginTop: 10, marginHorizontal: 10 }}>
+          <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
+            Tujuan Barang
+          </Text>
+          <Text style={{ marginTop: 10, color: 'black', fontSize: 14, fontFamily: 'Poppins-Medium' }}>
+            Posisi Anda Sekarang
+          </Text>
+          <TextInput placeholder='Masukkan Lokasi Anda' placeholderTextColor={"grey"} style={{ borderColor: 'grey', borderWidth: 1, borderRadius: 10, fontSize: 14, color: 'grey', fontFamily: 'Poppins-Medium', fontWeight: 'bold', paddingHorizontal: 10, height: 40 }} />
+
+          <Text style={{ marginTop: 10, color: 'black', fontSize: 14, fontFamily: 'Poppins-Medium' }}>
+            Kontak Penerima
+          </Text>
+
+          <View style={{ backgroundColor: '#051f84', borderRadius: 5, paddingVertical: 10, paddingHorizontal: 10, flexDirection: 'row' }}>
+            <View style={{ flex: 1 }}>
+              <Image source={require("../../../../../assets/images/people.png")} style={{ width: 50, height: 50, borderColor: 'white', borderWidth: 1, borderRadius: 50 }} />
+            </View>
+            <View style={{ flex: 4 }}>
+              <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 14, fontFamily: 'Poppins-Medium', textAlign: 'justify' }}>
+                {dataPribadi.nama}
+              </Text>
+              <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12, fontFamily: 'Poppins-Medium', textAlign: 'justify' }}>
+                {dataPribadi.nomor_hp}
+              </Text>
             </View>
           </View>
         </View>
@@ -200,18 +227,18 @@ const Keranjang = ({navigation}) => {
       <View style={styles.heading}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate(Navigasi.TOKO_KESEHATAN_PRODUK);
+            navigation.goBack();
           }}>
-          <Icon name="arrow-back" style={{color: 'black', fontSize: 20}} />
+          <Icon name="arrow-back" style={{ color: 'black', fontSize: 20 }} />
         </TouchableOpacity>
         <Text style={styles.textHeading}>Keranjang Belanja Anda</Text>
         <TouchableOpacity
-          style={{flex: 1, alignItems: 'flex-end'}}
+          style={{ flex: 1, alignItems: 'flex-end' }}
           onPress={() => {
             hapusSemuaData();
           }}>
           {keranjang.length > 0 ? (
-            <Icon name="trash" style={{color: 'red', fontSize: 20}} />
+            <Icon name="trash" style={{ color: 'red', fontSize: 20 }} />
           ) : (
             <View />
           )}
@@ -219,7 +246,7 @@ const Keranjang = ({navigation}) => {
       </View>
 
       {keranjang.length > 0 ? (
-        <View style={{flex: 7}}>
+        <View style={{ flex: 7 }}>
           {show()}
           <View
             style={{
@@ -231,9 +258,9 @@ const Keranjang = ({navigation}) => {
             <FlatList
               data={keranjang}
               keyExtractor={item => item.id.toString()}
-              renderItem={({item}) => (
+              renderItem={({ item }) => (
                 <>
-                  <View style={{flexDirection: 'row', marginVertical: 10}}>
+                  <View style={{ flexDirection: 'row', marginVertical: 10 }}>
                     <View
                       style={{
                         borderColor: 'gray',
@@ -244,22 +271,22 @@ const Keranjang = ({navigation}) => {
                       }}>
                       <Image
                         source={require('../../../../../assets/images/auth-new.png')}
-                        style={{width: 50, height: 50}}
+                        style={{ width: 50, height: 50 }}
                       />
                     </View>
                     <View style={styles.barang}>
-                      <Text style={{color: 'black', fontSize: 16}}>
+                      <Text style={{ color: 'black', fontSize: 16 }}>
                         {item.nama_produk}
                       </Text>
-                      <Text style={{color: 'gray', fontSize: 12}}>
+                      <Text style={{ color: 'gray', fontSize: 12 }}>
                         Per Strip
                       </Text>
                     </View>
-                    <View style={{flex: 1, alignItems: 'flex-end'}}>
-                      <Text style={{color: 'black', fontSize: 16}}>
+                    <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                      <Text style={{ color: 'black', fontSize: 16 }}>
                         {item.harga_produk}
                       </Text>
-                      <View style={{flexDirection: 'row', marginTop: 5}}>
+                      <View style={{ flexDirection: 'row', marginTop: 5 }}>
                         <TouchableOpacity
                           style={{
                             backgroundColor: colors.backgroundEmpty,
@@ -271,11 +298,11 @@ const Keranjang = ({navigation}) => {
                           }}>
                           <Icon
                             name="trash"
-                            style={{color: 'black', fontSize: 20}}
+                            style={{ color: 'black', fontSize: 20 }}
                           />
                         </TouchableOpacity>
                         <TouchableOpacity
-                          style={[styles.viewOperator, {marginLeft: 10}]}>
+                          style={[styles.viewOperator, { marginLeft: 10 }]}>
                           <Text style={styles.textViewOperator}>+</Text>
                         </TouchableOpacity>
                         <View
@@ -284,12 +311,12 @@ const Keranjang = ({navigation}) => {
                             alignItems: 'center',
                             marginLeft: 10,
                           }}>
-                          <Text style={{color: 'black', fontWeight: 'bold'}}>
+                          <Text style={{ color: 'black', fontWeight: 'bold' }}>
                             {item.count}
                           </Text>
                         </View>
                         <TouchableOpacity
-                          style={[styles.viewOperator, {marginLeft: 10}]}>
+                          style={[styles.viewOperator, { marginLeft: 10 }]}>
                           <Text style={styles.textViewOperator}>-</Text>
                         </TouchableOpacity>
                       </View>
@@ -300,7 +327,7 @@ const Keranjang = ({navigation}) => {
               )}
             />
           </View>
-          <View style={{flex: 1, justifyContent: 'center', marginBottom: 1}}>
+          <View style={{ flex: 1, justifyContent: 'center', marginBottom: 1 }}>
             {keranjang.length > 0 ? (
               <TouchableOpacity
                 style={styles.btnKeranjang}
@@ -317,7 +344,7 @@ const Keranjang = ({navigation}) => {
           </View>
         </View>
       ) : (
-        <View style={{flex: 1}}>{show()}</View>
+        <View style={{ flex: 1 }}>{show()}</View>
       )}
 
       {keranjang.length > 0 ? (
@@ -332,25 +359,25 @@ const Keranjang = ({navigation}) => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <View style={{flex: 1}}>
-            <Text style={{color: 'black', fontSize: 16}}>
+          <View style={{ flex: 1 }}>
+            <Text style={{ color: 'black', fontSize: 16 }}>
               Ada{' '}
-              <Text style={{color: 'red', fontWeight: 'bold'}}>
+              <Text style={{ color: 'red', fontWeight: 'bold' }}>
                 {keranjang.length}
               </Text>{' '}
               Keranjang
             </Text>
-            <Text style={{color: 'black'}}>Total Harga :</Text>
-            <Text style={{color: 'black', fontWeight: 'bold'}}>Rp. {harga} </Text>
+            <Text style={{ color: 'black' }}>Total Harga :</Text>
+            <Text style={{ color: 'black', fontWeight: 'bold' }}>Rp. {harga} </Text>
           </View>
-          <View style={{flex: 1}}>
+          <View style={{ flex: 1 }}>
             <TouchableOpacity
-              style={{backgroundColor: 'purple', borderRadius: 5}} onPress={() => {
+              style={{ backgroundColor: 'white', borderColor: 'purple', borderWidth: 1, borderRadius: 5 }} onPress={() => {
                 navigation.navigate(Navigasi.RINGKASAN_PEMBAYARAN_PRODUK)
               }} >
               <Text
                 style={{
-                  color: 'white',
+                  color: 'purple',
                   fontWeight: 'bold',
                   textAlign: 'center',
                   paddingVertical: 10,

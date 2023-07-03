@@ -38,9 +38,6 @@ import KeahlianDokter from '../views/member/DashboardMember/KeahlianDokter';
 import AllData from '../views/member/FiturUnggulan/BuatJanji/AllData';
 import AllDataProduk from '../views/member/Produk/TokoKesehatanProduk/AllData';
 import RingkasanPembayaranProduk from '../views/member/Produk/TokoKesehatanProduk/RingkasanPembayaranProduk';
-import Cash from '../views/member/Produk/TokoKesehatanProduk/RingkasanPembayaranProduk/Cash';
-import Banks from '../views/member/Produk/TokoKesehatanProduk/RingkasanPembayaranProduk/Banks';
-import EWallet from '../views/member/Produk/TokoKesehatanProduk/RingkasanPembayaranProduk/E-Wallet';
 import LoadingScreen from '../views/member/LoadingScreen';
 import ProfileAkunDokter from '../views/dokter/ProfileAkunDokter';
 import EditProfilDokter from '../views/dokter/ProfileAkunDokter/EditProfilDokter';
@@ -61,6 +58,7 @@ import DetailPraktek from '../views/member/FiturUnggulan/InformasiBuatJanji/Spes
 import DataAlamat from '../views/member/ProfileAkun/AlamatTersimpan/DataAlamat';
 import ProdukDokter from '../views/dokter/ProdukDokter';
 import TambahRekomendasi from '../views/dokter/ProdukDokter/TambahRekomendasi';
+import DetailKonsultasi from '../views/dokter/KonsultasiDokter/DetailKonsultasi';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -102,7 +100,7 @@ const MainApp = () => {
       />
       <Tab.Screen
         name={Navigasi.TRANSAKSI_MEMBER}
-        component={ChatPusher}
+        component={Transaksi}
         options={{ headerShown: false }}
       />
       <Tab.Screen
@@ -333,21 +331,6 @@ const Router = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name={Navigasi.BANKS}
-        component={Banks}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name={Navigasi.EWallet}
-        component={EWallet}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name={Navigasi.CASH}
-        component={Cash}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
         name={Navigasi.KEAHLIAN_DOKTER}
         component={KeahlianDokter}
         options={{ headerShown: false }}
@@ -456,6 +439,12 @@ const Router = () => {
       <Stack.Screen
         name={Navigasi.TAMBAH_REKOMENDASI}
         component={TambahRekomendasi}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name={Navigasi.DETAIL_KONSULTASI}
+        component={DetailKonsultasi}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

@@ -30,9 +30,7 @@ const Splash = ({ navigation }) => {
   });
 
   return (
-    <LinearGradient colors={['#FF6B6B', '#0000FF']}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }} style={styles.background}>
+    <View style={styles.background}>
       <StatusBarComponent />
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Image source={require("../../../assets/images/group-satu-new.png")} style={{ width: 150, height: 150 }} />
@@ -43,13 +41,14 @@ const Splash = ({ navigation }) => {
           " Melayani Konsultasi dan Reservasi Secara Online "
         </Text>
       </View>
-    </LinearGradient>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   background: {
     flex: 1,
+    backgroundColor: '#051f84'
   },
 
   title: {

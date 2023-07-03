@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux';
-import { baseUrl, colors, showSuccess, storeData } from '../../../../utils';
+import { baseUrl, colors, showError, showSuccess, storeData } from '../../../../utils';
 import StatusBarComponent from '../../../../components/StatusBar/StatusBarComponent';
 import FormInput from '../../../../components/FormInput';
 import Navigasi from '../../../../partials/navigasi';
@@ -84,26 +84,111 @@ const Login = ({ navigation }) => {
             if (data.message == "Berhasil Login") {
                 if (data.data.id_role == "RO-2003062") {
                     dispatch({ type: 'SET_LOADING', value: false });
-                    setForm('reset');
 
-                    axios({
-                        url: `${baseUrl.url}/akun/profil/dokter/profil`,
-                        headers: {
-                            Authorization: 'Bearer ' + data.data.token
-                        },
-                        method: "GET"
-                    }).then((response) => {
-                        storeData("profil_dokter", response.data.data);
-                    }).catch((error) => {
-                        console.log(error);
-                    })
+                    if (datauser.uuid_firebase == null) {
+                        const profildokter = await axios({
+                            url: `${baseUrl.url}/akun/profil/dokter/profil`,
+                            headers: {
+                                Authorization: 'Bearer ' + datauser.token
+                            },
+                            method: "GET"
+                        })
 
-                    showSuccess("Good Job, Login Success", "Anda Login Sebagai Dokter");
 
-                    storeData("dataUser", datauser);
-                    storeData("isLoggedIn", "true");
+                        configfirebase.auth()
+                            .createUserWithEmailAndPassword(datauser.email, form.password)
+                            .then(async (sukses) => {
+                                const dokterdata = {
+                                    nomor_str: profildokter.data.data.nomor_str,
+                                    nomor_hp: profildokter.data.data.user.nomor_hp,
+                                    email: profildokter.data.data.user.email,
+                                    nama: profildokter.data.data.user.nama,
+                                    uid: sukses.user.uid
+                                };
 
-                    navigation.navigate(Navigasi.MAIN_DOKTER);
+                                await axios({
+                                    url: `${baseUrl.url}/akun/user/uid`,
+                                    headers: {
+                                        Authorization: 'Bearer ' + datauser.token
+                                    },
+                                    method: "PUT",
+                                    data: {
+                                        id: profildokter.data.data.user.id,
+                                        uuid_firebase: sukses.user.uid
+                                    }
+                                })
+
+                                configfirebase.database()
+                                    .ref(`users/dokter/` + sukses.user.uid + "/")
+                                    .set(dokterdata)
+                                configfirebase.auth()
+                                    .signInWithEmailAndPassword(datauser.email, form.password)
+                                    .then((responseberhasil) => {
+                                        configfirebase.database()
+                                            .ref(`users/dokter/${responseberhasil.user.uid}`)
+                                            .once('value')
+                                            .then((responsedatabase) => {
+                                                if (responsedatabase.val()) {
+                                                    storeData("user", responsedatabase.val());
+                                                }
+                                            })
+                                    }).catch((errrodata) => {
+                                        console.log(errrodata);
+                                    })
+
+                                showSuccess("Good Job, Login Success", "Anda Berhasil Login");
+                                storeData("dataUser", datauser);
+                                storeData("isLoggedIn", "true");
+                                setForm("reset");
+
+                                navigation.navigate(Navigasi.MAIN_DOKTER);
+
+                            }).catch((error) => {
+                                console.log(error);
+                            })
+                    } else {
+                        configfirebase.auth()
+                            .signInWithEmailAndPassword(datauser.email, form.password)
+                            .then((responsesukses) => {
+                                configfirebase.database()
+                                    .ref(`users/dokter/${responsesukses.user.uid}`)
+                                    .once("value")
+                                    .then((responsedatabase) => {
+                                        if (responsedatabase.val()) {
+                                            storeData("user", responsedatabase.val());
+                                        }
+                                    })
+                            }).catch((error) => {
+                                console.log(error);
+                            })
+
+                        showSuccess("Good Job, Login Success", "Anda Berhasil Login");
+                        storeData("dataUser", datauser);
+                        storeData("isLoggedIn", "true");
+                        setForm("reset");
+
+                        navigation.navigate(Navigasi.MAIN_DOKTER);
+                    }
+                    // setForm('reset');
+
+                    // axios({
+                    //     url: `${baseUrl.url}/akun/profil/dokter/profil`,
+                    //     headers: {
+                    //         Authorization: 'Bearer ' + data.data.token
+                    //     },
+                    //     method: "GET"
+                    // }).then((response) => {
+                    //     storeData("profil_dokter", response.data.data);
+                    // }).catch((error) => {
+                    //     console.log(error);
+                    // })
+
+                    // showSuccess("Good Job, Login Success", "Anda Login Sebagai Dokter");
+
+                    // storeData("dataUser", datauser);
+                    // storeData("isLoggedIn", "true");
+
+                    // navigation.navigate(Navigasi.MAIN_DOKTER);
                 } else if (data.data.id_role == "RO-2003064") {
                     dispatch({ type: "SET_LOADING", value: false });
 
@@ -183,7 +268,8 @@ const Login = ({ navigation }) => {
             }
 
         } catch (error) {
-            console.log(error);
+            dispatch({ type: 'SET_LOADING', value: false });
+            showError("Maaf, Data Anda Tidak Ditemukan");
         }
     }
 

@@ -48,7 +48,7 @@ const DaftarAkun = ({navigation}) => {
                     }
 
                     await axios({
-                        url: `${baseUrl.url}/akun/konsumen/uid`,
+                        url: `${baseUrl.url}/akun/user/uid`,
                         method: "PUT",
                         data: {
                             id: datauser.data.user,

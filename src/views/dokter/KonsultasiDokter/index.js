@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
-import {baseUrl, colors, getData} from '../../../utils';
-import Firebase from '../../../firebase/firebaseConfig';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { baseUrl, colors, getData } from '../../../utils';
+import { configfirebase } from '../../../firebase/firebaseConfig';
 import axios from 'axios';
-import { ActivityIndicator } from 'react-native';
+import Navigasi from '../../../partials/navigasi';
 
-const KonsultasiDokter = () => {
+const KonsultasiDokter = ({navigation}) => {
 
   const [dokterProfil, setDokterProfil] = useState({});
   const [dataPribadi, setDataPribadi] = useState({});
@@ -16,34 +16,31 @@ const KonsultasiDokter = () => {
   useEffect(() => {
 
     getDataUserLocal();
-    const rootDB = Firebase.database().ref();
-    const urlHistory = `messages/${dokterProfil.id_dokter}`;
+    const rootDB = configfirebase.database().ref();
+    const urlHistory = `messages/${dataPribadi.uuid_firebase}`;
     const messagesDB = rootDB.child(urlHistory);
 
-    messagesDB.on('value', snapshot => {
+    messagesDB.on("value", async snapshot => {
       if (snapshot.val()) {
         const oldData = snapshot.val();
         const data = [];
 
-        Object.keys(oldData).map(key => {
+        const promises = await Object.keys(oldData).map(async key => {
+          const datakonsumen = `users/konsumen/${oldData[key].uidPartner}`;
+          // console.log(key);
+          const detail_konsumen = await rootDB.child(datakonsumen).once("value");
+          console.log(detail_konsumen);
           data.push({
             id: key,
-            ...oldData[key],
+            detail_konsumen: detail_konsumen.val()
           });
         });
 
-        setTimeout(() => {
-          setShowIndicator(false);
-          setHistoryChat(data);
-        }, 1000);
-      } else {
-        setTimeout(() => {
-          setOutput(true);
-          setShowIndicator(false);
-        }, 1000);
+        await Promise.all(promises);
+        setHistoryChat(data);
       }
     });
-  }, [dataPribadi.nama, dataPribadi.idx, dataPribadi.token]);
+  }, [dataPribadi.nama, dataPribadi.uuid_firebase, dataPribadi.idx, dataPribadi.token]);
 
   const getDataUserLocal = () => {
     getData("profil_dokter").then((response) => {
@@ -83,7 +80,7 @@ const KonsultasiDokter = () => {
                           fontWeight: 'bold',
                           fontFamily: 'Poppins-Medium',
                         }}>
-                        Mohammad Ilham Teguhriyadi
+                        {item.detail_konsumen.nama}
                       </Text>
                       <Text
                         style={{
@@ -91,7 +88,7 @@ const KonsultasiDokter = () => {
                           fontSize: 12,
                           fontFamily: 'Poppins-Medium',
                         }}>
-                        085324237299
+                        {item.detail_konsumen.nomor_hp}
                       </Text>
                     </View>
                     <View style={[styles.status, {backgroundColor: 'green'}]}>
@@ -126,9 +123,17 @@ const KonsultasiDokter = () => {
                       paddingVertical: 10,
                       justifyContent: 'center',
                       alignItems: 'center',
-                    }}>
+                    }} onPress={() => {
+                      const params = {
+                        id: item.id,
+                        uidPartner: item.detail_konsumen.uid,
+                        nama: item.detail_konsumen.nama,
+                        nomor_hp: item.detail_konsumen.nomor_hp
+                      }
+                      navigation.navigate(Navigasi.DETAIL_KONSULTASI, params)
+                    }} >
                     <Text style={{color: 'green', fontWeight: 'bold'}}>
-                      LANJUTKAN
+                      Lanjutkan
                     </Text>
                   </TouchableOpacity>
                 </View>

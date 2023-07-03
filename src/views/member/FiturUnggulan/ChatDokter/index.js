@@ -80,6 +80,7 @@ const ChatDokter = ({ navigation, route }) => {
 
       const result = await Promise.all(promises);
 
+      console.log(response.data.data);
       setListDataDokter(response.data.data);
       setListKeahlian(result.flat());
     } catch (error) {

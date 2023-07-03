@@ -8,3 +8,4 @@ export * from "./Dashboard/AllDataApotek";
 export * from "./Pusher";
 export * from "./ProdukDokter";
 export * from "./ProdukDokter/TambahRekomendasi";
+export * from "./KonsultasiDokter/DetailKonsultasi";

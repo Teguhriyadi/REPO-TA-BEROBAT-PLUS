@@ -28,28 +28,23 @@ const Konsultasi = ({navigation}) => {
     const urlHistory = `messages/${user.uid}/`;
     const messagesDB = rootDB.child(urlHistory);
 
-    setShowIndicator(true);
-    messagesDB.on('value', snapshot => {
+    messagesDB.on('value', async snapshot => {
       if (snapshot.val()) {
         const oldData = snapshot.val();
         const data = [];
 
-        Object.keys(oldData).map(key => {
+        const promises = await Object.keys(oldData).map(async key => {
+          const urlUidDokter = `users/dokter/${oldData[key].uidPartner}`
+          const detailDokter = await rootDB.child(urlUidDokter).once("value");
           data.push({
             id: key,
+            detailDokter: detailDokter.val(),
             ...oldData[key],
           });
         });
 
-        setTimeout(() => {
-          setShowIndicator(false);
-          setHistoryChat(data);
-        }, 1000);
-      } else {
-        setTimeout(() => {
-          setOutput(true);
-          setShowIndicator(false);
-        }, 1000);
+        await Promise.all(promises);
+        setHistoryChat(data);
       }
     });
   }, [user.uid, dataPribadi.idx, dataPribadi.token]);
@@ -87,9 +82,58 @@ const Konsultasi = ({navigation}) => {
         </View>
       </View>
 
-      {historyChat.length ? (
-        <ScrollView style={{marginTop: 15, marginBottom: 5}}>
+          
+      {/* {historyChat.length ? (
+        
+      ) : showIndicator ? (
+        <View style={{marginVertical: 10}}>
+          <ActivityIndicator size={'large'} color={colors.primary} />
+        </View>
+      ) : output ? (
+        <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+          <Image
+            source={require('../../../assets/images/konsultasi-not-found.png')}
+            resizeMode="cover"
+          />
+          <Text style={{color: 'black', fontSize: 20, fontWeight: 'bold'}}>
+            Maaf, Konsultasi Tidak Ditemukan
+          </Text>
+          <Text style={{color: 'black', fontSize: 14}}>
+            Anda sepertinya belum melakukan konsultasi
+          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate(Navigasi.CHAT_DOKTER);
+            }}
+            style={{
+              backgroundColor: 'purple',
+              width: 300,
+              padding: 10,
+              marginTop: 20,
+              borderRadius: 10,
+            }}>
+            <Text
+              style={{
+                color: 'white',
+                fontWeight: 'bold',
+                fontSize: 14,
+                textAlign: 'center',
+              }}>
+              Konsultasi Sekarang
+            </Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View />
+      )} */}
+      <ScrollView style={{marginTop: 15, marginBottom: 5}}>
           {historyChat.map(chat => {
+            const dataDoktor = {
+              uid: chat.detailDokter.uid,
+              data:chat.detailDokter
+            }
+
+            console.log(dataDoktor);
             return (
               <View
                 key={chat.id}
@@ -156,7 +200,7 @@ const Konsultasi = ({navigation}) => {
                           fontWeight: 'bold',
                           fontFamily: 'Poppins-Medium',
                         }}>
-                        {chat.namePartner}
+                        {chat.detailDokter.nama}
                       </Text>
                       <Text
                         style={{
@@ -188,6 +232,9 @@ const Konsultasi = ({navigation}) => {
                     alignItems: 'flex-end',
                   }}>
                   <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate(Navigasi.CHATING, dataDoktor)
+                    }}
                     style={{
                       borderColor: 'white',
                       borderWidth: 1,
@@ -208,47 +255,6 @@ const Konsultasi = ({navigation}) => {
             );
           })}
         </ScrollView>
-      ) : showIndicator ? (
-        <View style={{marginVertical: 10}}>
-          <ActivityIndicator size={'large'} color={colors.primary} />
-        </View>
-      ) : output ? (
-        <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
-          <Image
-            source={require('../../../assets/images/konsultasi-not-found.png')}
-            resizeMode="cover"
-          />
-          <Text style={{color: 'black', fontSize: 20, fontWeight: 'bold'}}>
-            Maaf, Konsultasi Tidak Ditemukan
-          </Text>
-          <Text style={{color: 'black', fontSize: 14}}>
-            Anda sepertinya belum melakukan konsultasi
-          </Text>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate(Navigasi.CHAT_DOKTER);
-            }}
-            style={{
-              backgroundColor: 'purple',
-              width: 300,
-              padding: 10,
-              marginTop: 20,
-              borderRadius: 10,
-            }}>
-            <Text
-              style={{
-                color: 'white',
-                fontWeight: 'bold',
-                fontSize: 14,
-                textAlign: 'center',
-              }}>
-              Konsultasi Sekarang
-            </Text>
-          </TouchableOpacity>
-        </View>
-      ) : (
-        <View />
-      )}
     </View>
   );
 };
