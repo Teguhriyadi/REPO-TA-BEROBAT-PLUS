@@ -63,6 +63,7 @@ import DetailKonsultasi from '../views/dokter/KonsultasiDokter/DetailKonsultasi'
 import ChatPerawat from '../views/member/FiturUnggulan/ChatPerawat';
 import DetailKonsultasiPerawat from '../views/perawat/KonsultasiPerawat/DetailKonsultasiPerawat';
 import LanjutkanPerawat from '../views/perawat/KonsultasiPerawat/LanjutkanPerawat';
+import LupaPasswordAutentikasi from '../views/public/Autentikasi/LupaPasswordAutentikasi';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -272,6 +273,11 @@ const Router = () => {
       <Stack.Screen 
         name={Navigasi.MAIN_PERAWAT}
         component={MainPerawat}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Navigasi.LUPA_PASSWORD_AUTENTIKASI}
+        component={LupaPasswordAutentikasi}
         options={{headerShown: false}}
       />
       <Stack.Screen 

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux';
 import { baseUrl, colors, showError, showSuccess, storeData } from '../../../../utils';
@@ -213,7 +213,7 @@ const Login = ({ navigation }) => {
                     }
 
                 } else if (data.data.id_role == "RO-2003064") {
-                    
+
                     const getProfile = async () => {
                         try {
                             const profilePerawat = await axios({
@@ -443,64 +443,75 @@ const Login = ({ navigation }) => {
         <>
             <View style={styles.background}>
                 <StatusBarComponent />
+
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    <Image source={require("../../../../assets/images/group-satu-new.png")} resizeMode='cover' style={{ width: 150, height: 150 }} />
+                </View>
+
                 <Text style={styles.textHeader}> Login Aplikasi</Text>
                 <Text style={styles.textSubHeader}>
                     Silahkan Login Terlebih Dahulu Untuk Memulai Program.
                 </Text>
-                <View style={styles.viewCard}>
-                    <FormInput
-                        icon={"call"}
-                        placeholder={"Masukkan Nomor HP"}
-                        placeholderTextColor={"grey"}
-                        keyBoardType={"numeric"}
-                        value={form.nomor_hp}
-                        onChangeText={handleInputChange}
-                    />
-                    {error != '' &&
-                        <View style={{ marginHorizontal: 10, marginBottom: 5 }}>
-                            <Text style={styles.textError}>
-                                * {error}
+                <ScrollView>
+                    <View style={styles.viewCard}>
+                        <FormInput
+                            icon={"call"}
+                            placeholder={"Masukkan Nomor HP"}
+                            placeholderTextColor={"grey"}
+                            keyBoardType={"numeric"}
+                            value={form.nomor_hp}
+                            onChangeText={handleInputChange}
+                        />
+                        {error != '' &&
+                            <View style={{ marginHorizontal: 10, marginBottom: 5 }}>
+                                <Text style={styles.textError}>
+                                    * {error}
+                                </Text>
+                            </View>
+                        }
+                        <FormInput
+                            icon={"eye"}
+                            placeholder={"Masukkan Password"}
+                            placeholderTextColor={"grey"}
+                            secureTextEntry={true}
+                            value={form.password}
+                            onChangeText={handleInputPassword}
+                        />
+                        {errorPassword != '' &&
+                            <View style={{ marginHorizontal: 10, marginBottom: 5 }}>
+                                <Text style={styles.textError}>
+                                    * {errorPassword}
+                                </Text>
+                            </View>
+                        }
+                        <TouchableOpacity onPress={() => {
+                            loginUser()
+                        }} style={styles.button}>
+                            <Text style={styles.textbutton}>
+                                Login
                             </Text>
+                        </TouchableOpacity>
+                        <View style={{ flexDirection: 'row' }}>
+                            <TouchableOpacity style={{ paddingLeft: 10, paddingTop: 10, flex: 1, alignItems: 'flex-start' }}
+                                onPress={() => {
+                                    navigation.navigate(Navigasi.DAFTAR_AKUN_KONSUMEN)
+                                }}>
+                                <Text style={{ color: 'blue' }}>
+                                    Daftar Disini
+                                </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{ paddingTop: 10 }} onPress={() => {
+                                navigation.navigate(Navigasi.LUPA_PASSWORD_AUTENTIKASI)
+                            }}>
+                                <View style={{ alignItems: 'flex-end', paddingRight: 10 }}>
+                                    <Text style={{ color: 'red', fontSize: 14 }}>
+                                        Lupa Password ?
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
                         </View>
-                    }
-                    <FormInput
-                        icon={"eye"}
-                        placeholder={"Masukkan Password"}
-                        placeholderTextColor={"grey"}
-                        secureTextEntry={true}
-                        value={form.password}
-                        onChangeText={handleInputPassword}
-                    />
-                    {errorPassword != '' &&
-                        <View style={{ marginHorizontal: 10, marginBottom: 5 }}>
-                            <Text style={styles.textError}>
-                                * {errorPassword}
-                            </Text>
-                        </View>
-                    }
-                    <TouchableOpacity style={{ paddingTop: 10 }}>
-                        <View style={{ alignItems: 'flex-end', paddingRight: 10 }}>
-                            <Text style={{ color: 'grey' }}>
-                                Lupa Password
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => {
-                        loginUser()
-                    }} style={styles.button}>
-                        <Text style={styles.textbutton}>
-                            Login
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ paddingLeft: 10, paddingTop: 10 }}
-                        onPress={() => {
-                            navigation.navigate(Navigasi.DAFTAR_AKUN_KONSUMEN)
-                        }}>
-                        <Text style={{ color: 'blue' }}>
-                            Daftar Disini
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+                    </View>
+                </ScrollView>
             </View>
         </>
     )
@@ -544,7 +555,8 @@ const styles = StyleSheet.create({
         marginTop: 10,
         elevation: 5,
         borderRadius: 10,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginBottom: 10
     },
 
     button: {

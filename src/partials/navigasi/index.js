@@ -59,5 +59,8 @@ export default {
   RIWAYAT_TRANSAKSI_PERAWAT: "RiwayatTransaksiPerawat",
   KONSULTASI_PERAWAT: "KonsultasiPerawat",
   DETAIL_KONSULTASI_PERAWAT: "DetailKonsultasiPerawat",
-  LANJUTKAN_PERAWATAN: "LanjutkanPerawatan"
+  LANJUTKAN_PERAWATAN: "LanjutkanPerawatan",
+
+  // PUBLIC
+  LUPA_PASSWORD_AUTENTIKASI: "LupaPasswordAutentikasi"
 };

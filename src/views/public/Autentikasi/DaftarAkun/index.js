@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'react-native'
 import React from 'react'
 import FormInput from '../../../../components/FormInput';
 import StatusBarComponent from '../../../../components/StatusBar/StatusBarComponent';
@@ -74,6 +74,9 @@ const DaftarAkun = ({navigation}) => {
         <>
             <View style={{ flex: 1, backgroundColor: 'white' }}>
                 <StatusBarComponent />
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                    <Image source={require("../../../../assets/images/group-satu-new.png")} resizeMode='cover' style={{height: 150, width: 150}} />
+                </View>
                 <Text style={styles.textHeader}>Daftar Akun</Text>
                 <Text style={styles.textSubHeader}>
                     Silahkan daftarkan akun terlebih dahulu.
