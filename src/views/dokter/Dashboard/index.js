@@ -30,8 +30,8 @@ const Dashboard = ({navigation}) => {
   const [getswitch, setswitch] = useState(false);
 
   useEffect(() => {
+    getDataUserLocal();
     const debounceTimeout = setTimeout(() => {
-      getDataUserLocal();
       dataLokasi();
     }, 300);
 
@@ -121,26 +121,24 @@ const Dashboard = ({navigation}) => {
         },
         {
           text: 'Setuju',
-          onPress: () => {
-            return new Promise(async (resolve, reject) => {
-              try {
-                AsyncStorage.removeItem('dataUser');
-                AsyncStorage.removeItem('user');
-                AsyncStorage.removeItem('isLoggedIn');
+          onPress: async () => {
+            try {
+              await AsyncStorage.removeItem("dataUser");
+              await AsyncStorage.removeItem("user");
+              await AsyncStorage.removeItem("isLoggedIn");
 
-                await axios({
-                  url: `${baseUrl.url}/logout`,
-                  headers: {
-                    Authorization: 'Bearer ' + dataPribadi.token,
-                  },
-                  method: 'GET',
-                });
+              await axios({
+                url: `${baseUrl.url}/logout`,
+                headers: {
+                  Authorization: 'Bearer ' + dataPribadi.token
+                },
+                method: "GET"
+              })
 
-                navigation.navigate(Navigasi.LOGIN);
-              } catch (error) {
-                console.log(error);
-              }
-            });
+              navigation.navigate(Navigasi.LOGIN);
+            } catch (error) {
+              console.log(error);
+            }
           }
         }
       ]

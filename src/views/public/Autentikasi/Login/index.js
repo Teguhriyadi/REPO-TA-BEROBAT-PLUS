@@ -7,6 +7,7 @@ import FormInput from '../../../../components/FormInput';
 import Navigasi from '../../../../partials/navigasi';
 import axios from 'axios';
 import { configfirebase } from '../../../../firebase/firebaseConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({ navigation }) => {
 
@@ -83,168 +84,263 @@ const Login = ({ navigation }) => {
 
             if (data.message == "Berhasil Login") {
                 if (data.data.id_role == "RO-2003062") {
-                    dispatch({ type: 'SET_LOADING', value: false });
 
-                    if (datauser.uuid_firebase == null) {
-                        const profildokter = await axios({
-                            url: `${baseUrl.url}/akun/profil/dokter/profil`,
-                            headers: {
-                                Authorization: 'Bearer ' + datauser.token
-                            },
-                            method: "GET"
-                        })
+                    const getProfile = async () => {
+                        try {
+                            const profileDokter = await axios({
+                                url: `${baseUrl.url}/akun/profil/dokter/profil`,
+                                headers: {
+                                    Authorization: 'Bearer ' + datauser.token
+                                },
+                                method: "GET"
+                            });
 
+                            return profileDokter.data;
 
-                        configfirebase.auth()
-                            .createUserWithEmailAndPassword(datauser.email, form.password)
-                            .then(async (sukses) => {
-                                const dokterdata = {
-                                    nomor_str: profildokter.data.data.nomor_str,
-                                    nomor_hp: profildokter.data.data.user.nomor_hp,
-                                    email: profildokter.data.data.user.email,
-                                    nama: profildokter.data.data.user.nama,
-                                    uid: sukses.user.uid
-                                };
+                        } catch (error) {
+                            console.log(error);
+                            throw error;
+                        }
+                    }
 
-                                await axios({
-                                    url: `${baseUrl.url}/akun/user/uid`,
-                                    headers: {
-                                        Authorization: 'Bearer ' + datauser.token
-                                    },
-                                    method: "PUT",
-                                    data: {
-                                        id: profildokter.data.data.user.id,
-                                        uuid_firebase: sukses.user.uid
-                                    }
-                                })
+                    const createFirebaseUser = async (email, password) => {
+                        try {
+                            const sukses = await configfirebase.auth().createUserWithEmailAndPassword(email, password);
+                            return sukses.user.uid;
+                        } catch (error) {
+                            console.log(error);
+                            throw error;
+                        }
+                    }
 
-                                configfirebase.database()
-                                    .ref(`users/dokter/` + sukses.user.uid + "/")
-                                    .set(dokterdata)
-                                configfirebase.auth()
-                                    .signInWithEmailAndPassword(datauser.email, form.password)
-                                    .then((responseberhasil) => {
-                                        configfirebase.database()
-                                            .ref(`users/dokter/${responseberhasil.user.uid}`)
-                                            .once('value')
-                                            .then((responsedatabase) => {
-                                                if (responsedatabase.val()) {
-                                                    storeData("user", responsedatabase.val());
-                                                }
-                                            })
-                                    }).catch((errrodata) => {
-                                        console.log(errrodata);
-                                    })
+                    const updateFirebaseUid = async (userId, uid) => {
+                        try {
+                            await axios({
+                                url: `${baseUrl.url}/akun/user/uid`,
+                                headers: {
+                                    Authorization: 'Bearer ' + datauser.token
+                                },
+                                method: "PUT",
+                                data: {
+                                    id: userId,
+                                    uuid_firebase: uid
+                                }
+                            });
+                        } catch (error) {
+                            console.log(error);
+                            throw error;
+                        }
+                    }
 
-                                showSuccess("Good Job, Login Success", "Anda Berhasil Login");
-                                storeData("dataUser", datauser);
-                                storeData("isLoggedIn", "true");
-                                setForm("reset");
+                    const saveDoctorData = async (uid, doctorData) => {
+                        try {
+                            await configfirebase.database().ref(`users/dokter/${uid}`).set(doctorData);
+                        } catch (error) {
+                            console.log(error);
+                            throw error;
+                        }
+                    }
 
-                                navigation.navigate(Navigasi.MAIN_DOKTER);
+                    const loginFirebase = async (email, password) => {
+                        try {
+                            const responseberhasil = await configfirebase.auth().signInWithEmailAndPassword(email, password);
+                            return responseberhasil.user.uid;
+                        } catch (error) {
+                            console.log(error);
+                            throw error;
+                        }
+                    }
 
-                            }).catch((error) => {
-                                console.log(error);
-                            })
-                    } else {
-                        configfirebase.auth()
-                            .signInWithEmailAndPassword(datauser.email, form.password)
-                            .then((responsesukses) => {
-                                configfirebase.database()
-                                    .ref(`users/dokter/${responsesukses.user.uid}`)
-                                    .once("value")
-                                    .then((responsedatabase) => {
-                                        if (responsedatabase.val()) {
-                                            storeData("user", responsedatabase.val());
-                                        }
-                                    })
-                            }).catch((error) => {
-                                console.log(error);
-                            })
+                    const getUserData = async (uid) => {
+                        try {
+                            const responsedatabase = await configfirebase.database().ref(`users/dokter/${uid}`).once('value');
+                            return responsedatabase.val();
+                        } catch (error) {
+                            console.log(error);
+                            throw error;
+                        }
+                    }
 
+                    const loginSuccess = () => {
+                        dispatch({ type: "SET_LOADING", value: false })
                         showSuccess("Good Job, Login Success", "Anda Berhasil Login");
-                        storeData("dataUser", datauser);
                         storeData("isLoggedIn", "true");
                         setForm("reset");
-
                         navigation.navigate(Navigasi.MAIN_DOKTER);
                     }
-                    
-                } else if (data.data.id_role == "RO-2003064") {
-                    dispatch({ type: "SET_LOADING", value: false });
 
                     if (datauser.uuid_firebase == null) {
-
-                        const profilkonsumen = await axios({
-                            url: `${baseUrl.url}/akun/profil/konsumen/profil`,
-                            headers: {
-                                Authorization: 'Bearer ' + datauser.token
-                            },
-                            method: "GET"
-                        })
-
-                        configfirebase.auth()
-                            .createUserWithEmailAndPassword(datauser.email, form.password)
-                            .then((sukses) => {
-                                const konsumendata = {
-                                    nik: profilkonsumen.data.data.nik,
-                                    nomor_hp: profilkonsumen.data.data.user.nomor_hp,
-                                    email: profilkonsumen.data.data.user.email,
-                                    nama: profilkonsumen.data.data.user.nama,
-                                    uid: sukses.user.uid
-                                };
-
-                                configfirebase.database()
-                                    .ref(`users/konsumen/` + sukses.user.uid + "/")
-                                    .set(konsumendata)
-                                configfirebase.auth()
-                                    .signInWithEmailAndPassword(datauser.email, form.password)
-                                    .then((responseberhasil) => {
-                                        configfirebase.database()
-                                            .ref(`users/konsumen/${responseberhasil.user.uid}`)
-                                            .once('value')
-                                            .then((responsedatabase) => {
-                                                if (responsedatabase.val()) {
-                                                    storeData("user", responsedatabase.val());
-                                                }
-                                            })
-                                    }).catch((errrodata) => {
-                                        console.log(errrodata);
-                                    })
-
-                                showSuccess("Good Job, Login Success", "Anda Berhasil Login");
-                                storeData("dataUser", datauser);
-                                storeData("isLoggedIn", "true");
-                                setForm("reset");
-
-                                navigation.navigate(Navigasi.MAIN_APP);
-
-                            }).catch((error) => {
-                                console.log(error);
-                            })
+                        try {
+                            const profildokter = await getProfile();
+                            const sukses = await createFirebaseUser(datauser.email, form.password);
+                            const dokterdata = {
+                                nomor_str: profildokter.data.nomor_str,
+                                nomor_hp: profildokter.data.user.nomor_hp,
+                                email: profildokter.data.user.email,
+                                nama: profildokter.data.user.nama,
+                                uid: sukses
+                            };
+                            await updateFirebaseUid(profildokter.data.user.id, sukses);
+                            await saveDoctorData(sukses, dokterdata);
+                            const responseberhasil = await loginFirebase(datauser.email, form.password);
+                            const userData = await getUserData(responseberhasil);
+                            storeData("user", userData);
+                            storeData("dataUser", {
+                                idx: datauser.idx,
+                                nama: datauser.nama,
+                                email: datauser.email,
+                                nomor_hp: datauser.nomor_hp,
+                                token: datauser.token,
+                                role: datauser.role,
+                                uuid_firebase: sukses
+                            });
+                            loginSuccess();
+                        } catch (error) {
+                            console.log(error);
+                            throw error;
+                        }
                     } else {
-                        configfirebase.auth()
-                            .signInWithEmailAndPassword(datauser.email, form.password)
-                            .then((responsesukses) => {
-                                configfirebase.database()
-                                    .ref(`users/konsumen/${responsesukses.user.uid}`)
-                                    .once("value")
-                                    .then((responsedatabase) => {
-                                        if (responsedatabase.val()) {
-                                            storeData("user", responsedatabase.val());
-                                        }
-                                    })
-                            }).catch((error) => {
-                                console.log(error);
-                            })
+                        try {
+                            const responseberhasil = await loginFirebase(datauser.email, form.password);
+                            const userData = await getUserData(responseberhasil);
+                            storeData("user", userData);
+                            storeData("dataUser", datauser);
+                            loginSuccess();
+                        } catch (error) {
+                            console.log(error);
+                            throw error;
+                        }
+                    }
 
+                } else if (data.data.id_role == "RO-2003064") {
+                    
+                    const getProfile = async () => {
+                        try {
+                            const profilePerawat = await axios({
+                                url: `${baseUrl.url}/akun/profil/perawat/profil`,
+                                headers: {
+                                    Authorization: 'Bearer ' + datauser.token
+                                },
+                                method: "GET"
+                            });
+
+                            return profilePerawat.data;
+
+                        } catch (error) {
+                            console.log(error);
+                            throw error;
+                        }
+                    }
+
+                    const createFirebaseUser = async (email, password) => {
+                        try {
+                            const sukses = await configfirebase.auth().createUserWithEmailAndPassword(email, password);
+                            return sukses.user.uid;
+                        } catch (error) {
+                            console.log(error);
+                            throw error;
+                        }
+                    }
+
+                    const updateFirebaseUid = async (userId, uid) => {
+                        try {
+                            await axios({
+                                url: `${baseUrl.url}/akun/user/uid`,
+                                headers: {
+                                    Authorization: 'Bearer ' + datauser.token
+                                },
+                                method: "PUT",
+                                data: {
+                                    id: userId,
+                                    uuid_firebase: uid
+                                }
+                            });
+                        } catch (error) {
+                            console.log(error);
+                            throw error;
+                        }
+                    }
+
+                    const savePerawatData = async (uid, perawatData) => {
+                        try {
+                            await configfirebase.database().ref(`users/perawat/${uid}`).set(perawatData);
+                        } catch (error) {
+                            console.log(error);
+                            throw error;
+                        }
+                    }
+
+                    const loginFirebase = async (email, password) => {
+                        try {
+                            const responseberhasil = await configfirebase.auth().signInWithEmailAndPassword(email, password);
+                            return responseberhasil.user.uid;
+                        } catch (error) {
+                            console.log(error);
+                            throw error;
+                        }
+                    }
+
+                    const getUserData = async (uid) => {
+                        try {
+                            const responsedatabase = await configfirebase.database().ref(`users/perawat/${uid}`).once('value');
+                            return responsedatabase.val();
+                        } catch (error) {
+                            console.log(error);
+                            throw error;
+                        }
+                    }
+
+                    const loginSuccess = () => {
+                        dispatch({ type: "SET_LOADING", value: false })
                         showSuccess("Good Job, Login Success", "Anda Berhasil Login");
-                        storeData("dataUser", datauser);
                         storeData("isLoggedIn", "true");
                         setForm("reset");
-
-                        navigation.navigate(Navigasi.MAIN_APP);
+                        navigation.navigate(Navigasi.MAIN_PERAWAT);
                     }
+
+                    if (datauser.uuid_firebase == null) {
+                        try {
+                            const profileperawat = await getProfile();
+                            const sukses = await createFirebaseUser(datauser.email, form.password);
+                            const perawatdata = {
+                                nomor_strp: profileperawat.data.nomor_strp,
+                                nomor_hp: profileperawat.data.user.nomor_hp,
+                                email: profileperawat.data.user.email,
+                                nama: profileperawat.data.user.nama,
+                                uid: sukses
+                            };
+                            await updateFirebaseUid(profileperawat.data.user.id, sukses);
+                            await saveDoctorData(sukses, dokterdata);
+                            const responseberhasil = await loginFirebase(datauser.email, form.password);
+                            const userData = await getUserData(responseberhasil);
+                            storeData("user", userData);
+                            storeData("dataUser", {
+                                idx: datauser.idx,
+                                nama: datauser.nama,
+                                email: datauser.email,
+                                nomor_hp: datauser.nomor_hp,
+                                token: datauser.token,
+                                role: datauser.role,
+                                uuid_firebase: sukses
+                            });
+                            loginSuccess();
+                        } catch (error) {
+                            console.log(error);
+                            throw error;
+                        }
+                    } else {
+                        try {
+                            const responseberhasil = await loginFirebase(datauser.email, form.password);
+                            const userData = await getUserData(responseberhasil);
+                            storeData("user", userData);
+                            storeData("dataUser", datauser);
+                            loginSuccess();
+                        } catch (error) {
+                            console.log(error);
+                            throw error;
+                        }
+                    }
+
                 } else if (data.data.id_role == "RO-2003063") {
                     dispatch({ type: 'SET_LOADING', value: false });
 
