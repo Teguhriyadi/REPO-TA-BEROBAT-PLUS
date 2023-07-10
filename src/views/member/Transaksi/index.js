@@ -1,4 +1,4 @@
-import React, {useState, useEffect, lazy, Suspense} from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import {
   View,
   Text,
@@ -7,52 +7,33 @@ import {
   StyleSheet,
   TouchableOpacity,
   StatusBar,
+  PermissionsAndroid,
 } from 'react-native';
-import {colors, baseUrl, getData} from '../../../utils';
+import { colors, baseUrl, getData } from '../../../utils';
 import axios from 'axios';
-import {WebView} from "react-native-webview";
+import { WebView } from "react-native-webview";
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
 import WS from 'react-native-websocket';
+import { configfirebase } from '../../../firebase/firebaseConfig';
+import Geolocation from '@react-native-community/geolocation';
 
 const Transaksi = () => {
   // const [countdown, setCountdown] = useState(1800);
   // const [finished, setFinished] = useState(false);
   const [dataRole, setData] = useState(null);
+  const [closestPerawat, setClosestPerawat] = useState(null);
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
   const [dataPribadi, setDataPribadi] = useState({});
   const [showIndicator, setShowIndicator] = useState(true);
 
   useEffect(() => {
     getUserLocal();
-
-    const socket = new WebSocket('ws://https://berobatplus.shop/api/send-message'); 
-
-    socket.onopen = () => {
-      console.log('Koneksi WebSocket terbuka');
-    };
-
-    socket.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      console.log('Menerima pesan dari server:', message);
-
-      // Proses pesan yang diterima dari server di sini
-    };
-
-    socket.onerror = (error) => {
-      console.error('Terjadi kesalahan pada koneksi WebSocket:', error);
-    };
-
-    socket.onclose = () => {
-      console.log('Koneksi WebSocket ditutup');
-    };
-
+    requestLocationPermission();
     // const interval = setInterval(() => {
     //   fetchData();
     // }, 5000);
 
-    return () => {
-      socket.close();
-      // clearInterval(fetchData);
-    }
     // let interval;
     // if (countdown > 0) {
     //   interval = setInterval(() => {
@@ -70,6 +51,85 @@ const Transaksi = () => {
       console.log(res);
       setDataPribadi(res);
     });
+  };
+
+  const requestLocationPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Location Permission',
+          message: 'This app requires access to your location.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        Geolocation.getCurrentPosition(position => {
+          const { latitude, longitude } = position.coords;
+
+          setLatitude(latitude)
+          setLongitude(longitude);
+        });
+      } else {
+        console.log('Tidak Ditemukan ');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const cari = () => {
+    if (latitude && longitude) {
+      const perawatref = configfirebase.database().ref("locations");
+      perawatref.once("value", (snapshot) => {
+        const perawatdata = snapshot.val();
+        console.log(perawatdata);
+        if (perawatdata) {
+          const perawatlist = Object.keys(perawatdata).map((key) => ({
+            id: key,
+            latitude: perawatdata[key].latitude,
+            longitude: perawatdata[key].longitude
+          }));
+
+          perawatlist.forEach((perawat) => {
+            const distance = haversineDistance(
+              latitude,
+              longitude,
+              perawat.latitude,
+              perawat.longitude
+            );
+            perawat.distance = distance;
+          });
+
+          // Mendapatkan perawat dengan jarak terdekat
+          const closestPerawat = perawatlist.reduce((prev, curr) =>
+            prev.distance < curr.distance ? prev : curr
+          );
+
+          setClosestPerawat(closestPerawat);
+        }
+      })
+    } else {
+      console.log("Lokasi Belum Tersedia");
+    }
+  }
+
+  const haversineDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Radius bumi dalam kilometer
+    const dLat = deg2rad(lat2 - lat1);
+    const dLon = deg2rad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Jarak dalam kilometer
+    return distance;
+  };
+
+  const deg2rad = (degree) => {
+    return degree * (Math.PI / 180);
   };
 
   const fetchData = async () => {
@@ -178,13 +238,13 @@ const Transaksi = () => {
   //   },
   // });
 
-  if (!dataRole) {
-    return (
-      <View style={{flex: 1, backgroundColor: 'white'}}>
-        <Text style={{color: 'black'}}>Loading...</Text>
-      </View>
-    );
-  }
+  // if (!dataRole) {
+  //   return (
+  //     <View style={{flex: 1, backgroundColor: 'white'}}>
+  //       <Text style={{color: 'black'}}>Loading...</Text>
+  //     </View>
+  //   );
+  // }
 
   return (
     // <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -195,9 +255,22 @@ const Transaksi = () => {
     //     renderItem={({item}) => <Text style={{color: 'black'}}>Hamdan</Text>}
     //   />
     // </View>
-    <View style={{flex: 1}}>
-      <StatusBarComponent/>
-      <WebView source={{uri: 'https://rtqulilalbab.com/'}} />
+    <View style={{ flex: 1 }}>
+      <StatusBarComponent />
+      <TouchableOpacity style={{ marginHorizontal: 10, marginVertical: 10, borderColor: 'green', borderWidth: 1, borderRadius: 5, paddingVertical: 10 }} onPress={() => {
+        cari();
+      }}>
+        <Text style={{ color: 'black', textAlign: 'center' }}>
+          Cari Ahli Terdekat
+        </Text>
+      </TouchableOpacity>
+      {closestPerawat && (
+        <View>
+          <Text style={{color: 'black'}}>Perawat Terdekat:</Text>
+          <Text style={{color: 'black'}}>Nama: {closestPerawat.latitude}</Text>
+          
+        </View>
+      )}
     </View>
   );
 };

@@ -1,24 +1,87 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Switch } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Switch, PermissionsAndroid } from 'react-native';
 import { baseUrl, colors, getData } from '../../../utils';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Navigasi from '../../../partials/navigasi';
 import axios from 'axios';
+import Geolocation from '@react-native-community/geolocation';
+import { configfirebase } from '../../../firebase/firebaseConfig';
 
 const ProfileAkunDokter = ({ navigation }) => {
   const [dataPribadi, setDataPribadi] = useState({});
   const [getswitch, setswitch] = useState(false);
   const [getprofil, setprofil] = useState(false);
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+  const [alamat, setAlamat] = useState(null);
 
   useEffect(() => {
+    getDataUserLocal();
     const debounceTimeout = setTimeout(() => {
-      getDataUserLocal();
+      requestLocationPermission();
       profil();
     }, 300);
 
     return () => clearTimeout(debounceTimeout);
 
-  }, [dataPribadi.nama, dataPribadi.nomor_hp]);
+  }, [dataPribadi.uuid_firebase, dataPribadi.nama, dataPribadi.nomor_hp]);
+
+  const requestLocationPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Location Permission',
+          message: 'This app requires access to your location.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        Geolocation.watchPosition(async position => {
+          const { latitude, longitude } = position.coords;
+          const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+
+          await axios
+            .get(url)
+            .then((response) => {
+              setAlamat(response.data.address.village)
+
+            }).catch((error) => {
+              console.log(error);
+            });
+
+          const locationData = {
+            uuid: dataPribadi.uuid_firebase,
+            latitude: latitude,
+            longitude: longitude
+          };
+
+          const checkFirebase = configfirebase.database().ref(`locations/${dataPribadi.uuid_firebase}`);
+
+          checkFirebase.once("value", (snapshot) => {
+            if (snapshot.val()) {
+              configfirebase.database()
+                .ref(`locations/${dataPribadi.uuid_firebase}`)
+                .update(locationData)
+            } else {
+              configfirebase.database()
+                .ref(`locations/${dataPribadi.uuid_firebase}`)
+                .set(locationData);
+            }
+          })
+
+          setLatitude(latitude)
+          setLongitude(longitude);
+        });
+      } else {
+        console.log('Tidak Ditemukan ');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const getDataUserLocal = () => {
     getData('dataUser').then(res => {
@@ -50,11 +113,11 @@ const ProfileAkunDokter = ({ navigation }) => {
     <View style={styles.backgroundBelakang}>
       <View style={styles.heading}>
         <View style={{ marginRight: 10 }}>
-          <Text style={{color: 'white', fontSize: 14, fontWeight: 'bold', fontFamily: 'Poppins-Medium'}}>
-            PROFIL SAYA
+          <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
+            PROFIL 3
           </Text>
         </View>
-        <View style={{justifyContent: 'flex-end', alignItems: 'flex-end', flex: 1}}>
+        <View style={{ justifyContent: 'flex-end', alignItems: 'flex-end', flex: 1 }}>
           <Switch
             trackColor={{ false: "#767577", true: "#81b0ff" }}
             thumbColor={getprofil ? "#f5dd4b" : "#f4f3f4"}
@@ -120,6 +183,12 @@ const ProfileAkunDokter = ({ navigation }) => {
             </View>
           </View>
         </View>
+        <Text style={{ color: 'black', fontSize: 14 }}>
+          Alamat Saya : {alamat}
+        </Text>
+        <Text style={{ color: 'black', fontSize: 14 }}>
+          {latitude}, {longitude}
+        </Text>
         <Text style={{ color: 'black', fontWeight: 'bold', fontFamily: 'Poppins-Medium', fontSize: 14, textAlign: 'center', marginTop: 10 }}>Versi Aplikasi 1.0</Text>
       </View>
     </View>

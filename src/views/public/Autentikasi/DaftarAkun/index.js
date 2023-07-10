@@ -80,11 +80,11 @@ const DaftarAkun = ({navigation}) => {
                 </Text>
                 <ScrollView>
                     <View style={styles.viewCard}>
-                        <FormInput placeholder="Masukkan NIK" value={form.nik} keyBoardType='numeric' placeholderTextColor={"grey"} onChangeText={value => setForm("nik", value)} />
-                        <FormInput placeholder="Masukkan Nama Lengkap" value={form.nama} placeholderTextColor={"grey"} onChangeText={value => setForm("nama", value)} />
-                        <FormInput placeholder="Masukkan E - Mail" value={form.email} placeholderTextColor={"grey"} onChangeText={value => setForm("email", value)} />
-                        <FormInput placeholder="Masukkan Password" value={form.password} placeholderTextColor={"grey"} secureTextEntry={true} onChangeText={value => setForm("password", value)} />
-                        <FormInput placeholder="Masukkan Nomor HP" value={form.nomor_hp} placeholderTextColor={"grey"} keyBoardType="numeric" onChangeText={value => setForm("nomor_hp", value)} />
+                        <FormInput icon={"newspaper-sharp"} placeholder="Masukkan NIK" value={form.nik} keyBoardType='numeric' placeholderTextColor={"grey"} onChangeText={value => setForm("nik", value)} />
+                        <FormInput icon={"person"} placeholder="Masukkan Nama Lengkap" value={form.nama} placeholderTextColor={"grey"} onChangeText={value => setForm("nama", value)} />
+                        <FormInput icon={"document-text-sharp"} placeholder="Masukkan E - Mail" value={form.email} placeholderTextColor={"grey"} onChangeText={value => setForm("email", value)} />
+                        <FormInput icon={"eye"} placeholder="Masukkan Password" value={form.password} placeholderTextColor={"grey"} secureTextEntry={true} onChangeText={value => setForm("password", value)} />
+                        <FormInput icon={"call"} placeholder="Masukkan Nomor HP" value={form.nomor_hp} placeholderTextColor={"grey"} keyBoardType="numeric" onChangeText={value => setForm("nomor_hp", value)} />
                         <TouchableOpacity
                             onPress={() => {
                                 daftarAkun();
@@ -135,11 +135,13 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         color: 'black',
         fontSize: 30,
+        textAlign: 'center',
         fontWeight: 'bold',
         fontFamily: 'Poppins-Medium'
     },
     textSubHeader: {
         color: 'black',
+        textAlign: 'center',
         fontSize: 12,
         paddingHorizontal: 10,
         fontFamily: 'Poppins-Medium'

@@ -35,6 +35,7 @@ export default {
   ALL_ARTIKEL: "AllArtikel",
   CHAT_PUSHER: "ChatPusher",
   DATA_ALAMAT: "DataAlamat",
+  CHAT_PERAWAT: "ChatPerawat",
 
   // Dokter
   DASHBOARD_DOKTER: 'DashboardDokter',
@@ -57,4 +58,6 @@ export default {
   PROFILE_PERAWAT: "ProfilePerawat",
   RIWAYAT_TRANSAKSI_PERAWAT: "RiwayatTransaksiPerawat",
   KONSULTASI_PERAWAT: "KonsultasiPerawat",
+  DETAIL_KONSULTASI_PERAWAT: "DetailKonsultasiPerawat",
+  LANJUTKAN_PERAWATAN: "LanjutkanPerawatan"
 };

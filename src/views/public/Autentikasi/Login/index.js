@@ -169,26 +169,7 @@ const Login = ({ navigation }) => {
 
                         navigation.navigate(Navigasi.MAIN_DOKTER);
                     }
-                    // setForm('reset');
-
-                    // axios({
-                    //     url: `${baseUrl.url}/akun/profil/dokter/profil`,
-                    //     headers: {
-                    //         Authorization: 'Bearer ' + data.data.token
-                    //     },
-                    //     method: "GET"
-                    // }).then((response) => {
-                    //     storeData("profil_dokter", response.data.data);
-                    // }).catch((error) => {
-                    //     console.log(error);
-                    // })
-
-                    // showSuccess("Good Job, Login Success", "Anda Login Sebagai Dokter");
-
-                    // storeData("dataUser", datauser);
-                    // storeData("isLoggedIn", "true");
-
-                    // navigation.navigate(Navigasi.MAIN_DOKTER);
+                    
                 } else if (data.data.id_role == "RO-2003064") {
                     dispatch({ type: "SET_LOADING", value: false });
 
@@ -264,6 +245,95 @@ const Login = ({ navigation }) => {
 
                         navigation.navigate(Navigasi.MAIN_APP);
                     }
+                } else if (data.data.id_role == "RO-2003063") {
+                    dispatch({ type: 'SET_LOADING', value: false });
+
+                    if (datauser.uuid_firebase == null) {
+                        const profilperawat = await axios({
+                            url: `${baseUrl.url}/akun/profil/perawat/profil`,
+                            headers: {
+                                Authorization: 'Bearer ' + datauser.token
+                            },
+                            method: "GET"
+                        })
+
+                        configfirebase.auth()
+                            .createUserWithEmailAndPassword(datauser.email, form.password)
+                            .then(async (sukses) => {
+                                const perawatdata = {
+                                    nomor_strp: profilperawat.data.data.nomor_strp,
+                                    nomor_hp: profilperawat.data.data.user.nomor_hp,
+                                    email: profilperawat.data.data.user.email,
+                                    nama: profilperawat.data.data.user.nama,
+                                    uid: sukses.user.uid
+                                };
+
+                                await axios({
+                                    url: `${baseUrl.url}/akun/user/uid`,
+                                    headers: {
+                                        Authorization: 'Bearer ' + datauser.token
+                                    },
+                                    method: "PUT",
+                                    data: {
+                                        id: profilperawat.data.data.user.id,
+                                        uuid_firebase: sukses.user.uid
+                                    }
+                                })
+
+                                configfirebase.database()
+                                    .ref(`users/perawat/` + sukses.user.uid + "/")
+                                    .set(perawatdata)
+                                configfirebase.auth()
+                                    .signInWithEmailAndPassword(datauser.email, form.password)
+                                    .then((responseberhasil) => {
+                                        configfirebase.database()
+                                            .ref(`users/perawat/${responseberhasil.user.uid}`)
+                                            .once('value')
+                                            .then((responsedatabase) => {
+                                                if (responsedatabase.val()) {
+                                                    storeData("user", responsedatabase.val());
+                                                }
+                                            })
+                                    }).catch((errrodata) => {
+                                        console.log(errrodata);
+                                    })
+
+                                showSuccess("Good Job, Login Success", "Anda Berhasil Login");
+                                storeData("dataUser", datauser);
+                                storeData("isLoggedIn", "true");
+                                setForm("reset");
+
+                                navigation.navigate(Navigasi.MAIN_PERAWAT);
+
+                            }).catch((error) => {
+                                console.log(error);
+                            })
+                    } else {
+                        configfirebase.auth()
+                            .signInWithEmailAndPassword(datauser.email, form.password)
+                            .then((responsesukses) => {
+                                configfirebase.database()
+                                    .ref(`users/perawat/${responsesukses.user.uid}`)
+                                    .once("value")
+                                    .then((responsedatabase) => {
+                                        if (responsedatabase.val()) {
+                                            storeData("user", responsedatabase.val());
+                                        }
+                                    })
+                            }).catch((error) => {
+                                console.log(error);
+                            })
+
+                        showSuccess("Good Job, Login Success", "Anda Berhasil Login");
+                        storeData("dataUser", datauser);
+                        storeData("isLoggedIn", "true");
+                        setForm("reset");
+
+                        navigation.navigate(Navigasi.MAIN_PERAWAT);
+                    }
+                } else {
+                    dispatch({ type: "SET_LOADING", value: false });
+                    showError("Maaf, Anda Tidak Memiliki Akses");
                 }
             }
 
@@ -277,12 +347,13 @@ const Login = ({ navigation }) => {
         <>
             <View style={styles.background}>
                 <StatusBarComponent />
-                <Text style={styles.textHeader}> Sign In </Text>
+                <Text style={styles.textHeader}> Login Aplikasi</Text>
                 <Text style={styles.textSubHeader}>
                     Silahkan Login Terlebih Dahulu Untuk Memulai Program.
                 </Text>
                 <View style={styles.viewCard}>
                     <FormInput
+                        icon={"call"}
                         placeholder={"Masukkan Nomor HP"}
                         placeholderTextColor={"grey"}
                         keyBoardType={"numeric"}
@@ -297,6 +368,7 @@ const Login = ({ navigation }) => {
                         </View>
                     }
                     <FormInput
+                        icon={"eye"}
                         placeholder={"Masukkan Password"}
                         placeholderTextColor={"grey"}
                         secureTextEntry={true}
@@ -345,11 +417,12 @@ const styles = StyleSheet.create({
     },
 
     textHeader: {
-        paddingHorizontal: 10,
         paddingTop: 10,
         color: 'black',
         fontSize: 30,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontFamily: 'Poppins-Medium'
     },
 
     textError: {
@@ -363,7 +436,9 @@ const styles = StyleSheet.create({
     textSubHeader: {
         color: 'black',
         fontSize: 12,
-        paddingHorizontal: 10
+        textAlign: 'center',
+        paddingHorizontal: 10,
+        marginVertical: 5
     },
 
     viewCard: {

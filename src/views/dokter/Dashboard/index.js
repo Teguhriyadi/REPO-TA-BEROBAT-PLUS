@@ -110,43 +110,41 @@ const Dashboard = ({navigation}) => {
     setswitch(previous => !previous);
   }
 
-  const logout = async () => {
+  const logout = () => {
     Alert.alert(
       'Konfirmasi',
-      'Apakah Anda Yakin Ingin Keluar?',
+      'Apakah Anda Yakin Untuk Keluar ?',
       [
         {
-          text: 'Tidak',
-          style: 'cancel',
+          text: 'Batal',
+          style: 'cancel'
         },
         {
           text: 'Setuju',
-          onPress: async () => {
-            try {
-              AsyncStorage.removeItem('dataUser');
-              AsyncStorage.removeItem('user');
-              AsyncStorage.removeItem('isLoggedIn');
-              AsyncStorage.removeItem('profil_dokter');
+          onPress: () => {
+            return new Promise(async (resolve, reject) => {
+              try {
+                AsyncStorage.removeItem('dataUser');
+                AsyncStorage.removeItem('user');
+                AsyncStorage.removeItem('isLoggedIn');
 
-              await axios({
-                url: `${baseUrl.url}/logout`,
-                headers: {
-                  Authorization: 'Bearer ' + dataPribadi.token,
-                },
-                method: 'GET',
-              });
+                await axios({
+                  url: `${baseUrl.url}/logout`,
+                  headers: {
+                    Authorization: 'Bearer ' + dataPribadi.token,
+                  },
+                  method: 'GET',
+                });
 
-              navigation.navigate(Navigasi.LOGIN);
-            } catch (error) {
-              console.log(error);
-            }
-          },
-        },
-      ],
-      {
-        cancelable: false,
-      },
-    );
+                navigation.navigate(Navigasi.LOGIN);
+              } catch (error) {
+                console.log(error);
+              }
+            });
+          }
+        }
+      ]
+    )
   };
 
   return (

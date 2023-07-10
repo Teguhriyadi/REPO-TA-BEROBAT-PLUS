@@ -37,7 +37,6 @@ const DashboardPerawat = ({ navigation }) => {
                             AsyncStorage.removeItem("dataUser");
                             AsyncStorage.removeItem("user");
                             AsyncStorage.removeItem('isLoggedIn');
-                            AsyncStorage.removeItem('profil_perawat');
 
                             axios({
                                 url: `${baseUrl.url}/logout`,
@@ -98,7 +97,7 @@ const DashboardPerawat = ({ navigation }) => {
                     <View style={{ marginTop: 20 }}>
                         <View style={{ flexDirection: 'row', marginBottom: 20 }}>
                             <View style={styles.cardrekap}>
-                                <Icon name='home' style={{fontSize: 50, color: 'blue'}} />
+                                <Icon name='home' style={{fontSize: 50, color: '#051f84'}} />
                                 <Text style={styles.titlerekap}>
                                     Total Pasien Yang Diatasi
                                 </Text>
@@ -107,27 +106,7 @@ const DashboardPerawat = ({ navigation }) => {
                                 </Text>
                             </View>
                             <View style={styles.cardrekap}>
-                                <Icon name='chatbubbles' style={{fontSize: 50, color: 'blue'}} />
-                                <Text style={styles.titlerekap}>
-                                    Total Pasien Yang Diatasi
-                                </Text>
-                                <Text style={styles.totalrekap}>
-                                    100
-                                </Text>
-                            </View>
-                        </View>
-                        <View style={{ flexDirection: 'row', marginBottom: 20 }}>
-                            <View style={styles.cardrekap}>
-                                <Icon name='location' style={{fontSize: 50, color: 'blue'}} />
-                                <Text style={styles.titlerekap}>
-                                    Total Pasien Yang Diatasi
-                                </Text>
-                                <Text style={styles.totalrekap}>
-                                    100
-                                </Text>
-                            </View>
-                            <View style={styles.cardrekap}>
-                                <Icon name='people' style={{fontSize: 50, color: 'blue'}} />
+                                <Icon name='chatbubbles' style={{fontSize: 50, color: '#051f84'}} />
                                 <Text style={styles.titlerekap}>
                                     Total Pasien Yang Diatasi
                                 </Text>
@@ -138,7 +117,7 @@ const DashboardPerawat = ({ navigation }) => {
                         </View>
                         <View style={{ flexDirection: 'row', marginBottom: 20 }}>
                             <View style={styles.cardrekap}>
-                                <Icon name='search' style={{fontSize: 50, color: 'blue'}} />
+                                <Icon name='location' style={{fontSize: 50, color: '#051f84'}} />
                                 <Text style={styles.titlerekap}>
                                     Total Pasien Yang Diatasi
                                 </Text>
@@ -147,7 +126,27 @@ const DashboardPerawat = ({ navigation }) => {
                                 </Text>
                             </View>
                             <View style={styles.cardrekap}>
-                                <Icon name='book' style={{fontSize: 50, color: 'blue'}} />
+                                <Icon name='people' style={{fontSize: 50, color: '#051f84'}} />
+                                <Text style={styles.titlerekap}>
+                                    Total Pasien Yang Diatasi
+                                </Text>
+                                <Text style={styles.totalrekap}>
+                                    100
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={{ flexDirection: 'row', marginBottom: 20 }}>
+                            <View style={styles.cardrekap}>
+                                <Icon name='search' style={{fontSize: 50, color: '#051f84'}} />
+                                <Text style={styles.titlerekap}>
+                                    Total Pasien Yang Diatasi
+                                </Text>
+                                <Text style={styles.totalrekap}>
+                                    100
+                                </Text>
+                            </View>
+                            <View style={styles.cardrekap}>
+                                <Icon name='book' style={{fontSize: 50, color: '#051f84'}} />
                                 <Text style={styles.titlerekap}>
                                     Total Pasien Yang Diatasi
                                 </Text>
@@ -170,7 +169,7 @@ const styles = StyleSheet.create({
     },
 
     header: {
-        backgroundColor: 'blue',
+        backgroundColor: '#051f84',
         height: 150,
         padding: 10,
         borderBottomEndRadius: 30,

@@ -331,7 +331,7 @@ const ChatDokter = ({ navigation, route }) => {
                           </View>
                         </View>
                         <View style={{ marginTop: 20, alignItems: 'flex-end' }}>
-                          <TouchableOpacity style={{ backgroundColor: 'purple', width: 100, borderRadius: 5, paddingVertical: 5, alignItems: 'center' }} onPress={() => navigation.navigate(Navigasi.DETAIL_CHAT, {
+                          <TouchableOpacity style={{ backgroundColor: '#051f84', width: 100, borderRadius: 5, paddingVertical: 5, alignItems: 'center' }} onPress={() => navigation.navigate(Navigasi.CHAT_PERAWAT, {
                             data: item
                           })}>
                             <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>

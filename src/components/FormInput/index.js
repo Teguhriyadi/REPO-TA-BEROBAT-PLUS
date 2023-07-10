@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import {View, Text, TextInput, StyleSheet} from "react-native";
+import { View, Text, TextInput, StyleSheet } from "react-native";
+import Icon from 'react-native-vector-icons/Ionicons';
 
-const FormInput = ({placeholder, placeholderTextColor, value, keyBoardType, onChangeText, secureTextEntry}) => {
+const FormInput = ({ icon, placeholder, placeholderTextColor, value, keyBoardType, onChangeText, secureTextEntry }) => {
     return (
-        <View style={{marginHorizontal: 10}}>
-            <TextInput style={styles.textInput} placeholder={placeholder} placeholderTextColor={placeholderTextColor} value={value} keyboardType={keyBoardType} secureTextEntry={secureTextEntry} onChangeText={onChangeText} />
+        <View style={styles.designform}>
+            <View style={styles.jarakicon}>
+                <Icon name={icon} style={styles.icon} />
+            </View>
+            <TextInput style={[styles.textInput, { flex: 1 }]} placeholder={placeholder} placeholderTextColor={placeholderTextColor} value={value} keyboardType={keyBoardType} secureTextEntry={secureTextEntry} onChangeText={onChangeText} />
         </View>
     );
 }
@@ -12,15 +16,28 @@ const FormInput = ({placeholder, placeholderTextColor, value, keyBoardType, onCh
 const styles = StyleSheet.create({
     textInput: {
         height: 40,
-        paddingHorizontal: 10,
         color: 'grey',
         fontSize: 12,
-        marginVertical: 10,
-        borderColor: 'black',
-        borderWidth: 1,
         borderRadius: 5,
         fontFamily: 'Poppins-Medium',
-        paddingVertical: 5
+        paddingVertical: 5,
+        marginRight: 10
+    },
+    icon: {
+        fontSize: 20,
+        color: 'gray'
+    },
+    jarakicon: {
+        justifyContent: 'center',
+        marginHorizontal: 10
+    },
+    designform: {
+        marginHorizontal: 10,
+        flexDirection: 'row',
+        borderColor: 'black',
+        borderWidth: 1,
+        borderRadius: 10,
+        marginVertical: 10
     }
 });
 

@@ -11,6 +11,7 @@ import LinearGradient from 'react-native-linear-gradient';
 const SpesialisBuatJanji = ({ navigation, route }) => {
 
     const spesialis = route.params;
+    console.log(spesialis);
     const [dataPribadi, setDataPribadi] = useState({});
     const [dokter, setdokterspesialis] = useState(null);
 
@@ -82,11 +83,9 @@ const SpesialisBuatJanji = ({ navigation, route }) => {
                                         </View>
                                     </View>
                                     <View style={{ alignItems: 'flex-end' }}>
-                                        <LinearGradient colors={['#FF6B6B', '#0000FF']}
-                                            start={{ x: 0, y: 0 }}
-                                            end={{ x: 1, y: 1 }} style={styles.button}>
-                                                <TouchableOpacity onPress={() => {
+                                        <TouchableOpacity style={styles.button} onPress={() => {
                                             navigation.navigate(Navigasi.DETAIL_PRAKTEK, {
+                                                id_rumah_sakit: spesialis.data.id_rumah_sakit,
                                                 data: item
                                             })
                                         }}>
@@ -94,7 +93,6 @@ const SpesialisBuatJanji = ({ navigation, route }) => {
                                                 Pilih
                                             </Text>
                                         </TouchableOpacity>
-                                        </LinearGradient>
                                     </View>
                                 </View>
                             </View>
@@ -163,7 +161,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Poppins-Medium',
     },
     button: {
-        backgroundColor: 'blue',
+        backgroundColor: '#051f84',
         borderRadius: 5,
         marginTop: 20,
         width: 70,

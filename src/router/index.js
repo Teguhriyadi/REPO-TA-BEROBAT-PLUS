@@ -23,6 +23,7 @@ import Dashboard from '../views/dokter/Dashboard';
 import Detail from '../views/member/Artikel/DetailArtikel';
 import ChatingDokter from '../views/dokter/Chating';
 import Konsultasi from '../views/member/Konsultasi';
+import KonsultasiPerawat from '../views/perawat/KonsultasiPerawat';
 import BuatJadwal from '../views/member/FiturUnggulan/BuatJanji';
 import DetailBuatJanji from '../views/member/FiturUnggulan/DetailBuatJanji';
 import InformasiBuatJanji from '../views/member/FiturUnggulan/InformasiBuatJanji';
@@ -59,6 +60,9 @@ import DataAlamat from '../views/member/ProfileAkun/AlamatTersimpan/DataAlamat';
 import ProdukDokter from '../views/dokter/ProdukDokter';
 import TambahRekomendasi from '../views/dokter/ProdukDokter/TambahRekomendasi';
 import DetailKonsultasi from '../views/dokter/KonsultasiDokter/DetailKonsultasi';
+import ChatPerawat from '../views/member/FiturUnggulan/ChatPerawat';
+import DetailKonsultasiPerawat from '../views/perawat/KonsultasiPerawat/DetailKonsultasiPerawat';
+import LanjutkanPerawat from '../views/perawat/KonsultasiPerawat/LanjutkanPerawat';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -218,7 +222,7 @@ const MainPerawat = () => {
       />
       <Tab.Screen
         name={Navigasi.KONSULTASI_PERAWAT}
-        component={Konsultasi}
+        component={KonsultasiPerawat}
         options={{headerShown: false, title: "Konsultasi"}}
       />
       <Tab.Screen 
@@ -303,6 +307,14 @@ const Router = () => {
         options={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        }}
+      />
+      <Stack.Screen
+        name={Navigasi.CHAT_PERAWAT}
+        component={ChatPerawat}
+        options={{
+          headerShown: false,
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
         }}
       />
       <Stack.Screen
@@ -447,6 +459,19 @@ const Router = () => {
         component={DetailKonsultasi}
         options={{headerShown: false}}
       />
+
+      <Stack.Screen
+        name={Navigasi.DETAIL_KONSULTASI_PERAWAT}
+        component={DetailKonsultasiPerawat}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name={Navigasi.LANJUTKAN_PERAWATAN}
+        component={LanjutkanPerawat}
+        options={{headerShown: false}}
+      />
+
     </Stack.Navigator>
   );
 };

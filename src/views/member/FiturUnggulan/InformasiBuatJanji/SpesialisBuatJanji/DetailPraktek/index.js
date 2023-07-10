@@ -1,22 +1,52 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
-import { colors } from '../../../../../../utils';
+import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { baseUrl, colors, getData } from '../../../../../../utils';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import StatusBarComponent from '../../../../../../components/StatusBar/StatusBarComponent';
+import axios from 'axios';
 
 const DetailPraktek = ({ navigation, route }) => {
 
+    const [dataPribadi, setDataPribadi] = useState({});
+    const [jadwal, setjadwal] = useState(null);
     const spesialis = route.params;
 
-    console.log(spesialis);
+    useEffect(() => {
+        const debounceTimeout = setTimeout(() => {
+            getDataUserLocal();
+            jadwalpraktek();
+        }, 300);
+
+        return () => clearTimeout(debounceTimeout);
+    }, [dataPribadi.token]);
+
+    const getDataUserLocal = () => {
+        getData('dataUser').then(res => {
+            setDataPribadi(res);
+        });
+    };
+
+    const jadwalpraktek = async () => {
+        try {
+            const response = await axios({
+                url: `${baseUrl.url}/master/ahli/jadwal_praktek/${spesialis.data.id_dokter}/${spesialis.id_rumah_sakit}`,
+                headers: {
+                    Authorization: 'Bearer ' + dataPribadi.token
+                },
+                method: "GET"
+            });
+
+            setjadwal(response.data.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <View style={styles.background}>
             <StatusBarComponent />
-            <LinearGradient colors={['#FF6B6B', '#0000FF']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }} style={{ paddingHorizontal: 10, paddingVertical: 15, flexDirection: 'row' }}>
+            <View style={{ paddingHorizontal: 10, paddingVertical: 15, flexDirection: 'row', backgroundColor: '#051f84' }}>
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                     <TouchableOpacity onPress={() => {
                         navigation.goBack();
@@ -29,8 +59,8 @@ const DetailPraktek = ({ navigation, route }) => {
                         Detail Data Praktek
                     </Text>
                 </View>
-            </LinearGradient>
-            <View style={{ marginTop: 10, flex: 2 }}>
+            </View>
+            <View style={{ marginTop: 10, flex: 3 }}>
                 <View style={{ backgroundColor: 'white', elevation: 5, paddingHorizontal: 10, paddingVertical: 10, flexDirection: 'row' }}>
                     <View style={{ flex: 1, justifyContent: 'center' }}>
                         <Image source={require("../../../../../../assets/images/people.png")} resizeMode='cover' style={{ width: 70, height: 70, borderRadius: 100, borderColor: 'blue', borderWidth: 1 }} />
@@ -91,16 +121,41 @@ const DetailPraktek = ({ navigation, route }) => {
                         <Image source={require("../../../../../../assets/images/gambar-rs.jpg")} resizeMode='cover' style={{ width: 50, height: 50, borderRadius: 10 }} />
                     </View>
                 </View>
-                <View style={{marginTop: 10, backgroundColor: 'skyblue', paddingHorizontal: 10, paddingVertical: 10}}>
-                    <Text style={{color: 'black', fontSize: 14, fontFamily: 'Poppins-Medium', fontWeight: 'bold'}}>
+                <View style={{ marginTop: 10, backgroundColor: 'skyblue', paddingHorizontal: 10, paddingVertical: 10 }}>
+                    <Text style={{ color: 'black', fontSize: 14, fontFamily: 'Poppins-Medium', fontWeight: 'bold' }}>
                         Pilih Tanggal & Waktu Kunjungan
                     </Text>
                 </View>
+                {jadwal == null ? (
+                    <ActivityIndicator size={"large"} color={"primary"} />
+                ) : (
+                    <ScrollView >
+                        {jadwal.map((item) => {
+                            return (
+                                <View style={{marginTop: 20, marginRight: 50, marginLeft: 10, backgroundColor: 'white', elevation: 5, marginBottom: 10, width: '50%', padding: 10, height: 120, borderRadius: 10}} key={item.id_jadwal_praktek}>
+                                    <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium', textAlign: 'center'}}>
+                                        {item.hari}
+                                    </Text>
+                                    <View style={{borderColor: 'grey', borderWidth: 1, marginVertical: 10}} />
+                                    <Text style={{color: 'black', fontSize: 14, fontWeight: 'bold', fontFamily: 'Poppins-Medium', textAlign: 'center'}}>
+                                        {item.mulai_jam}
+                                    </Text>
+                                    <Text style={{color: 'red', fontSize: 14, fontWeight: 'bold', fontFamily: 'Poppins-Medium', textAlign: 'center'}}>
+                                        S / D
+                                    </Text>
+                                    <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium', textAlign: 'center'}}>
+                                        {item.selesai_jam}
+                                    </Text>
+                                </View>
+                            )
+                        })}
+                    </ScrollView>
+                ) }
             </View>
             <View style={{ flex: 1, justifyContent: 'flex-end' }}>
                 <TouchableOpacity style={{ backgroundColor: 'purple', paddingVertical: 15 }}>
                     <Text style={{ color: 'black' }}>
-                        Hamdan
+                        3
                     </Text>
                 </TouchableOpacity>
             </View>

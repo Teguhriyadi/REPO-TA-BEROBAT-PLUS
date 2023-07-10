@@ -8,3 +8,4 @@ export * from './BuatJanji/AllData';
 export * from "./Reservasi"
 export * from "./InformasiBuatJanji/SpesialisBuatJanji";
 export * from "./InformasiBuatJanji/SpesialisBuatJanji/DetailPraktek"
+export * from "./ChatPerawat"
