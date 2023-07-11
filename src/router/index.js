@@ -64,6 +64,7 @@ import ChatPerawat from '../views/member/FiturUnggulan/ChatPerawat';
 import DetailKonsultasiPerawat from '../views/perawat/KonsultasiPerawat/DetailKonsultasiPerawat';
 import LanjutkanPerawat from '../views/perawat/KonsultasiPerawat/LanjutkanPerawat';
 import LupaPasswordAutentikasi from '../views/public/Autentikasi/LupaPasswordAutentikasi';
+import ProdukByKategori from '../views/member/Produk/TokoKesehatanProduk/ProdukByKategori';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -162,10 +163,10 @@ const MainDokter = () => {
         component={Transaksi}
         options={{ headerShown: false }}
       /> */}
-      <Tab.Screen 
-        name={Navigasi.PRODUK_DOKTER} 
+      <Tab.Screen
+        name={Navigasi.PRODUK_DOKTER}
         component={ProdukDokter}
-        options={{headerShown: false, title: 'Produk' }}
+        options={{ headerShown: false, title: 'Produk' }}
       />
       <Tab.Screen
         name={Navigasi.KONSULTASI_DOKTER}
@@ -216,20 +217,20 @@ const MainPerawat = () => {
         component={DashboardPerawat}
         options={{ headerShown: false, title: 'Home' }}
       />
-      <Tab.Screen 
+      <Tab.Screen
         name={Navigasi.RIWAYAT_TRANSAKSI_PERAWAT}
         component={Riwayat}
-        options={{headerShown: false, title: 'Riwayat'}} 
+        options={{ headerShown: false, title: 'Riwayat' }}
       />
       <Tab.Screen
         name={Navigasi.KONSULTASI_PERAWAT}
         component={KonsultasiPerawat}
-        options={{headerShown: false, title: "Konsultasi"}}
+        options={{ headerShown: false, title: "Konsultasi" }}
       />
-      <Tab.Screen 
+      <Tab.Screen
         name={Navigasi.PROFILE_PERAWAT}
         component={Profile}
-        options={{headerShown: false, title: "Profil"}}
+        options={{ headerShown: false, title: "Profil" }}
       />
     </Tab.Navigator>
   );
@@ -246,11 +247,11 @@ const Router = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen name={Navigasi.ALL_ARTIKEL} component={AllArtikel} options={{ headerShown: false }} />
-      <Stack.Screen 
+      <Stack.Screen
         name={Navigasi.CHAT_PUSHER}
         component={ChatPusher}
-        options={{headerShown: false}}
-       />
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name={Navigasi.OPTIONS_AUTENTIKASI}
         component={OptionsAutentikasi}
@@ -270,25 +271,25 @@ const Router = () => {
         component={MainDokter}
         options={{ headerShown: false }}
       />
-      <Stack.Screen 
+      <Stack.Screen
         name={Navigasi.MAIN_PERAWAT}
         component={MainPerawat}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.LUPA_PASSWORD_AUTENTIKASI}
         component={LupaPasswordAutentikasi}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
-      <Stack.Screen 
+      <Stack.Screen
         name={Navigasi.SPESIALIS_BUAT_JANJI}
         component={SpesialisBuatJanji}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.DETAIL_PRAKTEK}
         component={DetailPraktek}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.LOGIN}
@@ -331,7 +332,7 @@ const Router = () => {
       <Stack.Screen
         name={Navigasi.RESERVASI}
         component={Reservasi}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={Navigasi.All_DATA_RS}
@@ -361,6 +362,11 @@ const Router = () => {
       <Stack.Screen
         name={Navigasi.DETAIL_CHAT}
         component={DetailChatDokter}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={Navigasi.PRODUK_BY_KATEGORI}
+        component={ProdukByKategori}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -447,35 +453,35 @@ const Router = () => {
         component={AllDataApotek}
         options={{ headerShown: false }}
       />
-      
+
       <Stack.Screen
         name={Navigasi.DATA_ALAMAT}
         component={DataAlamat}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
 
       <Stack.Screen
         name={Navigasi.TAMBAH_REKOMENDASI}
         component={TambahRekomendasi}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
 
       <Stack.Screen
         name={Navigasi.DETAIL_KONSULTASI}
         component={DetailKonsultasi}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
 
       <Stack.Screen
         name={Navigasi.DETAIL_KONSULTASI_PERAWAT}
         component={DetailKonsultasiPerawat}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
 
       <Stack.Screen
         name={Navigasi.LANJUTKAN_PERAWATAN}
         component={LanjutkanPerawat}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
 
     </Stack.Navigator>

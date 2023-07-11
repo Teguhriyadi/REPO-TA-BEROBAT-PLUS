@@ -222,11 +222,17 @@ const TokoKesehatanProduk = ({ navigation }) => {
         <View style={styles.viewKategori} >
           {kategoriProduk.map((item) => {
             return (
-              <View style={styles.cardKategori} key={item.id_kategori_produk}>
-                <Text style={{ color: 'black' }}>
-                  {item.nama_kategori_produk}
-                </Text>
-              </View>
+              <TouchableOpacity onPress={() => {
+                navigation.navigate(Navigasi.PRODUK_BY_KATEGORI, {
+                  data: item
+                })
+              }} key={item.id_kategori_produk}>
+                <View style={styles.cardKategori}>
+                  <Text style={{ color: 'black' }}>
+                    {item.nama_kategori_produk}
+                  </Text>
+                </View>
+              </TouchableOpacity>
             )
           })}
         </View>

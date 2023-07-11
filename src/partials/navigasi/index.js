@@ -36,6 +36,7 @@ export default {
   CHAT_PUSHER: "ChatPusher",
   DATA_ALAMAT: "DataAlamat",
   CHAT_PERAWAT: "ChatPerawat",
+  PRODUK_BY_KATEGORI: "ProdukByKategori",
 
   // Dokter
   DASHBOARD_DOKTER: 'DashboardDokter',

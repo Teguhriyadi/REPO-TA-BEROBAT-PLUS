@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'rea
 import React from 'react'
 import FormInput from '../../../../components/FormInput';
 import StatusBarComponent from '../../../../components/StatusBar/StatusBarComponent';
-import { baseUrl, useForm } from '../../../../utils';
+import { baseUrl, showSuccess, useForm } from '../../../../utils';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { configfirebase } from '../../../../firebase/firebaseConfig';
@@ -61,6 +61,7 @@ const DaftarAkun = ({navigation}) => {
                         .set(datakonsumen)
 
                     dispatch({ type: "SET_LOADING", value: false });
+                    showSuccess("Good Job, Daftar Berhasil", "Akun Anda Berhasil di Daftarkan");
 
                     navigation.navigate(Navigasi.LOGIN)
                 })

@@ -212,7 +212,7 @@ const Login = ({ navigation }) => {
                         }
                     }
 
-                } else if (data.data.id_role == "RO-2003064") {
+                } else if (data.data.id_role == "RO-2003063") {
 
                     const getProfile = async () => {
                         try {
@@ -341,92 +341,47 @@ const Login = ({ navigation }) => {
                         }
                     }
 
-                } else if (data.data.id_role == "RO-2003063") {
-                    dispatch({ type: 'SET_LOADING', value: false });
+                } else if (data.data.id_role == "RO-2003064") {
+                    
+                    const loginFirebase = async (email, password) => {
+                        try {
+                            const responseberhasil = await configfirebase.auth().signInWithEmailAndPassword(email, password);
+                            return responseberhasil.user.uid;
+                        } catch (error) {
+                            console.log(error);
+                            throw error;
+                        }
+                    }
 
-                    if (datauser.uuid_firebase == null) {
-                        const profilperawat = await axios({
-                            url: `${baseUrl.url}/akun/profil/perawat/profil`,
-                            headers: {
-                                Authorization: 'Bearer ' + datauser.token
-                            },
-                            method: "GET"
-                        })
+                    const getUserData = async (uid) => {
+                        try {
+                            const responsedatabase = await configfirebase.database().ref(`users/konsumen/${uid}`).once('value');
+                            return responsedatabase.val();
+                        } catch (error) {
+                            console.log(error);
+                            throw error;
+                        }
+                    }
 
-                        configfirebase.auth()
-                            .createUserWithEmailAndPassword(datauser.email, form.password)
-                            .then(async (sukses) => {
-                                const perawatdata = {
-                                    nomor_strp: profilperawat.data.data.nomor_strp,
-                                    nomor_hp: profilperawat.data.data.user.nomor_hp,
-                                    email: profilperawat.data.data.user.email,
-                                    nama: profilperawat.data.data.user.nama,
-                                    uid: sukses.user.uid
-                                };
-
-                                await axios({
-                                    url: `${baseUrl.url}/akun/user/uid`,
-                                    headers: {
-                                        Authorization: 'Bearer ' + datauser.token
-                                    },
-                                    method: "PUT",
-                                    data: {
-                                        id: profilperawat.data.data.user.id,
-                                        uuid_firebase: sukses.user.uid
-                                    }
-                                })
-
-                                configfirebase.database()
-                                    .ref(`users/perawat/` + sukses.user.uid + "/")
-                                    .set(perawatdata)
-                                configfirebase.auth()
-                                    .signInWithEmailAndPassword(datauser.email, form.password)
-                                    .then((responseberhasil) => {
-                                        configfirebase.database()
-                                            .ref(`users/perawat/${responseberhasil.user.uid}`)
-                                            .once('value')
-                                            .then((responsedatabase) => {
-                                                if (responsedatabase.val()) {
-                                                    storeData("user", responsedatabase.val());
-                                                }
-                                            })
-                                    }).catch((errrodata) => {
-                                        console.log(errrodata);
-                                    })
-
-                                showSuccess("Good Job, Login Success", "Anda Berhasil Login");
-                                storeData("dataUser", datauser);
-                                storeData("isLoggedIn", "true");
-                                setForm("reset");
-
-                                navigation.navigate(Navigasi.MAIN_PERAWAT);
-
-                            }).catch((error) => {
-                                console.log(error);
-                            })
-                    } else {
-                        configfirebase.auth()
-                            .signInWithEmailAndPassword(datauser.email, form.password)
-                            .then((responsesukses) => {
-                                configfirebase.database()
-                                    .ref(`users/perawat/${responsesukses.user.uid}`)
-                                    .once("value")
-                                    .then((responsedatabase) => {
-                                        if (responsedatabase.val()) {
-                                            storeData("user", responsedatabase.val());
-                                        }
-                                    })
-                            }).catch((error) => {
-                                console.log(error);
-                            })
-
+                    const loginSuccess = () => {
+                        dispatch({ type: "SET_LOADING", value: false })
                         showSuccess("Good Job, Login Success", "Anda Berhasil Login");
-                        storeData("dataUser", datauser);
                         storeData("isLoggedIn", "true");
                         setForm("reset");
-
-                        navigation.navigate(Navigasi.MAIN_PERAWAT);
+                        navigation.navigate(Navigasi.MAIN_APP);
                     }
+
+                    try {
+                        const responseberhasil = await loginFirebase(datauser.email, form.password);
+                        const userData = await getUserData(responseberhasil);
+                        storeData("user", userData);
+                        storeData("dataUser", datauser);
+                        loginSuccess();
+                    } catch (error) {
+                        console.log(error);
+                        throw error;
+                    }
+
                 } else {
                     dispatch({ type: "SET_LOADING", value: false });
                     showError("Maaf, Anda Tidak Memiliki Akses");
