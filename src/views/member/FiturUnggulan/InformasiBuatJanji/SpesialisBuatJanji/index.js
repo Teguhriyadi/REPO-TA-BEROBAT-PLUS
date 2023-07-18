@@ -39,7 +39,9 @@ const SpesialisBuatJanji = ({ navigation, route }) => {
                 },
                 method: "GET"
             });
-
+            if (response.data.data == []) {
+                console.log("ada");
+            }
             setdokterspesialis(response.data.data);
 
         } catch (error) {
@@ -57,47 +59,59 @@ const SpesialisBuatJanji = ({ navigation, route }) => {
                 <ActivityIndicator size={"large"} color={colors.primary} style={{ alignItems: 'center', flex: 1 }} />
             ) : (
                 <ScrollView showsVerticalScrollIndicator={false}>
-                    {dokter.map((item) => {
-                        return (
-                            <View key={item.id_praktek} style={styles.card}>
-                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                    <Image source={require("../../../../../assets/images/people.png")} style={{ width: 100, height: 100 }} />
-                                </View>
-                                <View style={{ flex: 2 }}>
-                                    <Text style={styles.namadokter}>
-                                        {item.nama_dokter}
-                                    </Text>
-                                    <Text style={styles.nomorhp}>
-                                        {item.nomor_hp}
-                                    </Text>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <View style={styles.tahun}>
-                                            <Text style={styles.texttahun}>
-                                                100 Tahun
-                                            </Text>
+                    {Array.isArray(dokter) && dokter.length === 0 ? (
+                        <View style={{marginVertical: '80%', alignItems: 'center'}}>
+                            <Icon name="search" style={{fontSize: 50, color: colors.primary}} />
+                            <Text style={{color: colors.primary, fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium'}}>
+                                Maaf, Jadwal Dokter Tidak Ditemukan
+                            </Text>
+                            <Text style={{color: 'black', fontSize: 14, fontFamily: 'Poppins-Medium'}}>
+                                Silahkan Cari Jadwal Data Dokter Lainnya.
+                            </Text>
+                        </View>
+                    ) : (
+                        dokter.map((item) => {
+                            return (
+                                <View key={item.id_praktek} style={styles.card}>
+                                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                        <Image source={require("../../../../../assets/images/people.png")} style={{ width: 100, height: 100 }} />
+                                    </View>
+                                    <View style={{ flex: 2 }}>
+                                        <Text style={styles.namadokter}>
+                                            {item.nama_dokter}
+                                        </Text>
+                                        <Text style={styles.nomorhp}>
+                                            {item.nomor_hp}
+                                        </Text>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <View style={styles.tahun}>
+                                                <Text style={styles.texttahun}>
+                                                    100 Tahun
+                                                </Text>
+                                            </View>
+                                            <View style={styles.rating}>
+                                                <Text style={styles.textrating}>
+                                                    <Icon name="thumbs-up" style={{ color: 'blue' }} /> 100%
+                                                </Text>
+                                            </View>
                                         </View>
-                                        <View style={styles.rating}>
-                                            <Text style={styles.textrating}>
-                                                <Icon name="thumbs-up" style={{ color: 'blue' }} /> 100%
-                                            </Text>
+                                        <View style={{ alignItems: 'flex-end' }}>
+                                            <TouchableOpacity style={styles.button} onPress={() => {
+                                                navigation.navigate(Navigasi.DETAIL_PRAKTEK, {
+                                                    id_rumah_sakit: spesialis.data.id_rumah_sakit,
+                                                    data: item
+                                                })
+                                            }}>
+                                                <Text style={styles.textbutton}>
+                                                    Pilih
+                                                </Text>
+                                            </TouchableOpacity>
                                         </View>
                                     </View>
-                                    <View style={{ alignItems: 'flex-end' }}>
-                                        <TouchableOpacity style={styles.button} onPress={() => {
-                                            navigation.navigate(Navigasi.DETAIL_PRAKTEK, {
-                                                id_rumah_sakit: spesialis.data.id_rumah_sakit,
-                                                data: item
-                                            })
-                                        }}>
-                                            <Text style={styles.textbutton}>
-                                                Pilih
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
                                 </View>
-                            </View>
-                        )
-                    })}
+                            )
+                        })
+                    ) }
                 </ScrollView>
             )}
         </View>

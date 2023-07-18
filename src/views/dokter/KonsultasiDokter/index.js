@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Image } from 'react-native';
 import { baseUrl, colors, getData } from '../../../utils';
 import { configfirebase } from '../../../firebase/firebaseConfig';
 import axios from 'axios';
 import Navigasi from '../../../partials/navigasi';
 
-const KonsultasiDokter = ({navigation}) => {
+const KonsultasiDokter = ({ navigation }) => {
 
   const [dokterProfil, setDokterProfil] = useState({});
   const [dataPribadi, setDataPribadi] = useState({});
   const [historyChat, setHistoryChat] = useState([]);
   const [showIndicator, setShowIndicator] = useState(false);
-  const [output, setOutput] = useState(false);
 
   useEffect(() => {
+    setShowIndicator(true);
 
     getDataUserLocal();
     const rootDB = configfirebase.database().ref();
@@ -27,18 +27,22 @@ const KonsultasiDokter = ({navigation}) => {
 
         const promises = await Object.keys(oldData).map(async key => {
           const datakonsumen = `users/konsumen/${oldData[key].uidPartner}`;
-          // console.log(key);
           const detail_konsumen = await rootDB.child(datakonsumen).once("value");
           console.log(detail_konsumen);
           data.push({
             id: key,
-            detail_konsumen: detail_konsumen.val()
+            detail_konsumen: detail_konsumen.val(),
+            ...oldData[key]
           });
         });
 
         await Promise.all(promises);
         setHistoryChat(data);
+      } else {
+        setHistoryChat([]);
       }
+
+      setShowIndicator(false);
     });
   }, [dataPribadi.nama, dataPribadi.uuid_firebase, dataPribadi.idx, dataPribadi.token]);
 
@@ -57,15 +61,24 @@ const KonsultasiDokter = ({navigation}) => {
         <Text style={styles.textHeading}>Konsultasi Pasien</Text>
       </View>
       <ScrollView>
-        {historyChat == null ? (
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        {showIndicator ? (
+          <View style={{ marginVertical: '80%', justifyContent: 'center', alignItems: 'center' }}>
             <ActivityIndicator size={"large"} />
           </View>
-        ) : (
-          historyChat.map(item => {
+        ) : historyChat.length > 0 ? (
+          historyChat.map((item) => {
             return (
               <View key={item.id} style={styles.content}>
                 <View style={styles.listCard}>
+                  <View style={{ flexDirection: 'row', marginVertical: 15, marginHorizontal: 10 }}>
+                    <View style={{ flex: 1, justifyContent: 'center' }}>
+                      <Text style={{ color: 'black', fontSize: 14, fontFamily: 'Poppins-Medium', fontWeight: 'bold' }}>Tanggal : 12 Juli 2023</Text>
+                    </View>
+                    <View style={{ borderColor: 'green', borderWidth: 1, borderRadius: 10, paddingVertical: 5, paddingHorizontal: 10, alignItems: 'flex-end' }}>
+                      <Text style={{ color: 'green', fontSize: 12, fontFamily: 'Poppins-Medium', fontWeight: 'bold' }}> Sedang Konsultasi </Text>
+                    </View>
+                  </View>
+                  <View style={{ borderColor: 'black', borderWidth: 1, marginHorizontal: 10 }} />
                   <View
                     style={{
                       flexDirection: 'row',
@@ -73,35 +86,30 @@ const KonsultasiDokter = ({navigation}) => {
                       marginVertical: 10,
                     }}>
                     <View style={styles.headerIdentitas}>
-                      <Text
-                        style={{
-                          color: 'black',
-                          fontSize: 14,
-                          fontWeight: 'bold',
-                          fontFamily: 'Poppins-Medium',
-                        }}>
-                        {item.detail_konsumen.nama}
-                      </Text>
-                      <Text
-                        style={{
-                          color: 'gray',
-                          fontSize: 12,
-                          fontFamily: 'Poppins-Medium',
-                        }}>
-                        {item.detail_konsumen.nomor_hp}
-                      </Text>
-                    </View>
-                    <View style={[styles.status, {backgroundColor: 'green'}]}>
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontSize: 10,
-                          fontWeight: 'bold',
-                          fontFamily: 'Poppins-Medium',
-                          textAlign: 'justify',
-                        }}>
-                        SELESAI
-                      </Text>
+                      <View style={{ flexDirection: 'row' }}>
+                        <View>
+                          <Image source={require("../../../assets/images/people.png")} resizeMode='cover' style={{ width: 50, height: 50, borderRadius: 50, borderColor: 'black', borderWidth: 1 }} />
+                        </View>
+                        <View style={{ flex: 1, marginLeft: 10 }}>
+                          <Text
+                            style={{
+                              color: 'black',
+                              fontSize: 14,
+                              fontWeight: 'bold',
+                              fontFamily: 'Poppins-Medium',
+                            }}>
+                            {item.detail_konsumen.nama}
+                          </Text>
+                          <Text
+                            style={{
+                              color: 'gray',
+                              fontSize: 12,
+                              fontFamily: 'Poppins-Medium',
+                            }}>
+                            {item.detail_konsumen.nomor_hp}
+                          </Text>
+                        </View>
+                      </View>
                     </View>
                   </View>
                   <Text
@@ -132,7 +140,7 @@ const KonsultasiDokter = ({navigation}) => {
                       }
                       navigation.navigate(Navigasi.DETAIL_KONSULTASI, params)
                     }} >
-                    <Text style={{color: 'green', fontWeight: 'bold'}}>
+                    <Text style={{ color: 'green', fontWeight: 'bold' }}>
                       Lanjutkan
                     </Text>
                   </TouchableOpacity>
@@ -140,7 +148,16 @@ const KonsultasiDokter = ({navigation}) => {
               </View>
             );
           })
-        ) }
+        ) : (
+          <View style={{ marginVertical: '80%', justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ color: colors.primary, fontSize: 16, fontFamily: 'Poppins-Medium', fontWeight: 'bold' }}>
+              Maaf, Konsultasi Tidak Ditemukan
+            </Text>
+            <Text style={{ color: 'grey', fontFamily: 'Poppins-Medium', fontSize: 12 }}>
+              Sepertinya Belum Ada Data Konsultasi Untuk Anda
+            </Text>
+          </View>
+        )}
       </ScrollView>
     </View>
   );
@@ -149,7 +166,7 @@ const KonsultasiDokter = ({navigation}) => {
 const styles = StyleSheet.create({
   backgroundBelakang: {
     flex: 1,
-    backgroundColor: colors.backgroundDasarBelakang,
+    backgroundColor: 'white',
   },
   heading: {
     padding: 15,

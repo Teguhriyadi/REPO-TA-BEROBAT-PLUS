@@ -11,26 +11,32 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import StatusBarComponent from '../../../../../components/StatusBar/StatusBarComponent';
-import { colors, getData, showSuccess } from '../../../../../utils';
+import { baseUrl, colors, getData, showSuccess } from '../../../../../utils';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Navigasi from '../../../../../partials/navigasi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { FlatList } from 'react-native-gesture-handler';
 import Geocoder from 'react-native-geocoding';
 import Geolocation from '@react-native-community/geolocation';
+import axios from 'axios';
 
-const Keranjang = ({ navigation }) => {
+const Keranjang = ({ navigation, route }) => {
   const [dataPribadi, setDataPribadi] = useState({});
+  const [cart, setCart] = useState(null);
+  const [totalCart, setTotalCart] = useState(null);
   const [keranjang, setKeranjang] = useState([]);
   const [alamat, setAlamat] = useState(null);
   const [showIndicator, setShowIndicator] = useState(false);
   const [harga, setHarga] = useState(0);
 
+  const detail = route.params;
+
   useEffect(() => {
     getDataUserLocal();
     getKeranjang();
-    dataLokasi();
+    // dataLokasi();
     getTotalHarga();
+    keranjangbelanja();
+    semuakeranjang();
   }, [dataPribadi.token, dataPribadi.idx]);
 
   const getDataUserLocal = () => {
@@ -38,6 +44,38 @@ const Keranjang = ({ navigation }) => {
       setDataPribadi(res);
     });
   };
+
+  const semuakeranjang = async () => {
+    try {
+      const response = await axios({
+        url: `${baseUrl.url}/keranjang/total/by_konsumen`,
+        headers: {
+          Authorization: 'Bearer ' + dataPribadi.token
+        },
+        method: "GET"
+      });
+      setTotalCart(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const keranjangbelanja = async () => {
+    try {
+      const keranjang = await axios({
+        url: `${baseUrl.url}/keranjang/${detail.data.id_keranjang}`,
+        headers: {
+          Authorization: 'Bearer ' + dataPribadi.token
+        },
+        method: "GET"
+      });
+
+      setCart(keranjang.data.data)
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const getKeranjang = async () => {
     try {
@@ -104,26 +142,61 @@ const Keranjang = ({ navigation }) => {
     }
   };
 
-  const removeKeranjangProduk = async id => {
+  const removeKeranjangProduk = async id_keranjang_detail => {
     try {
-      const produk = await AsyncStorage.getItem(`produk_${dataPribadi.idx}`);
+      const response = await axios({
+        url: `${baseUrl.url}/detail_keranjang/${id_keranjang_detail}`,
+        headers: {
+          Authorization: 'Bearer ' + dataPribadi.token
+        },
+        method: "DELETE"
+      });
 
-      if (produk !== null) {
-        const produkArray = JSON.parse(produk);
-        const updateArray = produkArray.filter(item => item.id !== id);
-        await AsyncStorage.setItem(
-          `produk_${dataPribadi.idx}`,
-          JSON.stringify(updateArray),
-        );
-
-        showSuccess("Berhasil", "Data Keranjang Telah di Hapus");
-        setKeranjang(updateArray);
-        getTotalHarga();
-      }
+      showSuccess("Berhasil", "Data Produk Berhasil di Hapus");
+      semuakeranjang();
+      keranjangbelanja();
     } catch (error) {
       console.log(error);
     }
   };
+
+  const tambahKeranjang = async (id_keranjang_detail) => {
+    try {
+      const response = await axios({
+        url: `${baseUrl.url}/detail_keranjang/tambah/${id_keranjang_detail}`,
+        headers: {
+          Authorization: 'Bearer ' + dataPribadi.token
+        },
+        method: "PUT"
+      });
+
+      showSuccess("Berhasil", "QTY Berhasil di Tambahkan");
+      keranjangbelanja();
+      semuakeranjang();
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const kurangKeranjang = async (id_keranjang_detail) => {
+    try {
+      const response = await axios({
+        url: `${baseUrl.url}/detail_keranjang/kurang/${id_keranjang_detail}`,
+        headers: {
+          Authorization: 'Bearer ' + dataPribadi.token
+        },
+        method: "PUT"
+      });
+
+      showSuccess("Berhasil", "QTY Berhasil di Kurangkan");
+      keranjangbelanja();
+      semuakeranjang();
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const hapusSemuaData = async () => {
     try {
@@ -245,151 +318,135 @@ const Keranjang = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      {keranjang.length > 0 ? (
-        <View style={{ flex: 7 }}>
-          {show()}
-          <View
-            style={{
-              flex: 5,
-              backgroundColor: 'white',
-              marginVertical: 3,
-              paddingHorizontal: 10,
-            }}>
-            <FlatList
-              data={keranjang}
-              keyExtractor={item => item.id.toString()}
-              renderItem={({ item }) => (
-                <>
-                  <View style={{ flexDirection: 'row', marginVertical: 10 }}>
-                    <View
-                      style={{
-                        borderColor: 'gray',
-                        borderWidth: 1,
-                        borderRadius: 10,
-                        marginRight: 10,
-                        justifyContent: 'center',
-                      }}>
-                      <Image
-                        source={require('../../../../../assets/images/auth-new.png')}
-                        style={{ width: 50, height: 50 }}
-                      />
-                    </View>
-                    <View style={styles.barang}>
-                      <Text style={{ color: 'black', fontSize: 16 }}>
-                        {item.nama_produk}
-                      </Text>
-                      <Text style={{ color: 'gray', fontSize: 12 }}>
-                        Per Strip
-                      </Text>
-                    </View>
-                    <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                      <Text style={{ color: 'black', fontSize: 16 }}>
-                        {item.harga_produk}
-                      </Text>
-                      <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                        <TouchableOpacity
-                          style={{
-                            backgroundColor: colors.backgroundEmpty,
-                            padding: 5,
-                            borderRadius: 100,
-                          }}
-                          onPress={() => {
-                            removeKeranjangProduk(item.id);
-                          }}>
-                          <Icon
-                            name="trash"
-                            style={{ color: 'black', fontSize: 20 }}
-                          />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          style={[styles.viewOperator, { marginLeft: 10 }]}>
-                          <Text style={styles.textViewOperator}>+</Text>
-                        </TouchableOpacity>
-                        <View
-                          style={{
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginLeft: 10,
-                          }}>
-                          <Text style={{ color: 'black', fontWeight: 'bold' }}>
-                            {item.count}
-                          </Text>
-                        </View>
-                        <TouchableOpacity
-                          style={[styles.viewOperator, { marginLeft: 10 }]}>
-                          <Text style={styles.textViewOperator}>-</Text>
-                        </TouchableOpacity>
+      <View style={{ flex: 7 }}>
+        {show()}
+        <View style={{ flex: 6, backgroundColor: 'white', marginVertical: 3, paddingHorizontal: 10 }}>
+          {cart == null ? (
+            <ActivityIndicator />
+          ) : (
+            cart.map((item) => {
+              return (
+                <View key={item.id_keranjang_detail} style={{ flexDirection: 'row', marginVertical: 10 }}>
+                  <View style={{ borderColor: 'gray', borderWidth: 1, borderRadius: 10, marginRight: 10, justifyContent: 'center' }}>
+                    <Image source={require('../../../../../assets/images/auth-new.png')} style={{ width: 50, height: 50 }} />
+                  </View>
+                  <View style={styles.barang}>
+                    <Text style={{ color: 'black', fontSize: 16 }}>
+                      {item.produk.nama_produk}
+                    </Text>
+                    <Text style={{ color: 'gray', fontSize: 12 }}>
+                      Per Strip
+                    </Text>
+                  </View>
+                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                    <Text style={{ color: 'black', fontSize: 16 }}>
+                      {item.produk.harga_produk}
+                    </Text>
+                    <View style={{ flexDirection: 'row', marginTop: 5 }}>
+                      <TouchableOpacity
+                        style={{
+                          backgroundColor: colors.backgroundEmpty,
+                          padding: 5,
+                          borderRadius: 100,
+                        }}
+                        onPress={() => {
+                          removeKeranjangProduk(item.id_keranjang_detail);
+                        }}>
+                        <Icon
+                          name="trash"
+                          style={{ color: 'black', fontSize: 20 }}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={() => {
+                        tambahKeranjang(item.id_keranjang_detail)
+                      }} style={[styles.viewOperator, { marginLeft: 10 }]}>
+                        <Text style={styles.textViewOperator}>+</Text>
+                      </TouchableOpacity>
+                      <View
+                        style={{
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          marginLeft: 10,
+                        }}>
+                        <Text style={{ color: 'black', fontWeight: 'bold' }}>
+                          {item.qty}
+                        </Text>
                       </View>
+                      <TouchableOpacity onPress={() => {
+                        kurangKeranjang(item.id_keranjang_detail);
+                      }} style={[styles.viewOperator, { marginLeft: 10 }]}>
+                        <Text style={styles.textViewOperator}>-</Text>
+                      </TouchableOpacity>
                     </View>
                   </View>
-                  <View style={styles.garisBorder} />
-                </>
-              )}
-            />
-          </View>
-          <View style={{ flex: 1, justifyContent: 'center', marginBottom: 1 }}>
-            {keranjang.length > 0 ? (
-              <TouchableOpacity
-                style={styles.btnKeranjang}
-                onPress={() => {
-                  navigation.navigate(Navigasi.TOKO_KESEHATAN_PRODUK);
-                }}>
-                <Text style={styles.textBtnKeranjang}>
-                  + Tambah Keranjang Lagi
-                </Text>
-              </TouchableOpacity>
-            ) : (
-              <View />
-            )}
-          </View>
+                </View>
+              )
+            })
+          )}
         </View>
-      ) : (
-        <View style={{ flex: 1 }}>{show()}</View>
-      )}
-
-      {keranjang.length > 0 ? (
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'white',
-            elevation: 5,
-            flexDirection: 'row',
-            paddingHorizontal: 10,
-            paddingVertical: 10,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <View style={{ flex: 1 }}>
-            <Text style={{ color: 'black', fontSize: 16 }}>
-              Ada{' '}
-              <Text style={{ color: 'red', fontWeight: 'bold' }}>
-                {keranjang.length}
-              </Text>{' '}
-              Keranjang
+        <View style={{ flex: 1, justifyContent: 'center'}}>
+          <TouchableOpacity
+            style={styles.btnKeranjang}
+            onPress={() => {
+              navigation.navigate(Navigasi.TOKO_KESEHATAN_PRODUK);
+            }}>
+            <Text style={styles.textBtnKeranjang}>
+              + Tambah Keranjang Lagi
             </Text>
-            <Text style={{ color: 'black' }}>Total Harga :</Text>
-            <Text style={{ color: 'black', fontWeight: 'bold' }}>Rp. {harga} </Text>
-          </View>
-          <View style={{ flex: 1 }}>
-            <TouchableOpacity
-              style={{ backgroundColor: 'white', borderColor: 'purple', borderWidth: 1, borderRadius: 5 }} onPress={() => {
-                navigation.navigate(Navigasi.RINGKASAN_PEMBAYARAN_PRODUK)
-              }} >
-              <Text
-                style={{
-                  color: 'purple',
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-                  paddingVertical: 10,
-                }}>
-                Lanjutkan Pembayaran
-              </Text>
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
         </View>
-      ) : (
-        <View />
-      )}
+      </View>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: 'white',
+          elevation: 5,
+          flexDirection: 'row',
+          paddingHorizontal: 10,
+          paddingVertical: 10,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <View style={{ flex: 1 }}>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={{color: 'black', fontSize: 16}}>
+              Ada
+            </Text>
+            {totalCart == null ? (
+              <ActivityIndicator color={colors.primary} style={{marginHorizontal: 3}} />
+            ) : (
+              <Text style={{color: 'red', fontWeight: 'bold', fontSize: 16, marginHorizontal: 3}}>
+                {totalCart.total}
+              </Text>
+            ) }
+            <Text style={{color: 'black', fontSize: 16}}>Keranjang</Text>
+          </View>
+          <Text style={{ color: 'black' }}>Total Harga :</Text>
+          {totalCart == null ? (
+            <ActivityIndicator color={colors.primary} />
+          ) : (
+            <Text style={{ color: 'black', fontWeight: 'bold' }}>
+              {totalCart.harga}
+            </Text>
+          ) }
+        </View>
+        <View style={{ flex: 1 }}>
+          <TouchableOpacity
+            style={{ backgroundColor: 'white', borderColor: 'purple', borderWidth: 1, borderRadius: 5 }} onPress={() => {
+              navigation.navigate(Navigasi.RINGKASAN_PEMBAYARAN_PRODUK)
+            }} >
+            <Text
+              style={{
+                color: 'purple',
+                fontWeight: 'bold',
+                textAlign: 'center',
+                paddingVertical: 10,
+              }}>
+              Lanjutkan Pembayaran
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 };

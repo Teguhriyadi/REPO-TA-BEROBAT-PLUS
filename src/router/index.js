@@ -43,8 +43,6 @@ import LoadingScreen from '../views/member/LoadingScreen';
 import ProfileAkunDokter from '../views/dokter/ProfileAkunDokter';
 import EditProfilDokter from '../views/dokter/ProfileAkunDokter/EditProfilDokter';
 import KonsultasiDokter from '../views/dokter/KonsultasiDokter';
-import AllDataRumahSakit from '../views/dokter/Dashboard/AllDataRumahSakit';
-import AllDataApotek from '../views/dokter/Dashboard/AllDataApotek';
 import RingkasanPembayaranKonsultasi from '../views/member/DetailChat/RingkasanPembayaranKonsultasi';
 import AllArtikel from '../views/member/DashboardMember/AllArtikel';
 import ChatPusher from '../views/member/ChatPusher';
@@ -102,7 +100,7 @@ const MainApp = () => {
       <Tab.Screen
         name={Navigasi.DASHBOARD_MEMBER}
         component={DashboardMember}
-        options={{ headerShown: false, title: 'Home' }}
+        options={{ headerShown: false, title: 'Beranda' }}
       />
       <Tab.Screen
         name={Navigasi.TRANSAKSI_MEMBER}
@@ -156,7 +154,7 @@ const MainDokter = () => {
       <Tab.Screen
         name={Navigasi.DASHBOARD_DOKTER}
         component={Dashboard}
-        options={{ headerShown: false, title: 'Home' }}
+        options={{ headerShown: false, title: 'Beranda' }}
       />
       {/* <Tab.Screen
         name={Navigasi.TRANSAKSI_MEMBER}
@@ -215,7 +213,7 @@ const MainPerawat = () => {
       <Tab.Screen
         name={Navigasi.DASHBOARD_PERAWAT}
         component={DashboardPerawat}
-        options={{ headerShown: false, title: 'Home' }}
+        options={{ headerShown: false, title: 'Beranda' }}
       />
       <Tab.Screen
         name={Navigasi.RIWAYAT_TRANSAKSI_PERAWAT}
@@ -440,18 +438,6 @@ const Router = () => {
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
-      />
-
-      <Stack.Screen
-        name={Navigasi.ALL_DATA_RUMAH_SAKIT_TERDEKAT}
-        component={AllDataRumahSakit}
-        options={{ headerShown: false }}
-      />
-
-      <Stack.Screen
-        name={Navigasi.ALL_DATA_APOTEK_TERDEKAT}
-        component={AllDataApotek}
-        options={{ headerShown: false }}
       />
 
       <Stack.Screen

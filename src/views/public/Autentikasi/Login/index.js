@@ -71,7 +71,6 @@ const Login = ({ navigation }) => {
                     password: form.password
                 }
             });
-
             const datauser = {
                 idx: data.data.id,
                 nama: data.data.nama,
@@ -83,6 +82,7 @@ const Login = ({ navigation }) => {
             }
 
             if (data.message == "Berhasil Login") {
+
                 if (data.data.id_role == "RO-2003062") {
 
                     const getProfile = async () => {
@@ -134,7 +134,7 @@ const Login = ({ navigation }) => {
 
                     const saveDoctorData = async (uid, doctorData) => {
                         try {
-                            await configfirebase.database().ref(`users/dokter/${uid}`).set(doctorData);
+                            await configfirebase.database().ref(`users/ahli/${uid}`).set(doctorData);
                         } catch (error) {
                             console.log(error);
                             throw error;
@@ -153,7 +153,7 @@ const Login = ({ navigation }) => {
 
                     const getUserData = async (uid) => {
                         try {
-                            const responsedatabase = await configfirebase.database().ref(`users/dokter/${uid}`).once('value');
+                            const responsedatabase = await configfirebase.database().ref(`users/ahli/${uid}`).once('value');
                             return responsedatabase.val();
                         } catch (error) {
                             console.log(error);
@@ -178,7 +178,8 @@ const Login = ({ navigation }) => {
                                 nomor_hp: profildokter.data.user.nomor_hp,
                                 email: profildokter.data.user.email,
                                 nama: profildokter.data.user.nama,
-                                uid: sukses
+                                uid: sukses,
+                                akses: "dokter"
                             };
                             await updateFirebaseUid(profildokter.data.user.id, sukses);
                             await saveDoctorData(sukses, dokterdata);
@@ -263,7 +264,7 @@ const Login = ({ navigation }) => {
 
                     const savePerawatData = async (uid, perawatData) => {
                         try {
-                            await configfirebase.database().ref(`users/perawat/${uid}`).set(perawatData);
+                            await configfirebase.database().ref(`users/ahli/${uid}`).set(perawatData);
                         } catch (error) {
                             console.log(error);
                             throw error;
@@ -282,7 +283,7 @@ const Login = ({ navigation }) => {
 
                     const getUserData = async (uid) => {
                         try {
-                            const responsedatabase = await configfirebase.database().ref(`users/perawat/${uid}`).once('value');
+                            const responsedatabase = await configfirebase.database().ref(`users/ahli/${uid}`).once('value');
                             return responsedatabase.val();
                         } catch (error) {
                             console.log(error);
@@ -307,10 +308,11 @@ const Login = ({ navigation }) => {
                                 nomor_hp: profileperawat.data.user.nomor_hp,
                                 email: profileperawat.data.user.email,
                                 nama: profileperawat.data.user.nama,
-                                uid: sukses
+                                uid: sukses,
+                                akses: "perawat"
                             };
                             await updateFirebaseUid(profileperawat.data.user.id, sukses);
-                            await saveDoctorData(sukses, dokterdata);
+                            await savePerawatData(sukses, perawatdata);
                             const responseberhasil = await loginFirebase(datauser.email, form.password);
                             const userData = await getUserData(responseberhasil);
                             storeData("user", userData);
@@ -342,7 +344,7 @@ const Login = ({ navigation }) => {
                     }
 
                 } else if (data.data.id_role == "RO-2003064") {
-                    
+
                     const loginFirebase = async (email, password) => {
                         try {
                             const responseberhasil = await configfirebase.auth().signInWithEmailAndPassword(email, password);

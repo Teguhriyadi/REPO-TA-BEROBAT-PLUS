@@ -8,6 +8,7 @@ import 'firebase/compat/app-check';
 const firebaseConfig = {
   apiKey: "AIzaSyB3PzdWn_LZ-iPGwYXb3oV8UgQ1UYsyLQ0",
   authDomain: "berobatta.firebaseapp.com",
+  databaseURL: "https://berobatta-default-rtdb.firebaseio.com",
   projectId: "berobatta",
   storageBucket: "berobatta.appspot.com",
   messagingSenderId: "609711793746",

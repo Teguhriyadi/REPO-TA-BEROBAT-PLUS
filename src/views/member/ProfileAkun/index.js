@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
-import { colors } from '../../../utils';
+import { colors, showSuccess } from '../../../utils';
 import { getData } from '../../../utils';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Navigasi from '../../../partials/navigasi';
@@ -56,6 +56,7 @@ const ProfileAkun = ({ navigation }) => {
               method: "GET"
             })
 
+            showSuccess("Good Job, Logout Sukses", "Anda Berhasil Keluar Aplikasi");
             navigation.navigate(Navigasi.LOGIN);
           }
         }

@@ -16,7 +16,7 @@ import axios from 'axios';
 import Navigasi from '../../../partials/navigasi';
 
 const Chating = ({navigation, route}) => {
-  const getDokter = route.params.data;
+  const getDokter = route.params;
 
   const [form, setForm] = useForm({
     id_dokter: '',
@@ -30,7 +30,7 @@ const Chating = ({navigation, route}) => {
 
   useEffect(() => {
     getDataUserLocal();
-    const urlFirebase = `chatting/${user.uid}_${getDokter.uid}/allChat/`;
+    const urlFirebase = `chatting/${user.uid}_${getDokter.data.uid}/allChat/`;
     configfirebase.database()
       .ref(urlFirebase)
       .on('value', snapshot => {
@@ -84,16 +84,17 @@ const Chating = ({navigation, route}) => {
       chatContent: chatContent,
     };
 
-    const chatID = `${user.uid}_${getDokter.uid}`;
+    const chatID = `${user.uid}_${getDokter.data.uid}`;
 
     const urlFirebase = `chatting/${chatID}/allChat/${setDateChat(today)}`;
 
     const urlMessageUser = `messages/${user.uid}/${chatID}`;
-    const urlMessageDokter = `messages/${getDokter.uid}/${chatID}`;
+    const urlMessageDokter = `messages/${getDokter.data.uid}/${chatID}`;
     const dataHistoryChatForUser = {
       lastContentChat: chatContent,
       lastChatDate: today.getTime(),
-      uidPartner: getDokter.uid
+      uidPartner: getDokter.data.uid,
+      status: 1
     };
 
     const dataHistoryChatForDokter = {
@@ -152,10 +153,10 @@ const Chating = ({navigation, route}) => {
                 fontFamily: 'Poppins-Medium',
                 fontWeight: 'bold',
               }}>
-                {getDokter.nama}
+                {getDokter.data.nama}
             </Text>
             <Text style={{color: 'gray', fontSize: 12}}>
-              {getDokter.kelas == 1 ? 'Dokter Spesialis' : 'Dokter Umum' }
+              {getDokter.akses == "Perawat" ? "Perawat" : "Dokter" }
             </Text>
           </View>
           <View

@@ -20,6 +20,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 const TokoKesehatanProduk = ({ navigation }) => {
   const [dataPribadi, setDataPribadi] = useState({});
+  const [cart, setCart] = useState(null);
   const [kategoriProduk, setKategoriProduk] = useState(null);
   const [showIndicator, setShowIndicator] = useState(false);
   const [produk, setProduk] = useState(null);
@@ -29,6 +30,7 @@ const TokoKesehatanProduk = ({ navigation }) => {
       getDataUserLocal();
       getKategoriProduk();
       getProduk();
+      semuakeranjang();
     }, 300);
 
     return () => clearTimeout(debounceTimeout);
@@ -78,57 +80,89 @@ const TokoKesehatanProduk = ({ navigation }) => {
     })
   };
 
-  const tambahKeranjang = async product => {
-    const productIndex = produk.findIndex(p => p.id === product);
-    const newProductList = [...produk];
-    newProductList[productIndex].count += 1;
-    setProduk(newProductList);
-
+  const semuakeranjang = async () => {
     try {
-      const jsonValue = await AsyncStorage.getItem(`produk_${dataPribadi.idx}`);
-      if (jsonValue !== null) {
-        const oldProductList = JSON.parse(jsonValue);
-        const existingProductIndex = oldProductList.findIndex(
-          p => p.id === newProductList[productIndex].id,
-        );
-        if (existingProductIndex >= 0) {
-          oldProductList[existingProductIndex].count += 1;
-          await AsyncStorage.setItem(
-            `produk_${dataPribadi.idx}`,
-            JSON.stringify(oldProductList),
-          );
-        } else {
-          const mergedProductList = [
-            ...oldProductList,
-            newProductList[productIndex],
-          ];
-          await AsyncStorage.setItem(
-            `produk_${dataPribadi.idx}`,
-            JSON.stringify(mergedProductList),
-          );
+      const response = await axios({
+        url: `${baseUrl.url}/keranjang/total/by_konsumen`,
+        headers: {
+          Authorization: 'Bearer ' + dataPribadi.token
+        },
+        method: "GET"
+      });
+
+      setCart(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const tambahKeranjang = async product => {
+    // const productIndex = produk.findIndex(p => p.id === product);
+    // const newProductList = [...produk];
+    // newProductList[productIndex].count += 1;
+    // setProduk(newProductList);
+
+    // try {
+    //   const jsonValue = await AsyncStorage.getItem(`produk_${dataPribadi.idx}`);
+    //   if (jsonValue !== null) {
+    //     const oldProductList = JSON.parse(jsonValue);
+    //     const existingProductIndex = oldProductList.findIndex(
+    //       p => p.id === newProductList[productIndex].id,
+    //     );
+    //     if (existingProductIndex >= 0) {
+    //       oldProductList[existingProductIndex].count += 1;
+    //       await AsyncStorage.setItem(
+    //         `produk_${dataPribadi.idx}`,
+    //         JSON.stringify(oldProductList),
+    //       );
+    //     } else {
+    //       const mergedProductList = [
+    //         ...oldProductList,
+    //         newProductList[productIndex],
+    //       ];
+    //       await AsyncStorage.setItem(
+    //         `produk_${dataPribadi.idx}`,
+    //         JSON.stringify(mergedProductList),
+    //       );
+    //     }
+    //   } else {
+    //     await AsyncStorage.setItem(
+    //       `produk_${dataPribadi.idx}`,
+    //       JSON.stringify([newProductList[productIndex]]),
+    //     );
+    //   }
+
+    //   const produkKeys = Object.keys(produk);
+    //   for (const key of produkKeys) {
+    //     const jsonValue = await AsyncStorage.getItem(
+    //       `produk_${dataPribadi.idx}_${key}`,
+    //     );
+    //     const oldProduct = JSON.parse(jsonValue);
+    //     const newProduct = newProductList.find(p => p.id === product);
+    //     await AsyncStorage.setItem(
+    //       `produk_${dataPribadi.idx}_${key}`,
+    //       JSON.stringify(newProduct),
+    //     );
+    //   }
+
+    //   showSuccess('Berhasil', 'Data Produk Berhasil Masuk Ke Keranjang');
+
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    try {
+      const keranjang = await axios({
+        url: `${baseUrl.url}/keranjang`,
+        headers: {
+          Authorization: 'Bearer ' + dataPribadi.token
+        },
+        method: "POST",
+        data: {
+          produk_id: product
         }
-      } else {
-        await AsyncStorage.setItem(
-          `produk_${dataPribadi.idx}`,
-          JSON.stringify([newProductList[productIndex]]),
-        );
-      }
+      });
 
-      const produkKeys = Object.keys(produk);
-      for (const key of produkKeys) {
-        const jsonValue = await AsyncStorage.getItem(
-          `produk_${dataPribadi.idx}_${key}`,
-        );
-        const oldProduct = JSON.parse(jsonValue);
-        const newProduct = newProductList.find(p => p.id === product);
-        await AsyncStorage.setItem(
-          `produk_${dataPribadi.idx}_${key}`,
-          JSON.stringify(newProduct),
-        );
-      }
-
-      showSuccess('Berhasil', 'Data Produk Berhasil Masuk Ke Keranjang');
-
+      semuakeranjang();
     } catch (error) {
       console.log(error);
     }
@@ -173,26 +207,32 @@ const TokoKesehatanProduk = ({ navigation }) => {
             justifyContent: 'center',
             alignItems: 'flex-end',
           }}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate(Navigasi.KERANJANG);
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                position: 'relative'
+          {cart == null ? (
+            <ActivityIndicator color={colors.primary} />
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate(Navigasi.KERANJANG, {
+                  data: cart
+                });
               }}>
-              <Icon name="cart-sharp" style={{ color: 'red', fontSize: 20 }} />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  position: 'relative'
+                }}>
+                <Icon name="cart-sharp" style={{ color: 'red', fontSize: 20 }} />
 
-              <View style={{ position: 'absolute', top: -5, right: -5, backgroundColor: 'red', borderRadius: 10, width: 20, height: 15, justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ color: 'red', fontSize: 12 }}>
-                  0
-                </Text>
+                <View style={{ position: 'absolute', top: -5, right: -5, backgroundColor: 'red', borderRadius: 10, width: 20, height: 15, justifyContent: 'center', alignItems: 'center' }}>
+                  <Text style={{ color: 'red', fontSize: 12 }}>
+                    0
+                  </Text>
+                </View>
               </View>
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
       <View style={styles.cardSearch}>
@@ -311,7 +351,7 @@ const TokoKesehatanProduk = ({ navigation }) => {
                             fontSize: 18,
                             fontWeight: 'bold',
                           }}>
-                            {item.count}
+                          {item.count}
                         </Text>
                       </View>
                       <TouchableOpacity onPress={() => decrementProduct(item.id)}>

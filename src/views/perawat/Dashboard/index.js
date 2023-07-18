@@ -1,19 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from "react-native";
-import { colors, getData, baseUrl } from '../../../utils';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Alert, PermissionsAndroid } from "react-native";
+import { colors, getData, baseUrl, showSuccess } from '../../../utils';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Navigasi from '../../../partials/navigasi';
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
+import Geolocation from '@react-native-community/geolocation';
+import { configfirebase } from '../../../firebase/firebaseConfig';
 
 const DashboardPerawat = ({ navigation }) => {
 
     const [dataPribadi, setDataPribadi] = useState({});
+    const currenttime = new Date().getHours();
+    let greeting;
+    const [latitude, setLatitude] = useState(null);
+    const [longitude, setLongitude] = useState(null);
+
+    if (currenttime < 10) {
+        greeting = "Selamat Pagi";
+    } else if (currenttime < 15) {
+        greeting = "Selamat Siang";
+    } else if (currenttime < 18) {
+        greeting = "Selamat Sore";
+    } else {
+        greeting = "Selamat Malam";
+    }
 
     useEffect(() => {
         getDataUserLocal();
-    }, [dataPribadi.token]);
+        const debounceTimeout = setTimeout(() => {
+            requestLocationPermission();
+        }, 300);
+
+        return () => clearTimeout(debounceTimeout);
+    }, [dataPribadi.token, dataPribadi.uuid_firebase]);
 
     const getDataUserLocal = () => {
         getData('dataUser').then(res => {
@@ -46,6 +67,7 @@ const DashboardPerawat = ({ navigation }) => {
                                 method: 'GET',
                             });
 
+                            showSuccess("Good Job, Logout Sukses", "Anda Berhasil Keluar Aplikasi");
                             navigation.navigate(Navigasi.LOGIN)
 
                         } catch (error) {
@@ -57,24 +79,66 @@ const DashboardPerawat = ({ navigation }) => {
         )
     }
 
+    const requestLocationPermission = async () => {
+        try {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                {
+                    title: 'Location Permission',
+                    message: 'This app requires access to your location.',
+                    buttonNeutral: 'Ask Me Later',
+                    buttonNegative: 'Cancel',
+                    buttonPositive: 'OK',
+                },
+            );
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                Geolocation.watchPosition(async position => {
+                    const { latitude, longitude } = position.coords;
+                    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+
+                    const locationData = {
+                        uuid: dataPribadi.uuid_firebase,
+                        latitude: latitude,
+                        longitude: longitude
+                    };
+
+                    const checkFirebase = configfirebase.database().ref(`locations/perawat/${dataPribadi.uuid_firebase}`);
+
+                    checkFirebase.once("value", (snapshot) => {
+                        if (snapshot.val()) {
+                            configfirebase.database()
+                                .ref(`locations/perawat/${dataPribadi.uuid_firebase}`)
+                                .update(locationData)
+                        } else {
+                            configfirebase.database()
+                                .ref(`locations/perawat/${dataPribadi.uuid_firebase}`)
+                                .set(locationData);
+                        }
+                    })
+
+                    setLatitude(latitude)
+                    setLongitude(longitude);
+                });
+            } else {
+                console.log('Tidak Ditemukan ');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <View style={styles.background}>
             <StatusBarComponent />
             <View style={{ flex: 1, backgroundColor: 'white' }}>
                 <View style={styles.header}>
                     <View style={{ flexDirection: 'row' }}>
-                        <View style={{ marginRight: 10 }}>
-                            <Image
-                                source={require('../../../assets/images/people.png')}
-                                style={styles.headingprofil}
-                            />
-                        </View>
                         <View style={{ justifyContent: 'center', alignItems: 'flex-start' }}>
                             <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
-                                {dataPribadi.nama}
+                                Hallo, Selamat Datang,
                             </Text>
                             <Text style={{ color: 'white', fontSize: 12 }}>
-                                {dataPribadi.nomor_hp}
+                                {dataPribadi.nama}
                             </Text>
                         </View>
                         <View
@@ -94,41 +158,33 @@ const DashboardPerawat = ({ navigation }) => {
                             </TouchableOpacity>
                         </View>
                     </View>
+                    <View style={{ marginVertical: 20, backgroundColor: 'white', elevation: 5, borderRadius: 10, paddingVertical: 20, paddingHorizontal: 10, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                            <Image source={require("../../../assets/images/people.png")} resizeMode='cover' style={{ width: 50, height: 50, borderRadius: 50, borderColor: 'grey', borderWidth: 1 }} />
+                        </View>
+                        <View style={{ marginHorizontal: 7 }}>
+                            <Text style={{ color: 'black', fontFamily: 'Poppins-Medium', fontSize: 16, fontWeight: 'bold' }}>{dataPribadi.nama}</Text>
+                            <Text style={{ color: 'black', fontFamily: 'Poppins-Medium', fontSize: 12 }}>085324237299 </Text>
+                            <View style={{ borderColor: 'grey', borderWidth: 1, marginVertical: 10, width: 250 }} />
+                            <Text style={{ color: 'black', fontFamily: 'Poppins-Medium', fontSize: 12, fontWeight: 'bold' }}>Nomor STRP : 2003077
+                            </Text>
+                        </View>
+                    </View>
                     <View style={{ marginTop: 20 }}>
                         <View style={{ flexDirection: 'row', marginBottom: 20 }}>
-                            <View style={styles.cardrekap}>
-                                <Icon name='home' style={{fontSize: 50, color: '#051f84'}} />
+                            <View style={[styles.cardrekap, { marginRight: 10 }]}>
+                                <Icon name='checkmark-done-outline' style={{ fontSize: 50, color: '#051f84' }} />
                                 <Text style={styles.titlerekap}>
-                                    Total Pasien Yang Diatasi
+                                    Total Pasien Teratasi
                                 </Text>
                                 <Text style={styles.totalrekap}>
-                                    100
+                                    30
                                 </Text>
                             </View>
-                            <View style={styles.cardrekap}>
-                                <Icon name='chatbubbles' style={{fontSize: 50, color: '#051f84'}} />
+                            <View style={[styles.cardrekap, { marginLeft: 10 }]}>
+                                <Icon name='close' style={{ fontSize: 50, color: '#051f84' }} />
                                 <Text style={styles.titlerekap}>
-                                    Total Pasien Yang Diatasi
-                                </Text>
-                                <Text style={styles.totalrekap}>
-                                    100
-                                </Text>
-                            </View>
-                        </View>
-                        <View style={{ flexDirection: 'row', marginBottom: 20 }}>
-                            <View style={styles.cardrekap}>
-                                <Icon name='location' style={{fontSize: 50, color: '#051f84'}} />
-                                <Text style={styles.titlerekap}>
-                                    Total Pasien Yang Diatasi
-                                </Text>
-                                <Text style={styles.totalrekap}>
-                                    100
-                                </Text>
-                            </View>
-                            <View style={styles.cardrekap}>
-                                <Icon name='people' style={{fontSize: 50, color: '#051f84'}} />
-                                <Text style={styles.titlerekap}>
-                                    Total Pasien Yang Diatasi
+                                    Pasien Belum Teratasi
                                 </Text>
                                 <Text style={styles.totalrekap}>
                                     100
@@ -136,19 +192,19 @@ const DashboardPerawat = ({ navigation }) => {
                             </View>
                         </View>
                         <View style={{ flexDirection: 'row', marginBottom: 20 }}>
-                            <View style={styles.cardrekap}>
-                                <Icon name='search' style={{fontSize: 50, color: '#051f84'}} />
+                            <View style={[styles.cardrekap, { marginRight: 10 }]}>
+                                <Icon name='eyedrop-outline' style={{ fontSize: 50, color: '#051f84' }} />
                                 <Text style={styles.titlerekap}>
-                                    Total Pasien Yang Diatasi
+                                    Pasien Sedang Diatasi
                                 </Text>
                                 <Text style={styles.totalrekap}>
                                     100
                                 </Text>
                             </View>
-                            <View style={styles.cardrekap}>
-                                <Icon name='book' style={{fontSize: 50, color: '#051f84'}} />
+                            <View style={[styles.cardrekap, { marginLeft: 10 }]}>
+                                <Icon name='book' style={{ fontSize: 50, color: '#051f84' }} />
                                 <Text style={styles.titlerekap}>
-                                    Total Pasien Yang Diatasi
+                                    Jumlah Antrian
                                 </Text>
                                 <Text style={styles.totalrekap}>
                                     100
@@ -230,29 +286,28 @@ const styles = StyleSheet.create({
     },
 
     cardrekap: {
-        flex: 1, 
-        backgroundColor: 'white', 
-        elevation: 5, 
-        height: 170, 
+        flex: 1,
+        backgroundColor: 'white',
+        elevation: 5,
+        height: 170,
         borderRadius: 10,
-        marginRight: 5,
-        justifyContent: 'center', 
+        justifyContent: 'center',
         alignItems: 'center'
     },
 
     titlerekap: {
-        color: 'black', 
-        fontSize: 14, 
-        fontWeight: 'bold', 
+        color: 'black',
+        fontSize: 14,
+        fontWeight: 'bold',
         fontFamily: 'Poppins-Medium',
         textAlign: 'center',
         paddingHorizontal: 2
     },
 
     totalrekap: {
-        color: 'black', 
-        fontSize: 16, 
-        fontWeight: 'bold', 
+        color: 'black',
+        fontSize: 16,
+        fontWeight: 'bold',
         fontFamily: 'Poppins-Medium'
     }
 });

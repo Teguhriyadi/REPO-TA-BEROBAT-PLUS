@@ -34,7 +34,7 @@ const Konsultasi = ({navigation}) => {
         const data = [];
 
         const promises = await Object.keys(oldData).map(async key => {
-          const urlUidDokter = `users/dokter/${oldData[key].uidPartner}`
+          const urlUidDokter = `users/ahli/${oldData[key].uidPartner}`
           const detailDokter = await rootDB.child(urlUidDokter).once("value");
           data.push({
             id: key,
@@ -44,6 +44,7 @@ const Konsultasi = ({navigation}) => {
         });
 
         await Promise.all(promises);
+        console.log(data);
         setHistoryChat(data);
       }
     });
@@ -51,6 +52,7 @@ const Konsultasi = ({navigation}) => {
 
   const getDataUserLocal = () => {
     getData('user').then(res => {
+      console.log(res);
       setUser(res);
     });
     getData('dataUser').then(res => {
@@ -64,7 +66,7 @@ const Konsultasi = ({navigation}) => {
       <View style={styles.heading}>
         <Text style={styles.textHeading}>Konsultasi Ahli</Text>
       </View>
-      <View style={{marginTop: 3, backgroundColor: '#EBE1EF '}}>
+      <View style={{marginTop: 3, backgroundColor:  '#F6F1F1', elevation: 5}}>
         <View
           style={{
             flexDirection: 'row',
@@ -73,7 +75,7 @@ const Konsultasi = ({navigation}) => {
           }}>
           <View style={{flex: 2}}>
             <Text style={{color: 'black', fontSize: 16}}>
-              Mohammad Ilham Teguhriyadi
+              {dataPribadi.nama}
             </Text>
           </View>
           <TouchableOpacity style={{flex: 1, alignItems: 'flex-end'}}>
@@ -128,12 +130,6 @@ const Konsultasi = ({navigation}) => {
       )} */}
       <ScrollView style={{marginTop: 15, marginBottom: 5}}>
           {historyChat.map(chat => {
-            const dataDoktor = {
-              uid: chat.detailDokter.uid,
-              data:chat.detailDokter
-            }
-
-            console.log(dataDoktor);
             return (
               <View
                 key={chat.id}
@@ -233,7 +229,10 @@ const Konsultasi = ({navigation}) => {
                   }}>
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate(Navigasi.CHATING, dataDoktor)
+                      const dataDoktor = chat.detailDokter
+                      navigation.navigate(Navigasi.CHATING, {
+                        data: dataDoktor
+                      })
                     }}
                     style={{
                       borderColor: 'white',
@@ -246,8 +245,10 @@ const Konsultasi = ({navigation}) => {
                         paddingHorizontal: 20,
                         paddingVertical: 5,
                         fontSize: 10,
+                        fontFamily: 'Poppins-Medium',
+                        fontWeight: 'bold'
                       }}>
-                      Chat Ulang
+                        LIHAT KONSULTASI
                     </Text>
                   </TouchableOpacity>
                 </View>

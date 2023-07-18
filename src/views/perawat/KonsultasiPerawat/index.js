@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from "react-native";
-import { colors, getData } from '../../../utils';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, ActivityIndicator, Alert } from "react-native";
+import { colors, getData, showSuccess } from '../../../utils';
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
 import { configfirebase } from '../../../firebase/firebaseConfig';
 import Navigasi from '../../../partials/navigasi';
@@ -8,7 +8,7 @@ import Navigasi from '../../../partials/navigasi';
 const KonsultasiPerawat = ({ navigation }) => {
 
     const [dataPribadi, setDataPribadi] = useState({});
-    const [historyChat, setHistoryChat] = useState([]);
+    const [historyChat, setHistoryChat] = useState(null);
 
     useEffect(() => {
         getDataUserLocal();
@@ -23,12 +23,15 @@ const KonsultasiPerawat = ({ navigation }) => {
 
                 const promises = await Object.keys(oldData).map(async key => {
                     const datakonsumen = `users/konsumen/${oldData[key].uidPartner}`;
-                    // console.log(key);
+                    const messageskonsumen = `messages/${oldData[key].uidPartner}/${oldData[key].uidPartner}_${dataPribadi.uuid_firebase}`;
+
                     const detail_konsumen = await rootDB.child(datakonsumen).once("value");
-                    console.log(detail_konsumen);
+                    const detail_message = await rootDB.child(messageskonsumen).once("value");
                     data.push({
                         id: key,
-                        detail_konsumen: detail_konsumen.val()
+                        detail_konsumen: detail_konsumen.val(),
+                        detail_message: detail_message.val(),
+                        ...oldData[key]
                     });
                 });
 
@@ -44,6 +47,35 @@ const KonsultasiPerawat = ({ navigation }) => {
         });
     };
 
+    const akhiriSesi = (uidPartnerKonsumen) => {
+
+        Alert.alert(
+            'Konfirmasi',
+            'Akhiri Sesi Sekarang ?',
+            [
+                {
+                    text: 'Batal',
+                    style: 'cancel'
+                },
+                {
+                    text: 'Setuju',
+                    onPress: async () => {
+                        const urlHistory = `messages/${uidPartnerKonsumen}/${uidPartnerKonsumen}_${dataPribadi.uuid_firebase}`;
+
+                        configfirebase.database()
+                            .ref(urlHistory)
+                            .update({ status: 2 })
+                            .then((response) => {
+                                showSuccess("Berhasil, Sesi Telah Berakhir", "Anda Telah Mengakhiri Sesi Konsultasi");
+                            }).catch((error) => {
+                                console.log(error);
+                            })
+                    }
+                }
+            ]
+        )
+    }
+
     return (
         <View style={styles.background}>
             <StatusBarComponent />
@@ -51,15 +83,15 @@ const KonsultasiPerawat = ({ navigation }) => {
                 <Text style={styles.textHeading}> Konsultasi Pasien </Text>
             </View>
 
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false}>
                 {historyChat == null ? (
-                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                        <ActivityIndicator size={"large"} />
+                    <View style={{ marginVertical: '70%', justifyContent: 'center', alignItems: 'center' }}>
+                        <ActivityIndicator size={"large"} color={colors.primary} />
                     </View>
                 ) : (
                     historyChat.map(item => {
                         return (
-                            <View key={item.id} style={{ backgroundColor: 'white', elevation: 5, marginHorizontal: 10, marginVertical: 10, padding: 10 }}>
+                            <View key={item.id} style={{ backgroundColor: 'white', elevation: 5, marginHorizontal: 10, marginVertical: 10, padding: 10, borderRadius: 10 }}>
                                 <View style={{ flexDirection: 'row' }}>
                                     <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 14 }}>
                                         Tanggal : 07 Juli 2022
@@ -75,32 +107,57 @@ const KonsultasiPerawat = ({ navigation }) => {
                                     <Image source={require("../../../assets/images/background-doctor.png")} resizeMode='cover' style={{ height: 50, width: 50, borderRadius: 50, borderColor: 'black', borderWidth: 1 }} />
                                     <View style={{ marginHorizontal: 10 }}>
                                         <Text style={{ color: 'black', fontSize: 14, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
-                                        {item.detail_konsumen.nama}
+                                            {item.detail_konsumen.nama}
                                         </Text>
                                         <Text style={{ color: 'grey', fontSize: 12, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
-                                        {item.detail_konsumen.nomor_hp}
+                                            {item.detail_konsumen.nomor_hp}
                                         </Text>
                                     </View>
                                 </View>
                                 <Text style={{ color: 'black', marginVertical: 10, fontSize: 12, fontFamily: 'Poppins-Medium', fontWeight: 'bold', textAlign: 'justify' }}>
-                                    Masih Data Dummy
+                                    {item.status}
                                 </Text>
-                                <TouchableOpacity onPress={() => {
-                                    const params = {
-                                        id: item.id,
-                                        uidPartner: item.detail_konsumen.uid,
-                                        nama: item.detail_konsumen.nama,
-                                        nomor_hp: item.detail_konsumen.nomor_hp
-                                    }
-                                    navigation.navigate(Navigasi.DETAIL_KONSULTASI_PERAWAT, params)
-                                }} style={{ borderColor: 'green', borderWidth: 1, borderRadius: 10, paddingVertical: 10 }}>
-                                    <Text style={{ color: 'green', fontSize: 14, fontFamily: 'Poppins-Medium', fontWeight: 'bold', textAlign: 'center' }}>
-                                        Lanjutkan
-                                    </Text>
-                                </TouchableOpacity>
+                                {item.detail_message.status == 2 ? (
+                                    <TouchableOpacity onPress={() => {
+                                        const params = {
+                                            id: item.id,
+                                            uidPartner: item.detail_konsumen.uid,
+                                            nama: item.detail_konsumen.nama,
+                                            nomor_hp: item.detail_konsumen.nomor_hp
+                                        }
+                                        navigation.navigate(Navigasi.DETAIL_KONSULTASI_PERAWAT, params)
+                                    }} style={{ borderColor: 'green', borderWidth: 1, borderRadius: 10, paddingVertical: 10 }}>
+                                        <Text style={{ color: 'green', fontSize: 14, fontFamily: 'Poppins-Medium', fontWeight: 'bold', textAlign: 'center' }}>
+                                            Detail Konsultasi
+                                        </Text>
+                                    </TouchableOpacity>
+                                ) : (
+                                    <TouchableOpacity onPress={() => {
+                                        const params = {
+                                            id: item.id,
+                                            uidPartner: item.detail_konsumen.uid,
+                                            nama: item.detail_konsumen.nama,
+                                            nomor_hp: item.detail_konsumen.nomor_hp
+                                        }
+                                        navigation.navigate(Navigasi.DETAIL_KONSULTASI_PERAWAT, params)
+                                    }} style={{ borderColor: 'green', borderWidth: 1, borderRadius: 10, paddingVertical: 10 }}>
+                                        <Text style={{ color: 'green', fontSize: 14, fontFamily: 'Poppins-Medium', fontWeight: 'bold', textAlign: 'center' }}>
+                                            Lanjutkan
+                                        </Text>
+                                    </TouchableOpacity>
+                                ) }
                                 <View style={{ marginTop: 10 }} />
-                                <View style={{ flexDirection: 'row' }}>
-                                    <TouchableOpacity style={{ borderColor: 'red', borderWidth: 1, borderRadius: 10, paddingVertical: 10, width: 90 }}>
+                                {item.detail_message.status == 2 ? (
+                                    <View style={{backgroundColor: 'green', borderColor: 'white', borderWidth: 1, borderRadius: 10, paddingVertical: 10}}>
+                                        <Text style={{ color: 'white', fontSize: 14, fontFamily: 'Poppins-Medium', fontWeight: 'bold', textAlign: 'center' }}>
+                                            Konsultasi Telah Berakhir
+                                        </Text>
+                                    </View>
+                                ) : (
+                                    <View style={{ flexDirection: 'row' }}>
+                                    <TouchableOpacity style={{ borderColor: 'red', borderWidth: 1, borderRadius: 10, paddingVertical: 10, width: 90 }} onPress={() => {
+                                        akhiriSesi(item.uidPartner)
+                                    }} >
                                         <Text style={{ color: 'red', fontSize: 14, fontFamily: 'Poppins-Medium', fontWeight: 'bold', textAlign: 'center' }}>
                                             Akhiri Sesi
                                         </Text>
@@ -113,6 +170,7 @@ const KonsultasiPerawat = ({ navigation }) => {
                                         </Text>
                                     </TouchableOpacity>
                                 </View>
+                                ) }
                             </View>
                         );
                     })

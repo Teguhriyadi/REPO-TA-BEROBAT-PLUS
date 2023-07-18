@@ -115,7 +115,7 @@ const InformasiBuatJanji = ({ route }) => {
             </View>
           </ScrollView>
         ) : showIndicator ? (
-          <View style={{ marginVertical: 10, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ marginVertical: 10, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <ActivityIndicator size={'large'} color={colors.primary} />
           </View>
         ) : output ? (

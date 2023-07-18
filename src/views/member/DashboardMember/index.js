@@ -220,14 +220,14 @@ const DashboardMember = ({ navigation }) => {
             onPress={() => {
               navigation.replace(Navigasi.CHAT_DOKTER)
             }}
-            nameIcon={"home"}
+            nameIcon={"chatbubble-ellipses-sharp"}
             textfitur={"Chat Ahli"}
           />
           <ListFitur
             onPress={() => {
               navigation.replace(Navigasi.BUAT_JANJI)
             }}
-            nameIcon={"book"}
+            nameIcon={"git-network"}
             textfitur={"Buat Janji"}
           />
           <ListFitur

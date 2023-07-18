@@ -18,7 +18,7 @@ const DetailKonsultasiPerawat = ({route, navigation}) => {
 
     useEffect(() => {
         getDataUserLocal();
-        const urlfirebase = `chatting/${getkonsumen.uidPartner}_${user.uid}/allChat/`;
+        const urlfirebase = `chatting/${getkonsumen.uidPartner}_${dataPribadi.uuid_firebase}/allChat/`;
 
         configfirebase.database()
             .ref(urlfirebase)
@@ -46,15 +46,13 @@ const DetailKonsultasiPerawat = ({route, navigation}) => {
                     setChatData(semuadatachat);
                 }
             });
-    }, [user.uid]);
+    }, [dataPribadi.uuid_firebase]);
 
     const getDataUserLocal = () => {
         getData('user').then(res => {
-            console.log(res);
             setUser(res);
         });
         getData('dataUser').then(res => {
-            // console.log(res);
             setDataPribadi(res);
         });
     };
@@ -63,21 +61,21 @@ const DetailKonsultasiPerawat = ({route, navigation}) => {
         const today = new Date();
 
         const data = {
-            sendBy: user.uid,
+            sendBy: dataPribadi.uuid_firebase,
             chatDate: today.getTime(),
             chatTime: getChatTime(today),
             chatContent: chatContent,
         };
 
-        const chatID = `${getkonsumen.uidPartner}_${user.uid}`;
+        const chatID = `${getkonsumen.uidPartner}_${dataPribadi.uuid_firebase}`;
         const urlFirebase = `chatting/${chatID}/allChat/${setDateChat(today)}`;
 
         const urlMessageUser = `messages/${getkonsumen.uidPartner}/${chatID}`;
-        const urlMessageDokter = `messages/${user.uid}/${chatID}`;
+        const urlMessageDokter = `messages/${dataPribadi.uuid_firebase}/${chatID}`;
         const dataHistoryChatForUser = {
             lastContentChat: chatContent,
             lastChatDate: today.getTime(),
-            uidPartner: user.uid
+            uidPartner: dataPribadi.uuid_firebase
         };
 
         const dataHistoryChatForDokter = {
@@ -178,7 +176,7 @@ const DetailKonsultasiPerawat = ({route, navigation}) => {
                                     return (
                                         <ChatItem
                                             key={itemChat.id}
-                                            isMe={itemChat.data.sendBy === user.uid}
+                                            isMe={itemChat.data.sendBy === dataPribadi.uuid_firebase}
                                             text={itemChat.data.chatContent}
                                             date={itemChat.data.chatTime}
                                         />
