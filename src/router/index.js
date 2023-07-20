@@ -63,6 +63,7 @@ import DetailKonsultasiPerawat from '../views/perawat/KonsultasiPerawat/DetailKo
 import LanjutkanPerawat from '../views/perawat/KonsultasiPerawat/LanjutkanPerawat';
 import LupaPasswordAutentikasi from '../views/public/Autentikasi/LupaPasswordAutentikasi';
 import ProdukByKategori from '../views/member/Produk/TokoKesehatanProduk/ProdukByKategori';
+import Pembayaran from '../views/member/Produk/TokoKesehatanProduk/Pembayaran';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -381,6 +382,11 @@ const Router = () => {
         name={Navigasi.LANJUTKAN_PEMBAYARAN}
         component={LanjutkanPembayaran}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={Navigasi.PEMBAYARAN_PRODUK}
+        component={Pembayaran}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name={Navigasi.DETAIL_ARTIKEL}

@@ -37,6 +37,7 @@ export default {
   DATA_ALAMAT: "DataAlamat",
   CHAT_PERAWAT: "ChatPerawat",
   PRODUK_BY_KATEGORI: "ProdukByKategori",
+  PEMBAYARAN_PRODUK: "Pembayaran",
 
   // Dokter
   DASHBOARD_DOKTER: 'DashboardDokter',

@@ -162,6 +162,7 @@ const TokoKesehatanProduk = ({ navigation }) => {
         }
       });
 
+      console.log("Produk Berhasil di Masukkan Ke Dalam Keranjang");
       semuakeranjang();
     } catch (error) {
       console.log(error);

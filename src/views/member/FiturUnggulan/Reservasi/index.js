@@ -1,16 +1,20 @@
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { baseUrl, colors, getData } from '../../../../utils';
 import StatusBarComponent from '../../../../components/StatusBar/StatusBarComponent';
 import Heading from '../../../../components/Heading';
 import Navigasi from '../../../../partials/navigasi';
 import axios from 'axios';
+import Xendit from 'xendit-js-node';
+import { configure, createPayment } from './xendit';
 
 const Reservasi = ({ navigation }) => {
 
     const [dataPribadi, setDataPribadi] = useState({});
     const [listDataDokter, setListDataDokter] = useState(null);
     const [keahlian, setListKeahlian] = useState(null);
+    const [paymentStatus, setPaymentStatus] = useState('');
+    const [payment, setPayment] = useState(false);
 
     useEffect(() => {
         getDataUserLocal();
@@ -27,22 +31,22 @@ const Reservasi = ({ navigation }) => {
         { id: 1, nama: 'Item 1' },
         { id: 2, nama: 'Item 2' },
         { id: 3, nama: 'Item 3' }
-      ];
-    
-      const dataKedua = [
+    ];
+
+    const dataKedua = [
         { id: 1, deskripsi: 'Deskripsi Item 1' },
         { id: 2, deskripsi: 'Deskripsi Item 2' },
         { id: 3, deskripsi: 'Deskripsi Item 3' }
-      ];
+    ];
 
-      const hasil = dataPertama.map(itemPertama => {
+    const hasil = dataPertama.map(itemPertama => {
         const itemKedua = dataKedua.find(itemKedua => itemKedua.id === itemPertama.id);
         return {
-          id: itemPertama.id,
-          nama: itemPertama.nama,
-          deskripsi: itemKedua ? itemKedua.deskripsi : ''
+            id: itemPertama.id,
+            nama: itemPertama.nama,
+            deskripsi: itemKedua ? itemKedua.deskripsi : ''
         };
-      });
+    });
 
     const listDokter = async () => {
         try {
@@ -54,7 +58,7 @@ const Reservasi = ({ navigation }) => {
                 method: "GET"
             });
 
-            const promises = response.data.data.map(async(item) => {
+            const promises = response.data.data.map(async (item) => {
                 const responsedata = await axios({
                     url: `${baseUrl.url}/master/dokter_keahlian/${item.id_dokter}`,
                     headers: {
@@ -67,7 +71,7 @@ const Reservasi = ({ navigation }) => {
             });
 
             const result = await Promise.all(promises);
-            
+
             setListDataDokter(response.data.data);
             setListKeahlian(result.flat());
         } catch (error) {
@@ -75,48 +79,39 @@ const Reservasi = ({ navigation }) => {
         }
     };
 
+    const bayar = async () => {
+        try {
+            const response = await axios({
+                url: `${baseUrl.url}/invoice`,
+                method: "POST"
+            });
+
+            navigation.goBack();
+
+        } catch (error) {
+            console.log('Error creating payment:', error);
+            setPaymentStatus('Error creating payment.');
+        }
+    }
+
     return (
         <View style={styles.background}>
             <StatusBarComponent />
             <Heading navigasi={() => {
                 navigation.replace(Navigasi.MAIN_APP)
             }} textHeading={"Reservasi Kebutuhan Anda"} />
-            <View style={{marginHorizontal: 10}}>
-                {listDataDokter == null ? (
-                    <ActivityIndicator/>
-                ) : (
-                    listDataDokter.map((item) => {
-                        return (
-                            <View key={item.id_dokter}>
-                                <Text style={{color: 'black'}}>
-                                    {item.id_dokter}
-                                </Text>
-                                <Text style={{color: 'black'}}>
-                                    Keahlian : 
-                                </Text>
-                                {keahlian == null ? (
-                                    <ActivityIndicator/>
-                                ) : (
-                                    keahlian.map((dataahli) => {
-                                        return (
-                                            item.id_dokter == dataahli.get_dokter.id_dokter ? (
-                                                <Text style={{color: 'black', fontSize: 8}}>
-                                                    {dataahli.get_keahlian.nama_keahlian}
-                                                </Text>
-                                            ) : (
-                                                <View/>
-                                            )
-                                        )
-                                    })
-                                ) }
-                            </View>
-                        )
-                    })
-                ) }
-            </View>
+            <TouchableOpacity onPress={() => {
+                bayar()
+            }} style={{ backgroundColor: 'green', paddingHorizontal: 10, paddingVertical: 10, marginVertical: 10, marginHorizontal: 10 }}>
+                <Text style={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>
+                    Hamdan
+                </Text>
+            </TouchableOpacity>
         </View>
     )
 }
+
+configure("xnd_public_development_HCO3lYX562mxTdCCuBXLPj3JIWJMxHxIfodoCd80AzONQrFcP9N1AEuSy9Bq9R")
 
 export default Reservasi;
 

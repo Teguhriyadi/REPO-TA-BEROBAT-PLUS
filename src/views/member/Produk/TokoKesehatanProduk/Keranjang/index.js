@@ -26,17 +26,14 @@ const Keranjang = ({ navigation, route }) => {
   const [keranjang, setKeranjang] = useState([]);
   const [alamat, setAlamat] = useState(null);
   const [showIndicator, setShowIndicator] = useState(false);
-  const [harga, setHarga] = useState(0);
 
   const detail = route.params;
 
   useEffect(() => {
     getDataUserLocal();
     getKeranjang();
-    // dataLokasi();
-    getTotalHarga();
-    keranjangbelanja();
     semuakeranjang();
+
   }, [dataPribadi.token, dataPribadi.idx]);
 
   const getDataUserLocal = () => {
@@ -54,16 +51,11 @@ const Keranjang = ({ navigation, route }) => {
         },
         method: "GET"
       });
-      setTotalCart(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
-  const keranjangbelanja = async () => {
-    try {
+      setTotalCart(response.data);
+
       const keranjang = await axios({
-        url: `${baseUrl.url}/keranjang/${detail.data.id_keranjang}`,
+        url: `${baseUrl.url}/keranjang/${response.data.id_keranjang}`,
         headers: {
           Authorization: 'Bearer ' + dataPribadi.token
         },
@@ -76,7 +68,6 @@ const Keranjang = ({ navigation, route }) => {
       console.log(error);
     }
   }
-
   const getKeranjang = async () => {
     try {
       const produk = await AsyncStorage.getItem(`produk_${dataPribadi.idx}`);
@@ -86,26 +77,6 @@ const Keranjang = ({ navigation, route }) => {
         setShowIndicator(false);
         setKeranjang(arrayProduk);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getTotalHarga = async () => {
-    try {
-      let totalHarga = 0;
-
-      const produk = await AsyncStorage.getItem(`produk_${dataPribadi.idx}`);
-      const arrayProduk = JSON.parse(produk);
-
-      if (arrayProduk !== null) {
-        arrayProduk.forEach(item => {
-          totalHarga += item.harga * item.count;
-        })
-      }
-
-      setHarga(totalHarga);
-
     } catch (error) {
       console.log(error);
     }
@@ -171,7 +142,6 @@ const Keranjang = ({ navigation, route }) => {
       });
 
       showSuccess("Berhasil", "QTY Berhasil di Tambahkan");
-      keranjangbelanja();
       semuakeranjang();
 
     } catch (error) {
@@ -190,7 +160,6 @@ const Keranjang = ({ navigation, route }) => {
       });
 
       showSuccess("Berhasil", "QTY Berhasil di Kurangkan");
-      keranjangbelanja();
       semuakeranjang();
 
     } catch (error) {
@@ -215,54 +184,6 @@ const Keranjang = ({ navigation, route }) => {
   const show = () => {
     return (
       <>
-        {/* <View style={styles.content}>
-          <View style={styles.infoUser}>
-            <View style={{flexDirection: 'row'}}>
-              <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold'}}>
-                Tujuan Barang
-              </Text>
-              <TouchableOpacity style={{flex: 1, alignItems: 'flex-end'}}>
-                <Text style={{color: 'purple', fontSize: 16}}>Ganti</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.infoPribadi}>
-              <Text style={{color: 'black', marginTop: 10}}>
-                Posisi Anda Sekarang
-              </Text>
-              <Text
-                style={{color: 'black', fontSize: 12, textAlign: 'justify'}}>
-                {alamat}
-              </Text>
-              <TextInput
-                style={styles.textInput}
-                placeholder="Inputkan Lokasi Yang Anda Inginkan"
-                placeholderTextColor={'gray'}
-              />
-              <Text style={{color: 'gray', fontSize: 16, fontWeight: 'bold'}}>
-                Kontak Penerima
-              </Text>
-              <View style={{flexDirection: 'row'}}>
-                <View style={{flex: 1}}>
-                  <Text
-                    style={{
-                      color: 'black',
-                      fontSize: 16,
-                      fontWeight: 'bold',
-                      textAlign: 'justify',
-                    }}>
-                    {dataPribadi.nama}
-                  </Text>
-                  <Text style={{color: 'black', fontSize: 12}}>
-                    {dataPribadi.nomor_hp}
-                  </Text>
-                </View>
-                <TouchableOpacity style={{justifyContent: 'center'}}>
-                  <Icon name="exit-outline" style={{color: 'black', fontSize: 20}} />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </View> */}
         <View style={{ marginTop: 10, marginHorizontal: 10 }}>
           <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
             Tujuan Barang
@@ -384,7 +305,7 @@ const Keranjang = ({ navigation, route }) => {
             })
           )}
         </View>
-        <View style={{ flex: 1, justifyContent: 'center'}}>
+        <View style={{ flex: 1, justifyContent: 'center' }}>
           <TouchableOpacity
             style={styles.btnKeranjang}
             onPress={() => {
@@ -408,18 +329,18 @@ const Keranjang = ({ navigation, route }) => {
           alignItems: 'center',
         }}>
         <View style={{ flex: 1 }}>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={{color: 'black', fontSize: 16}}>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ color: 'black', fontSize: 16 }}>
               Ada
             </Text>
             {totalCart == null ? (
-              <ActivityIndicator color={colors.primary} style={{marginHorizontal: 3}} />
+              <ActivityIndicator color={colors.primary} style={{ marginHorizontal: 3 }} />
             ) : (
-              <Text style={{color: 'red', fontWeight: 'bold', fontSize: 16, marginHorizontal: 3}}>
+              <Text style={{ color: 'red', fontWeight: 'bold', fontSize: 16, marginHorizontal: 3 }}>
                 {totalCart.total}
               </Text>
-            ) }
-            <Text style={{color: 'black', fontSize: 16}}>Keranjang</Text>
+            )}
+            <Text style={{ color: 'black', fontSize: 16 }}>Keranjang</Text>
           </View>
           <Text style={{ color: 'black' }}>Total Harga :</Text>
           {totalCart == null ? (
@@ -428,23 +349,29 @@ const Keranjang = ({ navigation, route }) => {
             <Text style={{ color: 'black', fontWeight: 'bold' }}>
               {totalCart.harga}
             </Text>
-          ) }
+          )}
         </View>
         <View style={{ flex: 1 }}>
-          <TouchableOpacity
-            style={{ backgroundColor: 'white', borderColor: 'purple', borderWidth: 1, borderRadius: 5 }} onPress={() => {
-              navigation.navigate(Navigasi.RINGKASAN_PEMBAYARAN_PRODUK)
-            }} >
-            <Text
-              style={{
-                color: 'purple',
-                fontWeight: 'bold',
-                textAlign: 'center',
-                paddingVertical: 10,
-              }}>
-              Lanjutkan Pembayaran
-            </Text>
-          </TouchableOpacity>
+          {totalCart == null ? (
+            <ActivityIndicator size={"large"} color={colors.primary} />
+          ) : (
+            <TouchableOpacity
+              style={{ backgroundColor: 'white', borderColor: 'purple', borderWidth: 1, borderRadius: 5 }} onPress={() => {
+                navigation.navigate(Navigasi.RINGKASAN_PEMBAYARAN_PRODUK, {
+                  data: totalCart
+                })
+              }} >
+              <Text
+                style={{
+                  color: 'purple',
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+                  paddingVertical: 10,
+                }}>
+                Lanjutkan Pembayaran
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </View>

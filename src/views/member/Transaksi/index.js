@@ -1,278 +1,210 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
-import {
-  View,
-  Text,
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  StatusBar,
-  PermissionsAndroid,
-} from 'react-native';
-import { colors, baseUrl, getData } from '../../../utils';
-import axios from 'axios';
-import { WebView } from "react-native-webview";
-import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
-import WS from 'react-native-websocket';
-import { configfirebase } from '../../../firebase/firebaseConfig';
-import Geolocation from '@react-native-community/geolocation';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent'
+import Icon from 'react-native-vector-icons/Ionicons'
+import { baseUrl, colors, getData } from '../../../utils'
+import axios from 'axios'
+import Navigasi from '../../../partials/navigasi'
 
-const Transaksi = () => {
-  // const [countdown, setCountdown] = useState(1800);
-  // const [finished, setFinished] = useState(false);
-  const [dataRole, setData] = useState(null);
-  const [closestPerawat, setClosestPerawat] = useState(null);
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
-  const [dataPribadi, setDataPribadi] = useState({});
-  const [showIndicator, setShowIndicator] = useState(true);
+const Transaksi = ({navigation}) => {
 
-  useEffect(() => {
-    getUserLocal();
-    requestLocationPermission();
-    // const interval = setInterval(() => {
-    //   fetchData();
-    // }, 5000);
+    const [dataPribadi, setDataPribadi] = useState({});
+    const [transaksi, setTransaksi] = useState(null);
 
-    // let interval;
-    // if (countdown > 0) {
-    //   interval = setInterval(() => {
-    //     setCountdown(prevCountdown => prevCountdown - 1);
-    //   }, 1000);
-    // } else {
-    //   setFinished(true);
-    // }
+    useEffect(() => {
+        getDataUserLocal();
+        getTransaksi();
+    }, [dataPribadi.token]);
 
-    // return () => clearInterval(interval);
-  }, [dataPribadi.token]);
-
-  const getUserLocal = () => {
-    getData('dataUser').then(res => {
-      console.log(res);
-      setDataPribadi(res);
-    });
-  };
-
-  const requestLocationPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: 'Location Permission',
-          message: 'This app requires access to your location.',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        Geolocation.getCurrentPosition(position => {
-          const { latitude, longitude } = position.coords;
-
-          setLatitude(latitude)
-          setLongitude(longitude);
+    const getDataUserLocal = () => {
+        getData('dataUser').then(res => {
+            setDataPribadi(res);
         });
-      } else {
-        console.log('Tidak Ditemukan ');
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+    };
 
-  const cari = () => {
-    if (latitude && longitude) {
-      const perawatref = configfirebase.database().ref("locations");
-      perawatref.once("value", (snapshot) => {
-        const perawatdata = snapshot.val();
-        console.log(perawatdata);
-        if (perawatdata) {
-          const perawatlist = Object.keys(perawatdata).map((key) => ({
-            id: key,
-            latitude: perawatdata[key].latitude,
-            longitude: perawatdata[key].longitude
-          }));
+    const getTransaksi = async () => {
+        try {
+            const response = await axios({
+                url: `${baseUrl.url}/master/pembelian/transaksi`,
+                headers: {
+                    Authorization: 'Bearer ' + dataPribadi.token
+                },
+                method: "GET"
+            });
 
-          perawatlist.forEach((perawat) => {
-            const distance = haversineDistance(
-              latitude,
-              longitude,
-              perawat.latitude,
-              perawat.longitude
-            );
-            perawat.distance = distance;
-          });
+            setTransaksi(response.data.data);
 
-          // Mendapatkan perawat dengan jarak terdekat
-          const closestPerawat = perawatlist.reduce((prev, curr) =>
-            prev.distance < curr.distance ? prev : curr
-          );
-
-          setClosestPerawat(closestPerawat);
+        } catch (error) {
+            console.log(error);
         }
-      })
-    } else {
-      console.log("Lokasi Belum Tersedia");
     }
-  }
 
-  const haversineDistance = (lat1, lon1, lat2, lon2) => {
-    const R = 6371; // Radius bumi dalam kilometer
-    const dLat = deg2rad(lat2 - lat1);
-    const dLon = deg2rad(lon2 - lon1);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c; // Jarak dalam kilometer
-    return distance;
-  };
-
-  const deg2rad = (degree) => {
-    return degree * (Math.PI / 180);
-  };
-
-  const fetchData = async () => {
-    try {
-      const response = await axios({
-        url: `${baseUrl.url}/master/role`,
-        headers: {
-          Authorization: 'Bearer ' + dataPribadi.token
-        },
-        method: "GET"
-      });
-
-      console.log("----");
-      console.log(response.data.data);
-    } catch (error) {
-      console.log(error);
-    }
-    // return new Promise(async (resolve, reject) => {
-    //   try {
-    //     await axios({
-    //       url: `${baseUrl.url}/master/role`,
-    //       headers: {
-    //         Authorization: 'Bearer ' + dataPribadi.token,
-    //       },
-    //       method: 'GET',
-    //     })
-    //       .then(response => {
-    //         console.log(response.data.data)
-    //         setShowIndicator(false);
-    //         setData(response.data.data);
-    //       })
-    //       .catch(error => {
-    //         console.log(error);
-    //       });
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // });
-  };
-  // const formatTime = timeInSeconds => {
-  //   const minutes = Math.floor(timeInSeconds / 60);
-  //   const seconds = timeInSeconds % 60;
-  //   return `${minutes < 10 ? '0' : ''}${minutes}:${
-  //     seconds < 10 ? '0' : ''
-  //   }${seconds}`;
-  // };
-
-  // return (
-  //   <View style={{flex: 1, backgroundColor: 'white'}}></View>
-  // <View style={{flex: 1, backgroundColor: 'blue'}}>
-  //   {productList.map(product => (
-  //     <TouchableOpacity onPress={() => incrementProductCount(product.id)}>
-  //       <Text>{product.name}</Text>
-  //       <Text>{product.count}</Text>
-  //     </TouchableOpacity>
-  //   ))}
-  // </View>
-  // <View style={{flex: 1, backgroundColor: 'white'}}>
-  /* {finished ? (
-        <Text style={{color: 'black'}}>Countdown selesai</Text>
-      ) : (
-        <Text style={{color: 'black'}}>{formatTime(countdown)}</Text>
-      )} */
-  //   <View>
-  //     <Text style={{color: 'black'}}>Hamdan</Text>
-  //   </View> */
-  //   <FlatList
-  //     data={dataRole}
-  //     horizontal
-  //     showsHorizontalScrollIndicator={false}
-  //     renderItem={({item}) => (
-  //       <View style={styles.cardProduk}>
-  //         <TouchableOpacity>
-  //           <View
-  //             style={{justifyContent: 'center', alignItems: 'center'}}></View>
-  //         </TouchableOpacity>
-  //         <Text style={styles.namaProduk}>Hamdan</Text>
-  //         <Text style={styles.hargaProduk}>Rp. 100000</Text>
-  //       </View>
-  //     )}
-  //   />
-  // </View>
-  //   );
-  // };
-
-  // const styles = StyleSheet.create({
-  //   cardProduk: {
-  //     width: 200,
-  //     height: 250,
-  //     borderColor: 'gray',
-  //     borderWidth: 1,
-  //     marginHorizontal: 15,
-  //     marginVertical: 10,
-  //     borderRadius: 10,
-  //   },
-  //   namaProduk: {
-  //     color: 'black',
-  //     fontSize: 16,
-  //     marginHorizontal: 10,
-  //     fontWeight: 'bold',
-  //   },
-  //   hargaProduk: {
-  //     color: 'black',
-  //     fontSize: 12,
-  //     marginHorizontal: 10,
-  //   },
-  // });
-
-  // if (!dataRole) {
-  //   return (
-  //     <View style={{flex: 1, backgroundColor: 'white'}}>
-  //       <Text style={{color: 'black'}}>Loading...</Text>
-  //     </View>
-  //   );
-  // }
-
-  return (
-    // <View style={{flex: 1, backgroundColor: 'white'}}>
-    //   <FlatList
-    //     data={dataRole}
-    //     horizontal
-    //     showsHorizontalScrollIndicator={false}
-    //     renderItem={({item}) => <Text style={{color: 'black'}}>Hamdan</Text>}
-    //   />
-    // </View>
-    <View style={{ flex: 1 }}>
-      <StatusBarComponent />
-      <TouchableOpacity style={{ marginHorizontal: 10, marginVertical: 10, borderColor: 'green', borderWidth: 1, borderRadius: 5, paddingVertical: 10 }} onPress={() => {
-        cari();
-      }}>
-        <Text style={{ color: 'black', textAlign: 'center' }}>
-          Cari Ahli Terdekat
-        </Text>
-      </TouchableOpacity>
-      {closestPerawat && (
-        <View>
-          <Text style={{color: 'black'}}>Perawat Terdekat:</Text>
-          <Text style={{color: 'black'}}>Nama: {closestPerawat.latitude}</Text>
-          
+    return (
+        <View style={styles.background}>
+            <StatusBarComponent />
+            <View style={styles.heading}>
+                <Text style={styles.textheading}>
+                    Riwayat Transaksi
+                </Text>
+            </View>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                {transaksi == null ? (
+                    <ActivityIndicator size={"large"} color={colors.primary} style={{ marginTop: 200 }} />
+                ) : (
+                    transaksi.length > 0 ? (
+                        transaksi.map((item) => {
+                            return (
+                                <View style={styles.content} key={item.id_pembelian}>
+                                    <View style={{ flexDirection: 'row' }}>
+                                        <View style={{ flex: 3, justifyContent: 'center' }}>
+                                            <Text style={styles.textcontent}>
+                                                {item.id_pembelian}
+                                            </Text>
+                                        </View>
+                                        <View style={{ flex: 1, backgroundColor: 'orange', marginVertical: 10, marginHorizontal: 10, borderRadius: 5, paddingVertical: 5 }}>
+                                            <Text style={{ color: 'white', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 12, textAlign: 'center' }}>
+                                                {item.status}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                    <View style={styles.border} />
+                                    <View style={{ alignItems: 'flex-end', marginHorizontal: 10, marginVertical: 10 }}>
+                                        <Text style={styles.tanggal}>
+                                            {item.tanggal_pembelian}
+                                        </Text>
+                                    </View>
+                                    <View style={{ marginHorizontal: 10, marginBottom: 10 }}>
+                                        <Text style={{ color: 'black', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 16 }}>{item.konsumen_id.detail.nama}</Text>
+                                        <Text style={{ color: 'black' }}>{item.konsumen_id.detail.nomor_hp}</Text>
+                                        <View style={{ alignItems: 'flex-end' }}>
+                                            <Text style={{ color: 'black', fontFamily: 'Poppins-Medium', fontSize: 16, fontWeight: 'bold' }}>
+                                                Total Pembelian : {item.total_pembelian}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                    <TouchableOpacity style={styles.button}>
+                                        <Text style={styles.textbutton}>
+                                            Detail
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            )
+                        })
+                    ) : (
+                        <View style={styles.contentnotfound}>
+                            <Icon name="cart" style={{ fontSize: 100, color: '#051f84' }} />
+                            <Text style={styles.iconNotFound}>Belum Ada Transaksi</Text>
+                            <Text style={{ color: 'black', fontSize: 14 }}>Anda Belum Melakukan Pembelanjaan</Text>
+                            <TouchableOpacity style={styles.button} onPress={() => {
+                                navigation.navigate(Navigasi.TOKO_KESEHATAN_PRODUK)
+                            }}>
+                                <Text style={styles.textbutton}>
+                                    Lanjutkan Transaksi
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    )
+                )}
+            </ScrollView>
         </View>
-      )}
-    </View>
-  );
-};
+    )
+}
+
+const styles = StyleSheet.create({
+    background: {
+        flex: 1,
+        backgroundColor: 'white'
+    },
+
+    heading: {
+        padding: 15,
+        height: 50,
+        backgroundColor: 'white',
+        elevation: 5
+    },
+
+    textheading: {
+        color: 'black',
+        fontFamily: 'Poppins-Medium',
+        fontWeight: 'bold',
+        fontSize: 16
+    },
+
+    content: {
+        backgroundColor: 'white',
+        elevation: 5,
+        marginHorizontal: 10,
+        marginTop: 15,
+        marginBottom: 10,
+        borderRadius: 5
+    },
+
+    textcontent: {
+        color: 'blue',
+        marginHorizontal: 10,
+        marginVertical: 10,
+        fontFamily: 'Poppins-Medium',
+        fontSize: 16,
+        fontWeight: 'bold'
+    },
+
+    border: {
+        borderColor: 'gray',
+        marginHorizontal: 10,
+        borderWidth: 1
+    },
+
+    tanggal: {
+        color: 'green',
+        fontFamily: 'Poppins-Medium',
+        fontWeight: 'bold',
+        fontSize: 14
+    },
+
+    button: {
+        backgroundColor: 'green',
+        marginBottom: 15,
+        marginHorizontal: 10,
+        borderRadius: 5,
+        paddingVertical: 7
+    },
+
+    textbutton: {
+        color: 'white',
+        fontFamily: 'Poppins-Medium',
+        fontSize: 14,
+        fontWeight: 'bold',
+        textAlign: 'center'
+    },
+
+    contentnotfound: {
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        marginTop: 200
+    },
+
+    iconNotFound: {
+        color: '#051f84', 
+        fontFamily: 'Poppins-Medium', 
+        fontSize: 18, 
+        fontWeight: 'bold'
+    },
+
+    button: {
+        backgroundColor: '#051f84', 
+        width: '90%', 
+        paddingVertical: 10, 
+        marginVertical: 10, 
+        borderRadius: 10
+    },
+
+    textbutton: {
+        color: 'white', 
+        fontFamily: 'Poppins-Medium', 
+        fontWeight: 'bold', 
+        fontSize: 14, 
+        textAlign: 'center'
+    }
+})
 
 export default Transaksi;
