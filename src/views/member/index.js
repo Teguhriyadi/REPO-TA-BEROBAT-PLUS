@@ -13,6 +13,7 @@ export * from './ProfileAkun/AlamatTersimpan';
 export * from './DashboardMember/KeahlianDokter';
 export * from './LoadingScreen';
 export * from "./DetailChat/RingkasanPembayaranKonsultasi";
+export * from "./DetailChat/LanjutkanPembayaranKonsultasi";
 export * from "./DashboardMember/AllArtikel";
 export * from "./ChatPusher";
 export * from "./ProfileAkun/AlamatTersimpan/DataAlamat";

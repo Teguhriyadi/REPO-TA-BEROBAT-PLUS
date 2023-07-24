@@ -1,5 +1,5 @@
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, {useState, useEffect} from 'react'
+import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useState, useEffect } from 'react'
 import { colors, baseUrl, getData, getChatTime, setDateChat } from '../../../../utils';
 import { configfirebase } from '../../../../firebase/firebaseConfig';
 import StatusBarComponent from '../../../../components/StatusBar/StatusBarComponent';
@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import InputChat from "../../../../components/InputChat"
 import ChatItem from "../../../../components/ChatItem"
 
-const DetailKonsultasiPerawat = ({route, navigation}) => {
+const DetailKonsultasiPerawat = ({ route, navigation }) => {
 
     const getkonsumen = route.params;
 
@@ -15,10 +15,13 @@ const DetailKonsultasiPerawat = ({route, navigation}) => {
     const [chatData, setChatData] = useState([]);
     const [user, setUser] = useState({});
     const [dataPribadi, setDataPribadi] = useState({});
+    const [pesanStatus, setPesanStatus] = useState(null);
+    const [showIndicator, setShowIndicator] = useState(true);
 
     useEffect(() => {
         getDataUserLocal();
         const urlfirebase = `chatting/${getkonsumen.uidPartner}_${dataPribadi.uuid_firebase}/allChat/`;
+        const pesan = `messages/${getkonsumen.uidPartner}/${getkonsumen.uidPartner}_${dataPribadi.uuid_firebase}`;
 
         configfirebase.database()
             .ref(urlfirebase)
@@ -46,6 +49,15 @@ const DetailKonsultasiPerawat = ({route, navigation}) => {
                     setChatData(semuadatachat);
                 }
             });
+
+        configfirebase.database()
+            .ref(pesan)
+            .once("value")
+            .then((snapshot) => {
+                setShowIndicator(false);
+                const pesanStatus = snapshot.val() ? snapshot.val().status : null;
+                setPesanStatus(pesanStatus)
+            })
     }, [dataPribadi.uuid_firebase]);
 
     const getDataUserLocal = () => {
@@ -187,11 +199,25 @@ const DetailKonsultasiPerawat = ({route, navigation}) => {
                     })}
                 </ScrollView>
             </View>
-            <InputChat
-                value={chatContent}
-                onChangeText={value => setChatContent(value)}
-                onButtonPress={chatSend}
-            />
+            {showIndicator ? (
+                <ActivityIndicator size={"large"} style={{ marginVertical: 10 }} color={colors.primary} />
+            ) : (
+                pesanStatus === null ? (
+                    <ActivityIndicator size={"large"} style={{ marginVertical: 10 }} color={colors.primary} />
+                ) : pesanStatus === 2 ? (
+                    <View style={{ justifyContent: 'center', alignItems: 'center', borderColor: 'red', borderWidth: 1, marginVertical: 10, marginHorizontal: 10, borderRadius: 5, paddingVertical: 10 }}>
+                        <Text style={{ color: 'red', fontFamily: 'Poppins-Medium', fontSize: 14, fontWeight: 'bold' }}>
+                            Konsultasi Sudah Berakhir
+                        </Text>
+                    </View>
+                ) : (
+                    <InputChat
+                        value={chatContent}
+                        onChangeText={value => setChatContent(value)}
+                        onButtonPress={chatSend}
+                    />
+                )
+            )}
         </View>
     );
 }

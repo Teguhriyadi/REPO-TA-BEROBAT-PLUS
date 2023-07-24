@@ -56,6 +56,7 @@ const RingkasanPembayaranProduk = ({ navigation, route }) => {
   const bayar = async (id_keranjang) => {
 
     try {
+
       const response = await axios({
         url: `${baseUrl.url}/master/pembelian/transaksi`,
         headers: {
@@ -69,7 +70,7 @@ const RingkasanPembayaranProduk = ({ navigation, route }) => {
       });
 
       showSuccess("Berhasil", "Pembayaran Anda Sudah Berhasil");
-      navigation.navigate(Navigasi.PEMBAYARAN_PRODUK);
+      navigation.navigate(Navigasi.MAIN_APP)
 
     } catch (error) {
       console.log(error);

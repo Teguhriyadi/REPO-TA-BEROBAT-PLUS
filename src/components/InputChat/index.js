@@ -11,6 +11,8 @@ import {colors} from '../../utils';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const InputChat = ({value, onChangeText, onButtonPress}) => {
+  const isInputEmpty = value.trim().length === 0;
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -22,14 +24,11 @@ const InputChat = ({value, onChangeText, onButtonPress}) => {
       />
       <TouchableOpacity
         onPress={onButtonPress}
-        style={{
-          backgroundColor: 'blue',
-          padding: 10,
-          width: 40,
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderRadius: 7,
-        }}>
+        disabled={isInputEmpty}
+        style={[
+          styles.button,
+          isInputEmpty ? styles.disabledButton : styles.activeButton
+        ]}>
         <Icon name="send" style={{color: 'white', fontSize: 20}} />
       </TouchableOpacity>
     </View>
@@ -50,6 +49,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     maxHeight: 45,
     color: 'black',
+  },
+  button: {
+    padding: 10,
+    width: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 7,
+  },
+  activeButton: {
+    backgroundColor: 'blue',
+  },
+  disabledButton: {
+    backgroundColor: 'gray', // Warna ketika disabled
   },
 });
 

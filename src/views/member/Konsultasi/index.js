@@ -50,6 +50,8 @@ const Konsultasi = ({navigation}) => {
     });
   }, [user.uid, dataPribadi.idx, dataPribadi.token]);
 
+  console.log(historyChat);
+
   const getDataUserLocal = () => {
     getData('user').then(res => {
       console.log(res);

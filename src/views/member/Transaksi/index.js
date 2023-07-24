@@ -82,7 +82,11 @@ const Transaksi = ({navigation}) => {
                                             </Text>
                                         </View>
                                     </View>
-                                    <TouchableOpacity style={styles.button}>
+                                    <TouchableOpacity onPress={() => {
+                                        navigation.navigate(Navigasi.PEMBAYARAN_PRODUK, {
+                                            data: item
+                                        })
+                                    }} style={styles.button}>
                                         <Text style={styles.textbutton}>
                                             Detail
                                         </Text>
@@ -95,10 +99,10 @@ const Transaksi = ({navigation}) => {
                             <Icon name="cart" style={{ fontSize: 100, color: '#051f84' }} />
                             <Text style={styles.iconNotFound}>Belum Ada Transaksi</Text>
                             <Text style={{ color: 'black', fontSize: 14 }}>Anda Belum Melakukan Pembelanjaan</Text>
-                            <TouchableOpacity style={styles.button} onPress={() => {
+                            <TouchableOpacity style={styles.buttonNotFound} onPress={() => {
                                 navigation.navigate(Navigasi.TOKO_KESEHATAN_PRODUK)
                             }}>
-                                <Text style={styles.textbutton}>
+                                <Text style={styles.textButtonNotFound}>
                                     Lanjutkan Transaksi
                                 </Text>
                             </TouchableOpacity>
@@ -190,7 +194,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
 
-    button: {
+    buttonNotFound: {
         backgroundColor: '#051f84', 
         width: '90%', 
         paddingVertical: 10, 
@@ -198,7 +202,7 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
 
-    textbutton: {
+    textButtonNotFound: {
         color: 'white', 
         fontFamily: 'Poppins-Medium', 
         fontWeight: 'bold', 

@@ -53,6 +53,7 @@ export default {
   PUSHER: "Pusher",
   RESERVASI: "Reservasi",
   TAMBAH_REKOMENDASI: "TambahRekomendasi",
+  LANJUTKAN_PEMBAYARAN_KONSULTASI: "LanjutkanPembayaranKonsultasi",
 
   // Perawat
   DASHBOARD_PERAWAT: "DashboardPerawat",

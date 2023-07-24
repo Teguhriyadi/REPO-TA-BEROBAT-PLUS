@@ -6,6 +6,7 @@ import Navigasi from "../../../../partials/navigasi"
 import { colors } from '../../../../utils/colors';
 import { ImageBackground } from 'react-native';
 import Button from '../../../../components/Button';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ChatPerawat = ({ navigation, route }) => {
     const getPerawat = route.params;

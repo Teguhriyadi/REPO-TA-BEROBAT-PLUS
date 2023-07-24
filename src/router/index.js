@@ -35,7 +35,6 @@ import Keranjang from '../views/member/Produk/TokoKesehatanProduk/Keranjang';
 import UpdatePassword from '../views/member/ProfileAkun/UpdatePassword';
 import AlamatTersimpan from '../views/member/ProfileAkun/AlamatTersimpan';
 import KeahlianDokter from '../views/member/DashboardMember/KeahlianDokter';
-// import RingkasanPembayaran from '../views/member/DashboardMember/KeahlianDokter/RingkasanPembayaran';
 import AllData from '../views/member/FiturUnggulan/BuatJanji/AllData';
 import AllDataProduk from '../views/member/Produk/TokoKesehatanProduk/AllData';
 import RingkasanPembayaranProduk from '../views/member/Produk/TokoKesehatanProduk/RingkasanPembayaranProduk';
@@ -46,8 +45,6 @@ import KonsultasiDokter from '../views/dokter/KonsultasiDokter';
 import RingkasanPembayaranKonsultasi from '../views/member/DetailChat/RingkasanPembayaranKonsultasi';
 import AllArtikel from '../views/member/DashboardMember/AllArtikel';
 import ChatPusher from '../views/member/ChatPusher';
-import Pusher from '../views/dokter/Pusher';
-import ClassPusher from '../views/dokter/Pusher';
 import DashboardPerawat from '../views/perawat/Dashboard';
 import Profile from '../views/perawat/Profile';
 import Riwayat from '../views/perawat/Riwayat';
@@ -64,6 +61,7 @@ import LanjutkanPerawat from '../views/perawat/KonsultasiPerawat/LanjutkanPerawa
 import LupaPasswordAutentikasi from '../views/public/Autentikasi/LupaPasswordAutentikasi';
 import ProdukByKategori from '../views/member/Produk/TokoKesehatanProduk/ProdukByKategori';
 import Pembayaran from '../views/member/Produk/TokoKesehatanProduk/Pembayaran';
+import LanjutkanPembayaranKonsultasi from '../views/member/DetailChat/LanjutkanPembayaranKonsultasi';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -157,11 +155,6 @@ const MainDokter = () => {
         component={Dashboard}
         options={{ headerShown: false, title: 'Beranda' }}
       />
-      {/* <Tab.Screen
-        name={Navigasi.TRANSAKSI_MEMBER}
-        component={Transaksi}
-        options={{ headerShown: false }}
-      /> */}
       <Tab.Screen
         name={Navigasi.PRODUK_DOKTER}
         component={ProdukDokter}
@@ -357,6 +350,11 @@ const Router = () => {
         name={Navigasi.RINGKASAN_PEMBAYARAN}
         component={RingkasanPembayaranKonsultasi}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={Navigasi.LANJUTKAN_PEMBAYARAN_KONSULTASI}
+        component={LanjutkanPembayaranKonsultasi}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name={Navigasi.DETAIL_CHAT}

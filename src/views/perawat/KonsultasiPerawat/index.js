@@ -9,6 +9,7 @@ const KonsultasiPerawat = ({ navigation }) => {
 
     const [dataPribadi, setDataPribadi] = useState({});
     const [historyChat, setHistoryChat] = useState(null);
+    const [isDataChanged, setDataChanged] = useState(false);
 
     useEffect(() => {
         getDataUserLocal();
@@ -16,12 +17,12 @@ const KonsultasiPerawat = ({ navigation }) => {
         const urlHistory = `messages/${dataPribadi.uuid_firebase}`;
         const messagesDB = rootDB.child(urlHistory);
 
-        messagesDB.on("value", async snapshot => {
+        const onDataChange = snapshot => {
             if (snapshot.val()) {
                 const oldData = snapshot.val();
                 const data = [];
 
-                const promises = await Object.keys(oldData).map(async key => {
+                const promises = Object.keys(oldData).map(async key => {
                     const datakonsumen = `users/konsumen/${oldData[key].uidPartner}`;
                     const messageskonsumen = `messages/${oldData[key].uidPartner}/${oldData[key].uidPartner}_${dataPribadi.uuid_firebase}`;
 
@@ -35,11 +36,19 @@ const KonsultasiPerawat = ({ navigation }) => {
                     });
                 });
 
-                await Promise.all(promises);
-                setHistoryChat(data);
+                Promise.all(promises).then(() => {
+                    setHistoryChat(data);
+                });
             }
-        });
-    }, [dataPribadi.nama, dataPribadi.uuid_firebase, dataPribadi.idx, dataPribadi.token]);
+        }
+
+        messagesDB.on("value", onDataChange);
+
+        return () => {
+            messagesDB.off("value", onDataChange);
+        }
+
+    }, [dataPribadi.nama, dataPribadi.uuid_firebase, dataPribadi.idx, dataPribadi.token, isDataChanged]);
 
     const getDataUserLocal = () => {
         getData('dataUser').then(res => {
@@ -67,6 +76,7 @@ const KonsultasiPerawat = ({ navigation }) => {
                             .update({ status: 2 })
                             .then((response) => {
                                 showSuccess("Berhasil, Sesi Telah Berakhir", "Anda Telah Mengakhiri Sesi Konsultasi");
+                                setDataChanged(true);
                             }).catch((error) => {
                                 console.log(error);
                             })

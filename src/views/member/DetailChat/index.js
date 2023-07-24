@@ -1,14 +1,73 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, ActivityIndicator } from 'react-native';
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Navigasi from '../../../partials/navigasi';
 import { colors } from '../../../utils/colors';
 import { ImageBackground } from 'react-native';
 import Button from '../../../components/Button';
+import { configfirebase } from '../../../firebase/firebaseConfig';
+import { getData } from '../../../utils';
+import { useTime } from '../../../components/Time/TimeContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DetailChatDokter = ({ navigation, route }) => {
   const getDokter = route.params;
+
+  const {countdown, finished, formatTime, setCurrentPerUser} = useTime();
+  const isKonsultasiTerlewat = countdown <= 0;
+
+  const [dataPribadi, setDataPribadi] = useState({});
+  const [dataSesi, setDataSesi] = useState(null);
+
+  useEffect(() => {
+    getDataUserLocal();
+
+    if (Object.keys(dataPribadi).length > 0) {
+      cekSesi();
+    }
+    
+    AsyncStorage.removeItem("countdown");
+  }, [dataPribadi.uuid_firebase]);
+
+  const getDataUserLocal = () => {
+    getData('dataUser').then(res => {
+      console.log(res)
+      setDataPribadi(res);
+    });
+  };
+
+  const chating = (detail) => {
+    const urlHistory = `sesi/${dataPribadi.uuid_firebase}`
+    setCurrentPerUser(detail);
+    const postdata = {
+      uid: dataPribadi.uuid_firebase
+    }
+
+    configfirebase.database()
+      .ref(urlHistory)
+      .set(postdata)
+
+    navigation.navigate(Navigasi.CHATING, {
+      data: detail
+    })
+  }
+
+  const cekSesi = () => {
+    const rootDB = configfirebase.database().ref();
+    const urlHistory = `sesi/${dataPribadi.uuid_firebase}`
+    const messagesDB = rootDB.child(urlHistory);
+
+    messagesDB.on("value", snapshot => {
+      if (snapshot.val()) {
+        setDataSesi(snapshot.val());
+      } else {
+        setDataSesi("kosong");
+      }
+    })
+  }
+
+  AsyncStorage.removeItem("countdown");
 
   return (
     <View style={styles.background}>
@@ -183,23 +242,61 @@ const DetailChatDokter = ({ navigation, route }) => {
               </View>
             </View>
           </View>
-          <View
-            style={{
-              justifyContent: 'flex-end',
-              backgroundColor: 'blue',
-              borderRadius: 10,
-            }}>
-            <Button onpress={() => {
-              const detaildatadokter = {
-                uid: getDokter.data.user_id.uid_firebase,
-                nama: getDokter.data.user_id.nama,
-                kelas: getDokter.data.kelas
-              };
-              navigation.navigate(Navigasi.CHATING, {
-                data: detaildatadokter
-              })
-            }} textbutton={"Lanjutkan Pembayaran"} />
-          </View>
+          {dataSesi == null ? (
+            <ActivityIndicator size={"large"} color={colors.primary} />
+          ) : (
+            dataSesi == "kosong" ? (
+              <View
+                style={{
+                  justifyContent: 'flex-end',
+                  backgroundColor: 'blue',
+                  borderRadius: 10,
+                }}>
+                <Button onpress={() => {
+                  const detaildatadokter = {
+                    uid: getDokter.data.user_id.uid_firebase,
+                    nama: getDokter.data.user_id.nama,
+                    kelas: getDokter.data.kelas
+                  };
+
+                  chating(detaildatadokter);
+                }} textbutton={"Mulai Konsultasi"} />
+              </View>
+            ) : (
+              <View
+                style={{
+                  justifyContent: 'flex-end',
+                  backgroundColor: 'blue',
+                  borderRadius: 10,
+                }}>
+                {isKonsultasiTerlewat ? (
+                  <Button onpress={() => {
+                    const detaildatadokter = {
+                      uid: getDokter.data.user_id.uid_firebase,
+                      nama: getDokter.data.user_id.nama,
+                      kelas: getDokter.data.kelas
+                    };
+  
+                    navigation.navigate(Navigasi.LANJUTKAN_PEMBAYARAN_KONSULTASI, {
+                      data: detaildatadokter
+                    })
+                  }} textbutton={"Lanjutkan Pembayaran"} />
+                ) : (
+                  <Button onpress={() => {
+                    const detaildatadokter = {
+                      uid: getDokter.data.user_id.uid_firebase,
+                      nama: getDokter.data.user_id.nama,
+                      kelas: getDokter.data.kelas
+                    };
+  
+                    navigation.navigate(Navigasi.CHATING, {
+                      data: detaildatadokter
+                    })
+                  }} textbutton={"Lanjutkan Konsultasi"} />
+                ) }
+              </View>
+            )
+          )}
         </View>
       </View>
     </View>

@@ -1,7 +1,6 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, Image, TouchableOpacity, ScrollView} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
-import Icon from 'react-native-vector-icons/Ionicons';
 import ChatItem from '../../../components/ChatItem';
 import InputChat from '../../../components/InputChat';
 import { configfirebase } from '../../../firebase/firebaseConfig';
@@ -9,20 +8,29 @@ import {
   getChatTime,
   getData,
   setDateChat,
-  baseUrl,
   useForm,
 } from '../../../utils';
-import axios from 'axios';
+import { useTime } from '../../../components/Time/TimeContext';
 import Navigasi from '../../../partials/navigasi';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Chating = ({navigation, route}) => {
+const Chating = ({route }) => {
   const getDokter = route.params;
+
+  const navigation = useNavigation();
 
   const [form, setForm] = useForm({
     id_dokter: '',
     uid_partner: '',
   });
 
+  const { countdown, finished, formatTime, setCurrentPerUser } = useTime();
+  const durasiKonsultasi = 1800;
+
+  
+  const isKonsultasiTerlewat = countdown <= 0;
+  
   const [chatContent, setChatContent] = useState('');
   const [user, setUser] = useState({});
   const [dataPribadi, setDataPribadi] = useState({});
@@ -30,6 +38,11 @@ const Chating = ({navigation, route}) => {
 
   useEffect(() => {
     getDataUserLocal();
+
+    if (isKonsultasiTerlewat) {
+      AsyncStorage.removeItem("countdown");
+    }
+
     const urlFirebase = `chatting/${user.uid}_${getDokter.data.uid}/allChat/`;
     configfirebase.database()
       .ref(urlFirebase)
@@ -57,10 +70,12 @@ const Chating = ({navigation, route}) => {
           setChatData(semuaDataChat);
         }
       });
+    
   }, [
     user.uid,
     dataPribadi.idx,
     dataPribadi.token,
+    isKonsultasiTerlewat
   ]);
 
   const getDataUserLocal = () => {
@@ -114,78 +129,52 @@ const Chating = ({navigation, route}) => {
       .catch(error => {
         console.log(error);
       });
-
     // Kirim ke Firebase
   };
+
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
       <StatusBarComponent />
-      <View
-        style={{
-          backgroundColor: 'white',
-          elevation: 5,
-          height: 70,
-          borderBottomRightRadius: 20,
-          borderBottomLeftRadius: 20,
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <View style={{flex: 1, marginLeft: 10}}>
+      <View style={{ backgroundColor: 'white', elevation: 5, height: 70, borderBottomRightRadius: 20, borderBottomLeftRadius: 20, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ flex: 3, marginLeft: 10, flexDirection: 'row', marginHorizontal: 10 }}>
+          <Image source={require("../../../assets/images/background-doctor.png")} resizeMode='cover' style={{ height: 50, width: 50, borderRadius: 50, borderColor: 'black', borderWidth: 1 }} />
+          <View style={{ color: 'black', marginHorizontal: 10 }}>
+            <Text style={{ color: 'black', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}>
+              {getDokter.data.nama}
+            </Text>
+            <Text style={{ color: 'gray', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 12 }}>
+              Dokter
+            </Text>
+          </View>
+        </View>
+        <View style={{flex: 1, marginRight: 20}}>
           <TouchableOpacity onPress={() => {
-            navigation.goBack();
-          }}>
-          <Icon name="arrow-back" style={{fontSize: 20, color: 'black'}} />
+            navigation.navigate(Navigasi.MAIN_APP)
+          }} style={{backgroundColor: 'red', paddingVertical: 5, borderRadius: 5}}>
+            <Text style={{color: 'white', fontFamily: 'Poppins-Medium', fontSize: 12, fontWeight: 'bold', textAlign: 'center'}}>
+              Kembali
+            </Text>
           </TouchableOpacity>
         </View>
-        <View
-          style={{
-            flex: 2,
-            flexDirection: 'row',
-            marginRight: 10,
-          }}>
-          <View
-            style={{justifyContent: 'center', alignItems: 'flex-end', flex: 3}}>
-            <Text
-              style={{
-                color: 'black',
-                fontSize: 14,
-                fontFamily: 'Poppins-Medium',
-                fontWeight: 'bold',
-              }}>
-                {getDokter.data.nama}
-            </Text>
-            <Text style={{color: 'gray', fontSize: 12}}>
-              {getDokter.akses == "Perawat" ? "Perawat" : "Dokter" }
-            </Text>
-          </View>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'flex-end',
-              alignItems: 'flex-end',
-            }}>
-            <Image
-              source={require('../../../assets/images/background-doctor.png')}
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: 50,
-                borderColor: 'black',
-                borderWidth: 1,
-              }}
-            />
-          </View>
-        </View>
       </View>
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
+
+        {isKonsultasiTerlewat ? (
+          <Text style={{ color: 'red', fontFamily: 'Poppins-Medium', fontSize: 14, fontWeight: 'bold', textAlign: 'center', marginHorizontal: 10, marginTop: 10, marginBottom: 5 }}>
+            Waktu Konsultasi Selesai
+          </Text>
+        ) : (
+          <Text style={{ color: 'red', fontFamily: 'Poppins-Medium', fontSize: 14, fontWeight: 'bold', textAlign: 'center', marginHorizontal: 10, marginTop: 10, marginBottom: 5 }}>
+            Waktu Konsultasi: {formatTime(countdown)}
+          </Text>
+        )}
+
         <ScrollView showsVerticalScrollIndicator={false}>
           {chatData.map(chat => {
             return (
               <View key={chat.id}>
                 <Text
                   style={{
-                    color: 'black',
                     fontSize: 11,
                     color: 'gray',
                     marginVertical: 20,
@@ -208,11 +197,19 @@ const Chating = ({navigation, route}) => {
           })}
         </ScrollView>
       </View>
-      <InputChat
+      {isKonsultasiTerlewat && countdown != 0 ? (
+        <View style={{borderColor: 'red', borderWidth: 1, paddingVertical: 10, marginHorizontal: 10, marginVertical: 10, borderRadius: 10}}>
+          <Text style={{color: 'red', fontFamily: 'Poppins-Medium', fontWeight: 'bold', textAlign: 'center'}}>
+            Konsultasi Anda Sudah Selesai
+          </Text>
+        </View>
+      ) : (
+        <InputChat
         value={chatContent}
         onChangeText={value => setChatContent(value)}
         onButtonPress={chatSend}
       />
+      ) }
     </View>
   );
 };
