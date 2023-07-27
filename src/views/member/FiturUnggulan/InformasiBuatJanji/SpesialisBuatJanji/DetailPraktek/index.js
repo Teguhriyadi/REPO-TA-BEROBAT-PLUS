@@ -1,6 +1,6 @@
-import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native'
+import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View, ScrollView, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { baseUrl, colors, getData } from '../../../../../../utils';
+import { baseUrl, colors, getData, showError, showSuccess } from '../../../../../../utils';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import StatusBarComponent from '../../../../../../components/StatusBar/StatusBarComponent';
@@ -11,6 +11,10 @@ const DetailPraktek = ({ navigation, route }) => {
     const [dataPribadi, setDataPribadi] = useState({});
     const [jadwal, setjadwal] = useState(null);
     const spesialis = route.params;
+    const [status, setStatus] = useState(null);
+    const [tanggal, setTanggal] = useState(null);
+
+    console.log(spesialis);
 
     useEffect(() => {
         const debounceTimeout = setTimeout(() => {
@@ -38,6 +42,38 @@ const DetailPraktek = ({ navigation, route }) => {
             });
 
             setjadwal(response.data.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const pilihJadwal = (item) => {
+        if (status == 1) {
+            setStatus(null);
+            setTanggal(item)
+        } else {
+            setStatus(1);
+        }
+    }
+
+    const buttonDisabled = () => {
+        showError("Gagal", "Anda Perlu Memilih Jadwal Terlebih Dahulu");
+    }
+    
+    const buttonActive = async () => {
+        try {
+            const response = await axios({
+                url: `${baseUrl.url}/master/ahli/jadwal_antrian`,
+                headers: {
+                    Authorization: 'Bearer ' + dataPribadi.token
+                },
+                method: "POST",
+                data: {
+                    id_jadwal_praktek: tanggal.id_jadwal_praktek
+                }
+            })
+    
+            showSuccess("Berhasil", "Antrian Anda Berhasil di Buat");
         } catch (error) {
             console.log(error);
         }
@@ -121,7 +157,17 @@ const DetailPraktek = ({ navigation, route }) => {
                         <Image source={require("../../../../../../assets/images/gambar-rs.jpg")} resizeMode='cover' style={{ width: 50, height: 50, borderRadius: 10 }} />
                     </View>
                 </View>
-                <View style={{ marginTop: 10, backgroundColor: 'skyblue', paddingHorizontal: 10, paddingVertical: 10 }}>
+                <View style={{ marginTop: 10, backgroundColor: 'white', elevation: 5, paddingVertical: 10, paddingHorizontal: 10, flexDirection: 'row' }}>
+                    <View style={{ flex: 1, marginHorizontal: 5 }}>
+                        <Text style={{ color: 'red', fontFamily: 'Poppins-Medium', fontSize: 14, fontWeight: 'bold' }}>
+                            Bayar Di Rumah Sakit
+                        </Text>
+                        <Text style={{ color: 'black', marginTop: 5, fontFamily: 'Poppins-Medium', fontSize: 14, fontWeight: 'bold' }}>
+                            {spesialis.data.biaya}
+                        </Text>
+                    </View>
+                </View>
+                <View style={{ marginTop: 10, backgroundColor: '#F2EFEF', paddingHorizontal: 10, paddingVertical: 10 }}>
                     <Text style={{ color: 'black', fontSize: 14, fontFamily: 'Poppins-Medium', fontWeight: 'bold' }}>
                         Pilih Tanggal & Waktu Kunjungan
                     </Text>
@@ -132,33 +178,35 @@ const DetailPraktek = ({ navigation, route }) => {
                     <ScrollView >
                         {jadwal.map((item) => {
                             return (
-                                <View style={{marginTop: 20, marginRight: 50, marginLeft: 10, backgroundColor: 'white', elevation: 5, marginBottom: 10, width: '50%', padding: 10, height: 120, borderRadius: 10}} key={item.id_jadwal_praktek}>
-                                    <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium', textAlign: 'center'}}>
+                                <TouchableOpacity onPress={() => {
+                                    pilihJadwal(item)
+                                }} style={{ marginTop: 20, marginRight: 50, marginLeft: 10, backgroundColor: 'white', elevation: 5, marginBottom: 10, width: '50%', padding: 10, height: 120, borderRadius: 10 }} key={item.id_jadwal_praktek}>
+                                    <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium', textAlign: 'center' }}>
                                         {item.hari}
                                     </Text>
-                                    <View style={{borderColor: 'grey', borderWidth: 1, marginVertical: 10}} />
-                                    <Text style={{color: 'black', fontSize: 14, fontWeight: 'bold', fontFamily: 'Poppins-Medium', textAlign: 'center'}}>
+                                    <View style={{ borderColor: 'grey', borderWidth: 1, marginVertical: 10 }} />
+                                    <Text style={{ color: 'black', fontSize: 14, fontWeight: 'bold', fontFamily: 'Poppins-Medium', textAlign: 'center' }}>
                                         {item.mulai_jam}
                                     </Text>
-                                    <Text style={{color: 'red', fontSize: 14, fontWeight: 'bold', fontFamily: 'Poppins-Medium', textAlign: 'center'}}>
+                                    <Text style={{ color: 'red', fontSize: 14, fontWeight: 'bold', fontFamily: 'Poppins-Medium', textAlign: 'center' }}>
                                         S / D
                                     </Text>
-                                    <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium', textAlign: 'center'}}>
+                                    <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium', textAlign: 'center' }}>
                                         {item.selesai_jam}
                                     </Text>
-                                </View>
+                                </TouchableOpacity>
                             )
                         })}
                     </ScrollView>
-                ) }
+                )}
             </View>
-            <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-                <TouchableOpacity style={{ backgroundColor: 'purple', paddingVertical: 15 }}>
-                    <Text style={{ color: 'black' }}>
-                        3
-                    </Text>
-                </TouchableOpacity>
-            </View>
+            <TouchableOpacity onPress={() => {
+                status == null ? buttonDisabled() : buttonActive() 
+            }} style={[styles.button, status == null ? styles.disabled : styles.active] }>
+                <Text style={styles.textButton}>
+                    {status == null ? 'Pilih Jadwal Temu Dokter' : 'Buat Janji Temu Dokter' }
+                </Text>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -180,7 +228,27 @@ const styles = StyleSheet.create({
         color: 'black',
         fontWeight: 'bold',
         fontSize: 18,
-    }
+    },
+    button: {
+        backgroundColor: 'purple',
+        marginHorizontal: 10,
+        marginVertical: 10,
+        borderRadius: 10,
+        paddingVertical: 10
+    },
+    textButton: {
+        fontFamily: 'Poppins-Medium', 
+        fontSize: 14, 
+        fontWeight: 'bold', 
+        textAlign: 'center',
+        color: 'white'
+    },
+    active: {
+        backgroundColor: 'purple'
+    },
+    disabled: {
+        backgroundColor: 'gray'
+    },
 });
 
 export default DetailPraktek;

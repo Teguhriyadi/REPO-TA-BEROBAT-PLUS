@@ -451,7 +451,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     marginTop: 20,
     marginHorizontal: 15,
-    marginBottom: 20,
+    marginBottom: 90,
     borderRadius: 10,
   },
   viewimage: {

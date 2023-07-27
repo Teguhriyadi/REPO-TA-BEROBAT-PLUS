@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
 import {
   createStackNavigator,
@@ -67,20 +66,6 @@ import LanjutkanPembayaranKonsultasi from '../views/member/DetailChat/LanjutkanP
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const CustomTabBarButton = ({ children, onPress, accessbilityLabel }) => {
-  return (
-    <TouchableOpacity
-      style={{ top: -30, justifyContent: 'center', alignItems: 'center', ...styles.shadow }}
-      onPress={onPress}
-      accessbilityLabel={accessbilityLabel}
-    >
-      <View style={{ justifyContent: 'center', alignItems: 'center', width: 50, height: 50, borderRadius: 35, backgroundColor: '#051f84', elevation: 5 }}>
-        {children}
-      </View>
-    </TouchableOpacity>
-  );
-};
-
 const MainApp = () => {
   return (
     <Tab.Navigator
@@ -103,62 +88,33 @@ const MainApp = () => {
           return <Icon name={iconName} size={size} color={color} />;
         },
         tabBarStyle: {
-          position: 'absolute',
-          elevation: 0,
+          backgroundColor: '#FFFFFF',
+          elevation: 3,
           paddingTop: 5,
           paddingBottom: 5,
-          backgroundColor: 'white',
-          ...styles.shadow
         },
         tabBarActiveTintColor: '#051f84',
-        tabBarInactiveTintColor: 'black'
-      })}
-    >
+        tabBarInactiveTintColor: 'black',
+      })}>
       <Tab.Screen
         name={Navigasi.DASHBOARD_MEMBER}
         component={DashboardMember}
-        options={{
-          title: 'Beranda',
-          headerShown: false
-        }}
+        options={{ headerShown: false, title: 'Beranda' }}
       />
       <Tab.Screen
         name={Navigasi.TRANSAKSI_MEMBER}
         component={Transaksi}
-        options={{
-          headerShown: false
-        }}
-      />
-      <Tab.Screen
-        name="TokoKesehatanProduk"
-        component={TokoKesehatanProduk}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-              <Icon name="cart" style={{ fontSize: 30, color: 'black' }} />
-            </View>
-          ),
-          tabBarButton: (props) => (
-            <CustomTabBarButton {...props} accessibilityLabel="TokoKesehatanProduk">
-              <Icon name="cart" style={{ fontSize: 30, color: 'white' }} />
-            </CustomTabBarButton>
-          ),
-        }}
+        options={{ headerShown: false }}
       />
       <Tab.Screen
         name={Navigasi.KONSULTASI}
         component={Konsultasi}
-        options={{
-          headerShown: false
-        }}
+        options={{ headerShown: false }}
       />
       <Tab.Screen
         name={Navigasi.PROFILE_MEMBER}
         component={ProfileAkun}
-        options={{
-          title: "Profil",
-          headerShown: false
-        }}
+        options={{ headerShown: false, title: "Profil Saya" }}
       />
     </Tab.Navigator>
   );
@@ -398,7 +354,7 @@ const Router = () => {
       <Stack.Screen
         name={Navigasi.LANJUTKAN_PEMBAYARAN_KONSULTASI}
         component={LanjutkanPembayaranKonsultasi}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name={Navigasi.DETAIL_CHAT}
@@ -428,7 +384,7 @@ const Router = () => {
       <Stack.Screen
         name={Navigasi.PEMBAYARAN_PRODUK}
         component={Pembayaran}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name={Navigasi.DETAIL_ARTIKEL}
@@ -521,9 +477,5 @@ const Router = () => {
     </Stack.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  shadow: {}
-});
 
 export default Router;

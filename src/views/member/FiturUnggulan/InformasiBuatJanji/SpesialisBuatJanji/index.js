@@ -11,6 +11,7 @@ import LinearGradient from 'react-native-linear-gradient';
 const SpesialisBuatJanji = ({ navigation, route }) => {
 
     const spesialis = route.params;
+
     console.log(spesialis);
     const [dataPribadi, setDataPribadi] = useState({});
     const [dokter, setdokterspesialis] = useState(null);
@@ -74,7 +75,7 @@ const SpesialisBuatJanji = ({ navigation, route }) => {
                             return (
                                 <View key={item.id_praktek} style={styles.card}>
                                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                        <Image source={require("../../../../../assets/images/people.png")} style={{ width: 100, height: 100 }} />
+                                        <Image source={require("../../../../../assets/images/background-doctor.png")} style={{ width: 100, height: 100 }} />
                                     </View>
                                     <View style={{ flex: 2 }}>
                                         <Text style={styles.namadokter}>

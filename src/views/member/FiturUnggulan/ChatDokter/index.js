@@ -286,7 +286,7 @@ const ChatDokter = ({ navigation, route }) => {
         ) : (
           cekoption == 1 ? (
             listDataPerawat == null ? (
-              <ActivityIndicator size={"large"} color={"black"} />
+              <ActivityIndicator size={"large"} color={colors.primary} style={{marginTop: 150}} />
             ) : (
               <ScrollView showsVerticalScrollIndicator={false}>
                 {listDataPerawat && listDataPerawat.map((item) => {
