@@ -234,8 +234,8 @@ const DashboardMember = ({ navigation }) => {
             onPress={() => {
               navigation.replace(Navigasi.RESERVASI)
             }}
-            nameIcon={"md-calendar"}
-            textfitur={"Reservasi"}
+            nameIcon={"book"}
+            textfitur={"Antrian Saya"}
           />
           <ListFitur
             onPress={() => {

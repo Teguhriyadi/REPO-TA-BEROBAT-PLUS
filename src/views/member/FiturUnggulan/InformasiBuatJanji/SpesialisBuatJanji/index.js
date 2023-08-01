@@ -12,7 +12,7 @@ const SpesialisBuatJanji = ({ navigation, route }) => {
 
     const spesialis = route.params;
 
-    console.log(spesialis);
+    console.log(spesialis.data.penyakit.id_spesialis_penyakit);
     const [dataPribadi, setDataPribadi] = useState({});
     const [dokter, setdokterspesialis] = useState(null);
 

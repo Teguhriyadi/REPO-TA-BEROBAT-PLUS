@@ -61,7 +61,9 @@ const DaftarAkun = ({navigation}) => {
                         .set(datakonsumen)
 
                     dispatch({ type: "SET_LOADING", value: false });
-                    showSuccess("Good Job, Daftar Berhasil", "Akun Anda Berhasil di Daftarkan");
+
+                    console.log(sukses.user.uid);
+                    // showSuccess("Good Job, Daftar Berhasil", "Akun Anda Berhasil di Daftarkan");
 
                     navigation.navigate(Navigasi.LOGIN)
                 })

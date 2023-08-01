@@ -17,3 +17,4 @@ export * from "./DetailChat/LanjutkanPembayaranKonsultasi";
 export * from "./DashboardMember/AllArtikel";
 export * from "./ChatPusher";
 export * from "./ProfileAkun/AlamatTersimpan/DataAlamat";
+export * from "./Transaksi/DetailTransaksiBuatJanji"

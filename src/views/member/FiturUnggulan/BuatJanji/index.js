@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   StyleSheet,
   ScrollView,
+  Linking
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import StatusBarComponent from '../../../../components/StatusBar/StatusBarComponent';
@@ -23,6 +24,8 @@ import Heading from '../../../../components/Heading';
 const BuatJadwal = ({ navigation, route }) => {
   const [dataPribadi, setDataPribadi] = useState({});
   const [rumah_sakit, setRumahSakit] = useState(null);
+  const [latitudeMe, setLatitudeMe] = useState(null);
+  const [longitudeMe, setLongitudeMe] = useState(null);
 
   useEffect(() => {
     const debounceTimeout = setTimeout(() => {
@@ -55,6 +58,9 @@ const BuatJadwal = ({ navigation, route }) => {
         Geolocation.getCurrentPosition(position => {
           const { latitude, longitude } = position.coords;
           const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+
+          setLatitudeMe(latitude)
+          setLongitudeMe(longitude);
 
           axios
             .get(url)
@@ -102,41 +108,54 @@ const BuatJadwal = ({ navigation, route }) => {
         <ActivityIndicator size={"large"} color={colors.primary} />
       ) : (
         <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={{marginTop: 10}} />
           {rumah_sakit.map((item) => {
             return (
-              <TouchableOpacity onPress={() => {
-                navigation.navigate(Navigasi.DETAIL_BUAT_JANJI, {
-                  data: item
-                })
-              }} key={item.id_rumah_sakit}>
-                <View style={styles.cardrumahsakit}>
-                  <Image source={require("../../../../assets/images/gambar-rs.jpg")} style={{ height: 150, width: '100%', borderRadius: 10 }} />
-                  <Text style={styles.judulrs} numberOfLines={1} ellipsizeMode={'tail'}>
-                    {item.nama_rs}
-                  </Text>
-                  <Text style={styles.deskripsi} numberOfLines={1} ellipsizeMode={'tail'}>
-                    {item.deskripsi_rs}
-                  </Text>
-                  <View style={{ flexDirection: 'row' }}>
-                    <View style={{ flex: 1 }}>
-                      <View style={styles.rated}>
-                        <Icon name="thumbs-up" style={{ fontSize: 15, color: 'blue', marginRight: 5 }} />
-                        <Text style={{ color: 'blue', fontSize: 12, fontFamily: 'Poppins-Medium', fontWeight: 'bold' }}>
-                          100%
-                        </Text>
+              <View key={item.id_rumah_sakit}>
+                <TouchableOpacity onPress={() => {
+                  navigation.navigate(Navigasi.DETAIL_BUAT_JANJI, {
+                    data: item
+                  })
+                }}>
+                  <View style={styles.cardrumahsakit}>
+                    <Image source={require("../../../../assets/images/gambar-rs.jpg")} style={{ height: 150, width: '100%', borderRadius: 10 }} />
+                    <Text style={styles.judulrs} numberOfLines={1} ellipsizeMode={'tail'}>
+                      {item.nama_rs}
+                    </Text>
+                    <Text style={styles.deskripsi} numberOfLines={1} ellipsizeMode={'tail'}>
+                      {item.deskripsi_rs}
+                    </Text>
+                    <View style={{ flexDirection: 'row' }}>
+                      <View style={{ flex: 1 }}>
+                        <View style={styles.rated}>
+                          <Icon name="thumbs-up" style={{ fontSize: 15, color: 'blue', marginRight: 5 }} />
+                          <Text style={{ color: 'blue', fontSize: 12, fontFamily: 'Poppins-Medium', fontWeight: 'bold' }}>
+                            100%
+                          </Text>
+                        </View>
                       </View>
-                    </View>
-                    <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end' }}>
-                      <View style={styles.jarak}>
-                        <Icon name="ios-location" style={{ fontSize: 15, color: 'blue', marginRight: 5 }} />
-                        <Text style={{ color: 'blue', fontSize: 12, fontFamily: 'Poppins-Medium', fontWeight: 'bold' }}>
-                          {item.jarak} KM
-                        </Text>
+                      <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end' }}>
+                        <View style={styles.jarak}>
+                          <Icon name="ios-location" style={{ fontSize: 15, color: 'blue', marginRight: 5 }} />
+                          <Text style={{ color: 'blue', fontSize: 12, fontFamily: 'Poppins-Medium', fontWeight: 'bold' }}>
+                            {item.jarak} KM
+                          </Text>
+                        </View>
                       </View>
                     </View>
                   </View>
-                </View>
-              </TouchableOpacity>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ backgroundColor: 'green', paddingVertical: 5, borderRadius: 5, marginHorizontal: 10, justifyContent: 'center', alignItems: 'center' }} onPress={() => {
+                  const origin = `${latitudeMe},${longitudeMe}`;
+                  const destination = `${item.latitude},${item.longitude}`
+                  const url = `https://www.google.com/maps/dir/${origin}/${destination}`
+                  Linking.openURL(url);
+                }} >
+                  <Text style={{ color: 'white', fontFamily: 'Poppins-Medium', fontSize: 14, fontWeight: 'bold' }}>
+                    <Icon name="ios-location" style={{color: 'white', fontSize: 15}} /> Detail Lokasi
+                  </Text>
+                </TouchableOpacity>
+              </View>
             )
           })}
         </ScrollView>

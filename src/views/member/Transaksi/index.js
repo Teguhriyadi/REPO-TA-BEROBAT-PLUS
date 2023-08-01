@@ -172,7 +172,7 @@ const Transaksi = ({ navigation }) => {
                             })
                         ) : (
                             <View style={styles.contentnotfound}>
-                                <Icon name="cart" style={{ fontSize: 100, color: '#051f84' }} />
+                                <Icon name="call" style={{ fontSize: 100, color: '#051f84' }} />
                                 <Text style={styles.iconNotFound}>Belum Ada Transaksi</Text>
                                 <Text style={{ color: 'black', fontSize: 14 }}>Anda Belum Melakukan Konsultasi</Text>
                                 <TouchableOpacity style={styles.buttonNotFound} onPress={() => {
@@ -187,63 +187,181 @@ const Transaksi = ({ navigation }) => {
                     )
                 ) : (
                     cekOption == 2 ? (
-                        transaksiBuatJanji == null ? (
-                            <ActivityIndicator size={"large"} color={colors.primary} style={{ marginTop: 200 }} />
-                        ) : (
-                            transaksiBuatJanji.length > 0 ? (
-                                transaksiBuatJanji.map((item) => {
-                                    return (
-                                        <Text style={{ color: 'black' }}>
-                                            Makanan
-                                        </Text>
-                                    )
-                                })
-                            ) : (
-                                <View style={styles.contentnotfound}>
-                                    <Icon name="cart" style={{ fontSize: 100, color: '#051f84' }} />
-                                    <Text style={styles.iconNotFound}>Belum Ada Transaksi</Text>
-                                    <Text style={{ color: 'black', fontSize: 14 }}>Anda Belum Melakukan Transaksi Buat Janji</Text>
-                                    <TouchableOpacity style={styles.buttonNotFound} onPress={() => {
-                                        navigation.navigate(Navigasi.BUAT_JANJI)
-                                    }}>
-                                        <Text style={styles.textButtonNotFound}>
-                                            Lanjutkan Transaksi
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                            )
-                        )
-                    ) : (
-                        cekOption == 3 ? (
-                            transaksiProduk == null ? (
-                                <ActivityIndicator size={"large"} color={colors.primary} style={{ marginTop: 200 }} />
-                            ) : (
-                                transaksiProduk.length > 0 ? (
-                                    transaksiProduk.map((item) => {
-                                        return (
-                                            <Text style={{ color: 'black' }}>
-                                                Hamdan
-                                            </Text>
-                                        )
-                                    })
+                        <ScrollView style={{ marginBottom: 50, marginTop: 10 }} showsVerticalScrollIndicator={false}>
+                            {
+                                transaksiBuatJanji == null ? (
+                                    <ActivityIndicator size={"large"} color={colors.primary} style={{ marginTop: 200 }} />
                                 ) : (
-                                    <View style={styles.contentnotfound}>
-                                        <Icon name="cart" style={{ fontSize: 100, color: '#051f84' }} />
-                                        <Text style={styles.iconNotFound}>Belum Ada Transaksi</Text>
-                                        <Text style={{ color: 'black', fontSize: 14 }}>Anda Belum Melakukan Riwayat Transaksi Produk</Text>
-                                        <TouchableOpacity style={styles.buttonNotFound} onPress={() => {
-                                            navigation.navigate(Navigasi.TOKO_KESEHATAN_PRODUK)
-                                        }}>
-                                            <Text style={styles.textButtonNotFound}>
-                                                Lanjutkan Transaksi
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
+                                    transaksiBuatJanji.length > 0 ? (
+                                        transaksiBuatJanji.map((item) => {
+                                            return (
+                                                <View style={{ marginHorizontal: 10, backgroundColor: 'white', elevation: 5, marginTop: 5, marginBottom: 20, borderRadius: 5, paddingVertical: 10, paddingHorizontal: 10 }} key={item.id_transaksi_buat_janji} >
+                                                    <View style={{ flexDirection: 'row' }}>
+                                                        <Text style={{ color: 'black', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}> ID Transaksi : </Text>
+                                                        <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                                                            <Text style={{ color: 'green', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}>
+                                                                {item.id_transaksi_buat_janji}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{ borderColor: 'grey', borderWidth: 1, marginVertical: 10 }} />
+                                                    <Text style={{ color: 'green', fontFamily: 'Poppins-Medium', marginLeft: 2 }}>
+                                                        Detail Data Transaksi :
+                                                    </Text>
+                                                    <View style={{ flexDirection: 'row' }}>
+                                                        <Text style={{ color: 'black', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}> Tanggal Transaksi : </Text>
+                                                        <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                                                            <Text style={{ color: 'green', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}>
+                                                                {item.tanggal_transaksi}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                                                        <Text style={{ color: 'black', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}> Biaya Konsultasi : </Text>
+                                                        <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                                                            <Text style={{ color: 'green', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}>
+                                                                {item.detail.biaya}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                    <Text style={{ color: 'green', fontFamily: 'Poppins-Medium', marginLeft: 2, marginTop: 10 }}>
+                                                        Detail Data Konsumen :
+                                                    </Text>
+                                                    <View style={{ flexDirection: 'row' }}>
+                                                        <Text style={{ color: 'black', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}> Nama Konsumen : </Text>
+                                                        <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                                                            <Text style={{ color: 'green', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}>
+                                                                {item.konsumen.nama}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                                                        <Text style={{ color: 'black', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}> Nomor Handphone : </Text>
+                                                        <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                                                            <Text style={{ color: 'green', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}>
+                                                                {item.konsumen.nomor_hp}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                    <TouchableOpacity style={{ backgroundColor: 'green', marginLeft: 3, marginVertical: 10, borderRadius: 5, paddingHorizontal: 10, paddingVertical: 7 }} onPress={() => {
+                                                        navigation.navigate(Navigasi.DETAIL_TRANSAKSI_BUAT_JANJI, {
+                                                            data: item
+                                                        })
+                                                    }}>
+                                                        <Text style={{ color: 'white', fontFamily: 'Poppins-Medium', fontSize: 14, textAlign: 'center', fontWeight: 'bold' }}>
+                                                            Detail
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            )
+                                        })
+                                    ) : (
+                                        <View style={styles.contentnotfound}>
+                                            <Icon name="book" style={{ fontSize: 100, color: '#051f84' }} />
+                                            <Text style={styles.iconNotFound}>Belum Ada Transaksi</Text>
+                                            <Text style={{ color: 'black', fontSize: 14 }}>Anda Belum Melakukan Transaksi Buat Janji</Text>
+                                            <TouchableOpacity style={styles.buttonNotFound} onPress={() => {
+                                                navigation.navigate(Navigasi.BUAT_JANJI)
+                                            }}>
+                                                <Text style={styles.textButtonNotFound}>
+                                                    Lanjutkan Transaksi
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    )
                                 )
-                            )
-                        ) : (
-                            <View />
-                        )
+                            }
+                        </ScrollView>
+                    ) : (
+                        <ScrollView style={{marginBottom: 50, marginTop: 10}} showsVerticalScrollIndicator={false}>
+                            {
+                                cekOption == 3 ? (
+                                    transaksi == null ? (
+                                        <ActivityIndicator size={"large"} color={colors.primary} style={{ marginTop: 200 }} />
+                                    ) : (
+                                        transaksi.length > 0 ? (
+                                            transaksi.map((item) => {
+                                                return (
+                                                    <View style={{ marginHorizontal: 10, backgroundColor: 'white', elevation: 5, marginTop: 5, marginBottom: 20, borderRadius: 5, paddingVertical: 10, paddingHorizontal: 10 }} key={item.id_pembelian} >
+                                                    <View style={{ flexDirection: 'row' }}>
+                                                        <Text style={{ color: 'black', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}> ID Pembelian : </Text>
+                                                        <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                                                            <Text style={{ color: 'green', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}>
+                                                                {item.id_pembelian}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{ borderColor: 'grey', borderWidth: 1, marginVertical: 10 }} />
+                                                    <Text style={{ color: 'green', fontFamily: 'Poppins-Medium', marginLeft: 2 }}>
+                                                        Detail Data Transaksi :
+                                                    </Text>
+                                                    <View style={{ flexDirection: 'row' }}>
+                                                        <Text style={{ color: 'black', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}> Tanggal Transaksi : </Text>
+                                                        <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                                                            <Text style={{ color: 'green', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}>
+                                                                {item.tanggal_pembelian}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                                                        <Text style={{ color: 'black', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}> Total Pembelian : </Text>
+                                                        <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                                                            <Text style={{ color: 'green', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}>
+                                                                {item.total_pembelian}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                    <Text style={{ color: 'green', fontFamily: 'Poppins-Medium', marginLeft: 2, marginTop: 10 }}>
+                                                        Detail Data Konsumen :
+                                                    </Text>
+                                                    <View style={{ flexDirection: 'row' }}>
+                                                        <Text style={{ color: 'black', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}> Nama Konsumen : </Text>
+                                                        <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                                                            <Text style={{ color: 'green', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}>
+                                                                {item.konsumen_id.detail.nama}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                                                        <Text style={{ color: 'black', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}> Nomor Handphone : </Text>
+                                                        <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                                                            <Text style={{ color: 'green', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}>
+                                                                {item.konsumen_id.detail.nomor_hp}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                    <TouchableOpacity style={{ backgroundColor: 'green', marginLeft: 3, marginVertical: 10, borderRadius: 5, paddingHorizontal: 10, paddingVertical: 7 }} onPress={() => {
+                                                        navigation.navigate(Navigasi.DETAIL_TRANSAKSI_BUAT_JANJI, {
+                                                            data: item
+                                                        })
+                                                    }}>
+                                                        <Text style={{ color: 'white', fontFamily: 'Poppins-Medium', fontSize: 14, textAlign: 'center', fontWeight: 'bold' }}>
+                                                            Detail
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                                )
+                                            })
+                                        ) : (
+                                            <View style={styles.contentnotfound}>
+                                                <Icon name="cart" style={{ fontSize: 100, color: '#051f84' }} />
+                                                <Text style={styles.iconNotFound}>Belum Ada Transaksi</Text>
+                                                <Text style={{ color: 'black', fontSize: 14 }}>Anda Belum Melakukan Riwayat Transaksi Produk</Text>
+                                                <TouchableOpacity style={styles.buttonNotFound} onPress={() => {
+                                                    navigation.navigate(Navigasi.TOKO_KESEHATAN_PRODUK)
+                                                }}>
+                                                    <Text style={styles.textButtonNotFound}>
+                                                        Lanjutkan Transaksi
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        )
+                                    )
+                                ) : (
+                                    <View />
+                                )
+                            }
+                        </ScrollView>
                     )
                 )}
             </ScrollView>

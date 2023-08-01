@@ -63,6 +63,8 @@ import LupaPasswordAutentikasi from '../views/public/Autentikasi/LupaPasswordAut
 import ProdukByKategori from '../views/member/Produk/TokoKesehatanProduk/ProdukByKategori';
 import Pembayaran from '../views/member/Produk/TokoKesehatanProduk/Pembayaran';
 import LanjutkanPembayaranKonsultasi from '../views/member/DetailChat/LanjutkanPembayaranKonsultasi';
+import DetailTransaksiBuatJanji from '../views/member/Transaksi/DetailTransaksiBuatJanji';
+import AllAntrian from '../views/member/FiturUnggulan/Reservasi/AllAntrian';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -130,8 +132,8 @@ const MainApp = () => {
         }}
       />
       <Tab.Screen
-        name="TokoKesehatanProduk"
-        component={TokoKesehatanProduk}
+        name="Keranjang"
+        component={Keranjang}
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -139,7 +141,7 @@ const MainApp = () => {
             </View>
           ),
           tabBarButton: (props) => (
-            <CustomTabBarButton {...props} accessibilityLabel="TokoKesehatanProduk">
+            <CustomTabBarButton {...props} accessibilityLabel="Keranjang">
               <Icon name="cart" style={{ fontSize: 30, color: 'white' }} />
             </CustomTabBarButton>
           ),
@@ -369,6 +371,16 @@ const Router = () => {
         name={Navigasi.RESERVASI}
         component={Reservasi}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={Navigasi.ALL_ANTRIAN}
+        component={AllAntrian}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen 
+        name={Navigasi.DETAIL_TRANSAKSI_BUAT_JANJI}
+        component={DetailTransaksiBuatJanji}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name={Navigasi.All_DATA_RS}

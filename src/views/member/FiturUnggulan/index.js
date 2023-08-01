@@ -9,3 +9,4 @@ export * from "./Reservasi"
 export * from "./InformasiBuatJanji/SpesialisBuatJanji";
 export * from "./InformasiBuatJanji/SpesialisBuatJanji/DetailPraktek"
 export * from "./ChatPerawat"
+export * from "./Reservasi/AllAntrian"

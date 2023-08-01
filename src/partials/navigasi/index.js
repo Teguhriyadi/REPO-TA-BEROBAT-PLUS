@@ -38,6 +38,8 @@ export default {
   CHAT_PERAWAT: "ChatPerawat",
   PRODUK_BY_KATEGORI: "ProdukByKategori",
   PEMBAYARAN_PRODUK: "Pembayaran",
+  DETAIL_TRANSAKSI_BUAT_JANJI: "DetailTransaksiBuatJanji",
+  ALL_ANTRIAN: "AllAntrian",
 
   // Dokter
   DASHBOARD_DOKTER: 'DashboardDokter',
