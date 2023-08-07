@@ -40,6 +40,8 @@ export default {
   PEMBAYARAN_PRODUK: "Pembayaran",
   DETAIL_TRANSAKSI_BUAT_JANJI: "DetailTransaksiBuatJanji",
   ALL_ANTRIAN: "AllAntrian",
+  OBAT_RESEP: "ObatResep",
+  DETAIL_OBAT_RESEP: "DetailObatResep",
 
   // Dokter
   DASHBOARD_DOKTER: 'DashboardDokter',

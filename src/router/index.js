@@ -72,6 +72,8 @@ import ResepObat from '../views/dokter/KonsultasiDokter/ResepObat';
 import KeranjangResep from '../views/dokter/KonsultasiDokter/ResepObat/KeranjangResep';
 import ListResepObat from '../views/dokter/Fitur/ListResepObat';
 import DetailListResepObat from '../views/dokter/Fitur/ListResepObat/DetailListResepObat';
+import ObatResep from '../views/member/ObatResep';
+import DetailResepObat from '../views/member/ObatResep/DetailObatResep';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -140,7 +142,7 @@ const MainApp = () => {
       />
       <Tab.Screen
         name="Keranjang"
-        component={Keranjang}
+        component={ObatResep}
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -337,6 +339,11 @@ const Router = () => {
         name={Navigasi.DETAIL_PRAKTEK}
         component={DetailPraktek}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={Navigasi.DETAIL_OBAT_RESEP}
+        component={DetailResepObat}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name={Navigasi.LOGIN}

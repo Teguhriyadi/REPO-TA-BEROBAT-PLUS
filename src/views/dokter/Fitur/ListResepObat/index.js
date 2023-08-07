@@ -119,7 +119,7 @@ const ListResepObat = ({ navigation }) => {
                                         })
                                     }} style={styles.button}>
                                         <Text style={styles.textButton}>
-                                            Hamdan
+                                            Detail Resep
                                         </Text>
                                     </TouchableOpacity>
                                 </View>
