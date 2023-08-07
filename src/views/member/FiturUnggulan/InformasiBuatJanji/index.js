@@ -63,17 +63,6 @@ const InformasiBuatJanji = ({ route }) => {
 
   return (
     <View style={styles.backgroundBelakang}>
-      <View style={styles.textInput}>
-        <TextInput
-          placeholder="Ex: Dr. Hamdan"
-          placeholderTextColor="gray"
-          style={{
-            height: 40,
-            fontSize: 12,
-            color: 'gray',
-          }}
-        />
-      </View>
       <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}>
         Cari Dokter Spesialis
       </Text>

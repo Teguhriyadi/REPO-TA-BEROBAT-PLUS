@@ -9,3 +9,6 @@ export * from "./Pusher";
 export * from "./ProdukDokter";
 export * from "./ProdukDokter/TambahRekomendasi";
 export * from "./KonsultasiDokter/DetailKonsultasi";
+export * from "./Fitur/JadwalBuatJanji";
+export * from "./Fitur/JadwalBuatJanji/DetailJadwalJanji";
+export * from "./KonsultasiDokter/ResepObat"

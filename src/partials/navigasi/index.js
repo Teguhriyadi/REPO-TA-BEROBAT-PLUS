@@ -54,8 +54,15 @@ export default {
   ALL_DATA_APOTEK_TERDEKAT: "AllDataApotekTerdekat",
   PUSHER: "Pusher",
   RESERVASI: "Reservasi",
+  TRANSAKSI_DOKTER: "TransaksiDokter",
   TAMBAH_REKOMENDASI: "TambahRekomendasi",
+  JADWAL_BUAT_JANJI: "JadwalBuatJanji",
+  DETAIL_JADWAL_JANJI: "DetailJadwalJanji",
   LANJUTKAN_PEMBAYARAN_KONSULTASI: "LanjutkanPembayaranKonsultasi",
+  RESEP_OBAT: "ResepObat",
+  KERANJANG_RESEP: "KeranjangResep",
+  LIST_RESEP_OBAT: "ListResepObat",
+  DETAIL_LIST_RESEP_OBAT: "DetailListResepObat",
 
   // Perawat
   DASHBOARD_PERAWAT: "DashboardPerawat",

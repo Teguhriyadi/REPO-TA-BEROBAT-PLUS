@@ -4,6 +4,7 @@ import { baseUrl, colors, getData } from '../../../utils';
 import { configfirebase } from '../../../firebase/firebaseConfig';
 import axios from 'axios';
 import Navigasi from '../../../partials/navigasi';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const KonsultasiDokter = ({ navigation }) => {
 
@@ -142,6 +143,16 @@ const KonsultasiDokter = ({ navigation }) => {
                     }} >
                     <Text style={{ color: 'green', fontWeight: 'bold' }}>
                       Lanjutkan
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => {
+                    const params = {
+                      konsumen: item.detail_konsumen
+                    }
+                    navigation.navigate(Navigasi.RESEP_OBAT, params)
+                  }} style={{backgroundColor: 'green', marginHorizontal: 10, marginBottom: 10, borderRadius: 5, paddingVertical: 10, justifyContent: 'center', alignItems: 'center'}}>
+                    <Text style={{color: 'white', fontFamily: 'Poppins-Medium', fontSize: 14, fontWeight: 'bold'}}>
+                      <Icon name="book" style={{fontSize: 15}} /> Buatkan Resep Obat
                     </Text>
                   </TouchableOpacity>
                 </View>

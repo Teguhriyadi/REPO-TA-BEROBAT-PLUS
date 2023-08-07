@@ -40,6 +40,7 @@ const DaftarAkun = ({navigation}) => {
                 .createUserWithEmailAndPassword(form.email, form.password)
                 .then(async (sukses) => {
                     const datakonsumen = {
+                        id_konsumen: datauser.data.konsumen_id,
                         nik: form.nik,
                         nomor_hp: form.nomor_hp,
                         email: form.email,

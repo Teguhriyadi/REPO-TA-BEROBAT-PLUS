@@ -71,6 +71,7 @@ const Login = ({ navigation }) => {
                     password: form.password
                 }
             });
+
             const datauser = {
                 idx: data.data.id,
                 nama: data.data.nama,
@@ -197,7 +198,6 @@ const Login = ({ navigation }) => {
                             });
                             loginSuccess();
                         } catch (error) {
-                            console.log(error);
                             throw error;
                         }
                     } else {

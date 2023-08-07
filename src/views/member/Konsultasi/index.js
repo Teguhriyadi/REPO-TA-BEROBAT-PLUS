@@ -198,7 +198,7 @@ const Konsultasi = ({navigation}) => {
                           fontWeight: 'bold',
                           fontFamily: 'Poppins-Medium',
                         }}>
-                        {chat.detailDokter.nama}
+                          {chat.detailDokter.nama}
                       </Text>
                       <Text
                         style={{

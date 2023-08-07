@@ -65,6 +65,13 @@ import Pembayaran from '../views/member/Produk/TokoKesehatanProduk/Pembayaran';
 import LanjutkanPembayaranKonsultasi from '../views/member/DetailChat/LanjutkanPembayaranKonsultasi';
 import DetailTransaksiBuatJanji from '../views/member/Transaksi/DetailTransaksiBuatJanji';
 import AllAntrian from '../views/member/FiturUnggulan/Reservasi/AllAntrian';
+import TransaksiDokter from '../views/dokter/TransaksiDokter';
+import JadwalBuatJanji from '../views/dokter/Fitur/JadwalBuatJanji';
+import DetailJadwalJanji from '../views/dokter/Fitur/JadwalBuatJanji/DetailJadwalJanji';
+import ResepObat from '../views/dokter/KonsultasiDokter/ResepObat';
+import KeranjangResep from '../views/dokter/KonsultasiDokter/ResepObat/KeranjangResep';
+import ListResepObat from '../views/dokter/Fitur/ListResepObat';
+import DetailListResepObat from '../views/dokter/Fitur/ListResepObat/DetailListResepObat';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -183,6 +190,8 @@ const MainDokter = () => {
             iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
           } else if (route.name == 'ProdukDokter') {
             iconName = focused ? 'cart' : 'cart-outline';
+          } else if (route.name == "TransaksiDokter") {
+            iconName = focused ? 'book' : 'book-outline';
           }
 
           return <Icon name={iconName} size={size} color={color} />;
@@ -201,10 +210,10 @@ const MainDokter = () => {
         component={Dashboard}
         options={{ headerShown: false, title: 'Beranda' }}
       />
-      <Tab.Screen
-        name={Navigasi.PRODUK_DOKTER}
-        component={ProdukDokter}
-        options={{ headerShown: false, title: 'Produk' }}
+      <Stack.Screen
+        name={Navigasi.TRANSAKSI_DOKTER}
+        component={TransaksiDokter}
+        options={{headerShown: false, title: "Transaksi"}}
       />
       <Tab.Screen
         name={Navigasi.KONSULTASI_DOKTER}
@@ -337,6 +346,36 @@ const Router = () => {
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           gestureDirection: 'horizontal-inverted',
         }}
+      />
+      <Stack.Screen
+        name={Navigasi.JADWAL_BUAT_JANJI}
+        component={JadwalBuatJanji}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Navigasi.DETAIL_JADWAL_JANJI}
+        component={DetailJadwalJanji}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Navigasi.RESEP_OBAT}
+        component={ResepObat}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Navigasi.DETAIL_LIST_RESEP_OBAT}
+        component={DetailListResepObat}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Navigasi.KERANJANG_RESEP}
+        component={KeranjangResep}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Navigasi.LIST_RESEP_OBAT}
+        component={ListResepObat}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name={Navigasi.DAFTAR_AKUN_KONSUMEN}

@@ -183,11 +183,11 @@ const Reservasi = ({ navigation }) => {
                                     </Text>
                                 </TouchableOpacity>
                             ) : (
-                                <TouchableOpacity style={{ backgroundColor: 'gray', marginVertical: 15, marginHorizontal: 10, borderRadius: 5, paddingVertical: 10, alignItems: 'center' }}>
+                                <View style={{ justifyContent: 'center', alignItems: 'center', marginVertical: 10, backgroundColor: '#D84040', marginHorizontal: 10, borderRadius: 5, paddingVertical: 10 }}>
                                     <Text style={{ color: 'white', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}>
                                         Tidak Ada Antrian Yang Lain
                                     </Text>
-                                </TouchableOpacity>
+                                </View>
                             )
                         )}
                     </>

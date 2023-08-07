@@ -9,11 +9,12 @@ import {
   Alert
 } from 'react-native';
 import StatusBarComponent from '../../../components/StatusBar/StatusBarComponent';
-import { baseUrl, getData, showSuccess } from '../../../utils';
+import { baseUrl, colors, getData, showSuccess } from '../../../utils';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Navigasi from '../../../partials/navigasi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ListFitur from '../../../components/ListFitur';
 
 const Dashboard = ({ navigation }) => {
   const [dataPribadi, setDataPribadi] = useState({});
@@ -136,6 +137,24 @@ const Dashboard = ({ navigation }) => {
       </View>
       <View style={{ flex: 2, marginTop: 30 }}>
         <ScrollView>
+
+          <View style={styles.fitur}>
+            <ListFitur
+              onPress={() => {
+                navigation.navigate(Navigasi.LIST_RESEP_OBAT)
+              }}
+              nameIcon={"cart"}
+              textfitur={"Data Resep Obat"}
+            />
+            <ListFitur
+              onPress={() => {
+                navigation.navigate(Navigasi.JADWAL_BUAT_JANJI)
+              }}
+              nameIcon={"book"}
+              textfitur={"Jadwal Buat Janji"}
+            />
+          </View>
+
           <View style={{ marginTop: 20, marginHorizontal: 10 }}>
             <View style={{ flexDirection: 'row', marginBottom: 20 }}>
               <View style={[styles.cardRekap, {marginRight: 10}]}>
@@ -282,6 +301,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     fontFamily: 'Poppins-Medium'
+  },
+
+  fitur: {
+    paddingVertical: 10,
+    backgroundColor: colors.background,
+    elevation: 5,
+    marginHorizontal: 15,
+    marginVertical: 10,
+    flexDirection: 'row',
+    borderRadius: 10,
+    paddingHorizontal: 10
   }
 });
 

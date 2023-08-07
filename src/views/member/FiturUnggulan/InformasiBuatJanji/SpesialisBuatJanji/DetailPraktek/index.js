@@ -2,9 +2,9 @@ import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View, Scr
 import React, { useEffect, useState } from 'react'
 import { baseUrl, colors, getData, showError, showSuccess } from '../../../../../../utils';
 import Icon from 'react-native-vector-icons/Ionicons';
-import LinearGradient from 'react-native-linear-gradient';
 import StatusBarComponent from '../../../../../../components/StatusBar/StatusBarComponent';
 import axios from 'axios';
+import Navigasi from '../../../../../../partials/navigasi';
 
 const DetailPraktek = ({ navigation, route }) => {
 
@@ -13,8 +13,7 @@ const DetailPraktek = ({ navigation, route }) => {
     const spesialis = route.params;
     const [status, setStatus] = useState(null);
     const [tanggal, setTanggal] = useState(null);
-
-    console.log(spesialis);
+    const [selectedJadwal, setSelectedJadwal] = useState(null);
 
     useEffect(() => {
         const debounceTimeout = setTimeout(() => {
@@ -48,11 +47,10 @@ const DetailPraktek = ({ navigation, route }) => {
     }
 
     const pilihJadwal = (item) => {
-        if (status == 1) {
-            setStatus(null);
-            setTanggal(item)
+        if (selectedJadwal == item.id_jadwal_praktek) {
+            setSelectedJadwal(null);
         } else {
-            setStatus(1);
+            setSelectedJadwal(item.id_jadwal_praktek)
         }
     }
 
@@ -60,7 +58,7 @@ const DetailPraktek = ({ navigation, route }) => {
         showError("Gagal", "Anda Perlu Memilih Jadwal Terlebih Dahulu");
     }
     
-    const buttonActive = async () => {
+    const buttonActive = async (selectedJadwal) => {
         try {
             const response = await axios({
                 url: `${baseUrl.url}/master/ahli/jadwal_antrian`,
@@ -69,11 +67,18 @@ const DetailPraktek = ({ navigation, route }) => {
                 },
                 method: "POST",
                 data: {
-                    id_jadwal_praktek: tanggal.id_jadwal_praktek
+                    id_jadwal_praktek: selectedJadwal
                 }
             })
     
-            showSuccess("Berhasil", "Antrian Anda Berhasil di Buat");
+            if (response.data.status == false) {
+                showError("Gagal", response.data.pesan);
+            } else {
+                showSuccess("Berhasil", "Antrian Anda Berhasil di Buat");
+    
+                navigation.navigate(Navigasi.MAIN_APP)
+            }
+
         } catch (error) {
             console.log(error);
         }
@@ -106,9 +111,6 @@ const DetailPraktek = ({ navigation, route }) => {
                             {spesialis.data.nama_dokter}
                         </Text>
                         <Text style={{ color: 'grey', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
-                            {spesialis.data.email}
-                        </Text>
-                        <Text style={{ color: 'grey', fontSize: 12, fontFamily: 'Poppins-Medium' }}>
                             {spesialis.data.nomor_hp}
                         </Text>
                         <View style={{ flexDirection: 'row' }}>
@@ -138,7 +140,7 @@ const DetailPraktek = ({ navigation, route }) => {
                                         fontFamily: 'Poppins-Medium',
                                         fontWeight: 'bold',
                                     }}>
-                                    100 Tahun
+                                    42 Tahun
                                 </Text>
                             </View>
                         </View>
@@ -147,10 +149,11 @@ const DetailPraktek = ({ navigation, route }) => {
                 <View style={{ marginTop: 10, backgroundColor: 'white', elevation: 5, paddingVertical: 10, paddingHorizontal: 10, flexDirection: 'row' }}>
                     <View style={{ flex: 2 }}>
                         <Text style={{ color: 'black', fontFamily: 'Poppins-Medium', fontSize: 14, fontWeight: 'bold' }}>
-                            RS. Sumber Kasih
+                            {spesialis.data.tempat_medis.nama_rs}
                         </Text>
                         <Text style={{ color: 'grey', fontFamily: 'Poppins-Medium', fontSize: 12, fontWeight: 'bold' }}>
-                            Kejaksan, Kota Cirebon
+                            {/* {spesialis.data.tempat_medis.alamat_rs} */}
+                            Jalan Villa Intan 2 Blok i4 No.1
                         </Text>
                     </View>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end' }}>
@@ -175,36 +178,32 @@ const DetailPraktek = ({ navigation, route }) => {
                 {jadwal == null ? (
                     <ActivityIndicator size={"large"} color={"primary"} />
                 ) : (
-                    <ScrollView >
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginHorizontal: 10}}>
                         {jadwal.map((item) => {
                             return (
                                 <TouchableOpacity onPress={() => {
                                     pilihJadwal(item)
-                                }} style={{ marginTop: 20, marginRight: 50, marginLeft: 10, backgroundColor: 'white', elevation: 5, marginBottom: 10, width: '50%', padding: 10, height: 120, borderRadius: 10 }} key={item.id_jadwal_praktek}>
-                                    <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium', textAlign: 'center' }}>
-                                        {item.hari}
+                                }} style={[styles.cardJadwal, selectedJadwal === item.id_jadwal_praktek ? styles.active : styles.non_active ]} key={item.id_jadwal_praktek}>
+                                    <Text style={[styles.textJadwal, selectedJadwal === item.id_jadwal_praktek ? styles.textActive : styles.textNonActive ]}>
+                                        {item.tanggal}
                                     </Text>
                                     <View style={{ borderColor: 'grey', borderWidth: 1, marginVertical: 10 }} />
-                                    <Text style={{ color: 'black', fontSize: 14, fontWeight: 'bold', fontFamily: 'Poppins-Medium', textAlign: 'center' }}>
-                                        {item.mulai_jam}
-                                    </Text>
-                                    <Text style={{ color: 'red', fontSize: 14, fontWeight: 'bold', fontFamily: 'Poppins-Medium', textAlign: 'center' }}>
-                                        S / D
-                                    </Text>
-                                    <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium', textAlign: 'center' }}>
-                                        {item.selesai_jam}
+                                    <Text style={[styles.textJadwal, selectedJadwal === item.id_jadwal_praktek ? styles.textActive : styles.textNonActive ]}>
+                                        Jam : {item.mulai_jam} - {item.selesai_jam}
                                     </Text>
                                 </TouchableOpacity>
                             )
                         })}
+                        </View>
                     </ScrollView>
                 )}
             </View>
             <TouchableOpacity onPress={() => {
-                status == null ? buttonDisabled() : buttonActive() 
-            }} style={[styles.button, status == null ? styles.disabled : styles.active] }>
+                selectedJadwal == null ? buttonDisabled() : buttonActive(selectedJadwal) 
+            }} style={[styles.button, selectedJadwal == null ? styles.disabled : styles.active] }>
                 <Text style={styles.textButton}>
-                    {status == null ? 'Pilih Jadwal Temu Dokter' : 'Buat Janji Temu Dokter' }
+                    {selectedJadwal == null ? 'Pilih Jadwal Temu Dokter' : 'Buat Janji Temu Dokter' }
                 </Text>
             </TouchableOpacity>
         </View>
@@ -243,12 +242,40 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'white'
     },
-    active: {
-        backgroundColor: 'purple'
-    },
     disabled: {
         backgroundColor: 'gray'
     },
+    cardJadwal: {
+        elevation: 5,
+        borderRadius: 10,
+        marginVertical: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        flexBasis: '48%',
+    },
+
+    active: {
+        backgroundColor: "#051f84"
+    },
+
+    non_active: {
+        backgroundColor: 'white'
+    },
+
+    textActive: {
+        color: 'white'
+    },
+
+    textNonActive: {
+        color: 'black'
+    },
+
+    textJadwal: {
+        fontSize: 14, 
+        fontWeight: 'bold', 
+        fontFamily: 'Poppins-Medium', 
+        textAlign: 'center'
+    }
 });
 
 export default DetailPraktek;

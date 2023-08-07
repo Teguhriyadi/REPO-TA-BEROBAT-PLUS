@@ -56,6 +56,12 @@ const SpesialisBuatJanji = ({ navigation, route }) => {
             <Heading textHeading={spesialis.data.penyakit.nama_spesialis} navigasi={() => {
                 navigation.goBack()
             }} />
+            <Text style={{color: 'black', fontWeight: 'bold', fontFamily: 'Poppins-Medium', fontSize: 18, marginLeft: 10, marginTop: 5}}>
+                Rekomendasi Ahli
+            </Text>
+            <Text style={{color: 'gray',fontFamily: 'Poppins-Medium', fontSize: 12, marginLeft: 10}}>
+                Beberapa Rekomendasi Ahli Yang Bisa Anda Pilih
+            </Text>
             {dokter == null ? (
                 <ActivityIndicator size={"large"} color={colors.primary} style={{ alignItems: 'center', flex: 1 }} />
             ) : (

@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         color: 'white',
         marginLeft: 10,
         marginRight: 10,
-        textAlign: 'justify'
+        textAlign: 'justify',
     }
 });
 
