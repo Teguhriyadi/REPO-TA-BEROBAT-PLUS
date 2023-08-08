@@ -4,7 +4,7 @@ import StatusBarComponent from '../../../../../components/StatusBar/StatusBarCom
 import Heading from '../../../../../components/Heading'
 import { SvgXml } from 'react-native-svg'
 import axios from 'axios'
-import { baseUrl, getData, showSuccess } from '../../../../../utils'
+import { baseUrl, getData, showError, showSuccess } from '../../../../../utils'
 import { useState } from 'react'
 import Navigasi from '../../../../../partials/navigasi'
 
@@ -45,9 +45,13 @@ const DetailJadwalJanji = ({ navigation, route }) => {
                                 method: "PUT"
                             })
 
-                            showSuccess("Berhasil", "Konsultasi Konsumen Selesai");
-                            
-                            navigation.navigate(Navigasi.MAIN_APP)
+                            if (response.data.status == false) {
+                                showError("Gagal", "Belum Waktunya Konsultasi");
+                            } else {
+                                showSuccess("Berhasil", "Konsultasi Konsumen Selesai");
+                                
+                                navigation.navigate(Navigasi.MAIN_DOKTER)
+                            }
 
                         } catch (error) {
                             console.log(error);
