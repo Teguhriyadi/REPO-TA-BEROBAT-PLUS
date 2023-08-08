@@ -182,7 +182,9 @@ const KonsultasiPerawat = ({ navigation }) => {
                                             </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => {
-                                            navigation.navigate(Navigasi.LANJUTKAN_PERAWATAN)
+                                            navigation.navigate(Navigasi.LANJUTKAN_PERAWATAN, {
+                                                data: item
+                                            })
                                         }} style={{ borderColor: 'blue', borderWidth: 1, borderRadius: 10, paddingVertical: 10, width: 170, marginLeft: 10 }}>
                                             <Text style={{ color: 'blue', fontSize: 14, fontFamily: 'Poppins-Medium', fontWeight: 'bold', textAlign: 'center' }}>
                                                 Lanjutkan Rawat Jalan

@@ -338,15 +338,15 @@ const Transaksi = ({ navigation }) => {
                                                             </Text>
                                                         </View>
                                                     </View>
-                                                    <TouchableOpacity style={{ backgroundColor: 'green', marginLeft: 3, marginVertical: 10, borderRadius: 5, paddingHorizontal: 10, paddingVertical: 7 }} onPress={() => {
+                                                    {/* <TouchableOpacity style={{ backgroundColor: 'green', marginLeft: 3, marginVertical: 10, borderRadius: 5, paddingHorizontal: 10, paddingVertical: 7 }} onPress={() => {
                                                         navigation.navigate(Navigasi.DETAIL_TRANSAKSI_BUAT_JANJI, {
                                                             data: item
                                                         })
                                                     }}>
                                                         <Text style={{ color: 'white', fontFamily: 'Poppins-Medium', fontSize: 14, textAlign: 'center', fontWeight: 'bold' }}>
-                                                            Detail
+                                                            MOhammad
                                                         </Text>
-                                                    </TouchableOpacity>
+                                                    </TouchableOpacity> */}
                                                 </View>
                                                 )
                                             })

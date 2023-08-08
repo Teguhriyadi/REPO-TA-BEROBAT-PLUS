@@ -75,6 +75,7 @@ import DetailListResepObat from '../views/dokter/Fitur/ListResepObat/DetailListR
 import ObatResep from '../views/member/ObatResep';
 import DetailResepObat from '../views/member/ObatResep/DetailObatResep';
 import Invoice from '../views/member/Produk/TokoKesehatanProduk/RingkasanPembayaranProduk/Invoice';
+import TransaksiRawatJalan from '../views/perawat/TransaksiRawatJalan';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -249,6 +250,8 @@ const MainPerawat = () => {
             iconName = focused ? 'book' : 'book-outline';
           } else if (route.name == "KonsultasiPerawat") {
             iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
+          } else if (route.name == "TransaksiRawatJalan") {
+            iconName = focused ? 'cart' : 'cart-outline';
           }
 
           return <Icon name={iconName} size={size} color={color} />;
@@ -267,10 +270,15 @@ const MainPerawat = () => {
         component={DashboardPerawat}
         options={{ headerShown: false, title: 'Beranda' }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name={Navigasi.RIWAYAT_TRANSAKSI_PERAWAT}
         component={Riwayat}
         options={{ headerShown: false, title: 'Riwayat' }}
+      /> */}
+      <Tab.Screen
+        name={Navigasi.TRANSAKSI_RAWAT_JALAN}
+        component={TransaksiRawatJalan}
+        options={{ headerShown: false, title: 'Rawat Jalan' }}
       />
       <Tab.Screen
         name={Navigasi.KONSULTASI_PERAWAT}

@@ -75,6 +75,7 @@ export default {
   KONSULTASI_PERAWAT: "KonsultasiPerawat",
   DETAIL_KONSULTASI_PERAWAT: "DetailKonsultasiPerawat",
   LANJUTKAN_PERAWATAN: "LanjutkanPerawatan",
+  TRANSAKSI_RAWAT_JALAN: "TransaksiRawatJalan",
 
   // PUBLIC
   LUPA_PASSWORD_AUTENTIKASI: "LupaPasswordAutentikasi"

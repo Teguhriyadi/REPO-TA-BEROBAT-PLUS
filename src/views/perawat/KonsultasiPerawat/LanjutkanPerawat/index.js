@@ -1,23 +1,35 @@
 import { ActivityIndicator, Image, PermissionsAndroid, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { colors } from '../../../../utils'
+import { baseUrl, colors, getData, showSuccess } from '../../../../utils'
 import StatusBarComponent from '../../../../components/StatusBar/StatusBarComponent'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { configfirebase } from '../../../../firebase/firebaseConfig'
 import Geolocation from '@react-native-community/geolocation'
 import messaging from "@react-native-firebase/messaging"
+import Heading from '../../../../components/Heading'
+import axios from 'axios'
+import navigasi from '../../../../partials/navigasi'
 
-const LanjutkanPerawat = ({ navigation }) => {
+const LanjutkanPerawat = ({ navigation, route }) => {
 
     const [latitude, setLatitude] = useState(null);
     const [longitude, setLongitude] = useState(null);
     const [closestPerawat, setClosestPerawat] = useState(null);
+    const [dataPribadi, setDataPribadi] = useState(null);
     const [perawat, setPerawat] = useState(null);
     const [isData, setIsData] = useState(false);
+    const detail = route.params;
 
     useEffect(() => {
+        getDataUserLocal();
         requestLocationPermission();
     });
+
+    const getDataUserLocal = () => {
+        getData('dataUser').then(res => {
+            setDataPribadi(res);
+        });
+    };
 
     const requestLocationPermission = async () => {
         try {
@@ -108,41 +120,45 @@ const LanjutkanPerawat = ({ navigation }) => {
         return degree * (Math.PI / 180);
     };
 
-    const pemberitahuan = async () => {
+    const pemberitahuan = async (perawat) => {
+
+        console.log();
 
         try {
-            const token = await messaging().getToken();
-            console.log('Token perangkat:', token);
+            const response = await axios({
+                url: `${baseUrl.url}/perawat/pesan_perawat`,
+                headers: {
+                    Authorization: 'Bearer ' + dataPribadi.token
+                },
+                method: "POST",
+                data: {
+                    konsumen_id: detail.data.detail_konsumen.id_konsumen,
+                    ahli_id: perawat.nomor_hp
+                }
+            })
+
+            showSuccess("Berhasil", "Data Berhasil di Tambahkan");
+
+            navigation.navigate(navigasi.MAIN_PERAWAT)
+
         } catch (error) {
-            console.log('Error mendapatkan token:', error);
+            console.log(error);
         }
-        const unsubscribe = messaging().onMessage(async remoteMessage => {
-            console.log("Notifikasi Datang", remoteMessage);
-        });
-    
-        return unsubscribe;
     }
-    
+
 
     return (
         <View style={styles.background}>
             <StatusBarComponent />
-            <View style={styles.heading}>
-                <TouchableOpacity onPress={() => {
-                    navigation.goBack();
-                }}>
-                    <Icon name="arrow-back" style={{ fontSize: 20, color: 'black' }} />
-                </TouchableOpacity>
-                <Text style={{ color: 'black', fontSize: 14, fontWeight: 'bold', fontFamily: 'Poppins-Medium', marginLeft: 10 }}>
-                    Rekomendasi Perawat Terdekat Dengan Pasien
-                </Text>
-            </View>
+            <Heading textHeading={"Rekomendasi Perawat Terdekat Dengan Pasien"} navigasi={() => {
+                navigation.goBack();
+            }} />
 
             {isData ? (
                 <View />
             ) : (
                 <>
-                    <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20, marginBottom: 5 }}>
+                    <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 50, marginBottom: 5 }}>
                         <Icon name="search" style={{ color: colors.primary, fontSize: 50 }} />
                         <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 16, fontFamily: 'Poppins-Medium' }}>
                             Temukan Perawat Yang Tersedia
@@ -167,7 +183,8 @@ const LanjutkanPerawat = ({ navigation }) => {
                     <Text style={{ color: 'black', fontSize: 14, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>{perawat.email}</Text>
                     <Text style={{ color: 'grey', fontSize: 14, fontFamily: 'Poppins-Medium' }}>{perawat.nomor_hp}</Text>
                     <TouchableOpacity style={{ backgroundColor: '#051f84', borderRadius: 10, paddingVertical: 10, paddingHorizontal: 10 }} onPress={() => {
-                        pemberitahuan();
+                        pemberitahuan(perawat);
+                        // console.log(perawat)
                     }} >
                         <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', fontFamily: 'Poppins-Medium', textAlign: 'center' }}>
                             Berikan Pemberitahuan

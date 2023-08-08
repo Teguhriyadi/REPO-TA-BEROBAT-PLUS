@@ -200,7 +200,7 @@ const ChatPerawat = ({ navigation, route }) => {
                             navigation.navigate(Navigasi.CHATING, {
                                 data: detaildataperawat
                             })
-                        }} textbutton={"Lanjutkan Pembayaran"} />
+                        }} textbutton={"Mulai Konsultasi"} />
                     </View>
                 </View>
             </View>
