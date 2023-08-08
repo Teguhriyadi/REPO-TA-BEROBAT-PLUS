@@ -7,19 +7,17 @@ import { colors } from "../../../utils/colors"
 const OptionsAutentikasi = ({ navigation }) => {
   return (
     <View>
-      <ImageBackground resizeMode='cover' source={require("../../../assets/images/background-autentikasi.jpg")} style={styles.backgroundimage} />
+      <ImageBackground resizeMode='cover' source={require("../../../assets/images/walpaper.jpg")} style={styles.backgroundimage} />
       <View style={styles.content}>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate(Navigasi.LOGIN);
           }}
           style={{
-            borderColor: 'green',
-            borderWidth: 1,
+            backgroundColor: 'green',
             marginHorizontal: 20,
             padding: 10,
             width: '80%',
-            borderColor: 'white',
             borderRadius: 10
           }}>
           <Text
@@ -27,7 +25,7 @@ const OptionsAutentikasi = ({ navigation }) => {
             Masuk
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             navigation.navigate(Navigasi.MAIN_APP);
           }}
@@ -45,7 +43,7 @@ const OptionsAutentikasi = ({ navigation }) => {
             style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>
             Login Sebagai Tamu
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );

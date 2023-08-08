@@ -74,6 +74,7 @@ import ListResepObat from '../views/dokter/Fitur/ListResepObat';
 import DetailListResepObat from '../views/dokter/Fitur/ListResepObat/DetailListResepObat';
 import ObatResep from '../views/member/ObatResep';
 import DetailResepObat from '../views/member/ObatResep/DetailObatResep';
+import Invoice from '../views/member/Produk/TokoKesehatanProduk/RingkasanPembayaranProduk/Invoice';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -343,6 +344,11 @@ const Router = () => {
       <Stack.Screen
         name={Navigasi.DETAIL_OBAT_RESEP}
         component={DetailResepObat}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={Navigasi.INVOICE}
+        component={Invoice}
         options={{headerShown: false}}
       />
       <Stack.Screen

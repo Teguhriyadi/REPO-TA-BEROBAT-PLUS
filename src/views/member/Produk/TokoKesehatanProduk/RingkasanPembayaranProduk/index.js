@@ -64,13 +64,17 @@ const RingkasanPembayaranProduk = ({ navigation, route }) => {
         },
         method: 'POST',
         data: {
+          payment_method: "bank_transfer",
+          bank: "bca",
           id_keranjang: id_keranjang,
           id_keranjang_detail: cart.map((item) => item.id_keranjang_detail)
         },
       });
 
       showSuccess("Berhasil", "Pembayaran Anda Sudah Berhasil");
-      navigation.navigate(Navigasi.MAIN_APP)
+      navigation.navigate(Navigasi.INVOICE, {
+        data: response.data
+      })
 
     } catch (error) {
       console.log(error);

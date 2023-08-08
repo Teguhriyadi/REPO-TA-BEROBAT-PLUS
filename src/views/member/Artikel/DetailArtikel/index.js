@@ -59,15 +59,23 @@ const Detail = ({ navigation, route }) => {
             <ActivityIndicator size={"large"} />
           ) : (
             <ScrollView ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {kategori.map((item) => {
-                return (
-                  <View key={item.id_grouping_artikel} style={styles.cardkategori}>
-                    <Text style={styles.textkategori}>
-                      {item.nama_kategori.toUpperCase()}
-                    </Text>
-                  </View>
-                )
-              })}
+              {kategori.length  > 0 ? (
+                kategori.map((item) => {
+                  return (
+                    <View key={item.id_grouping_artikel} style={styles.cardkategori}>
+                      <Text style={styles.textkategori}>
+                        {item.nama_kategori.toUpperCase()}
+                      </Text>
+                    </View>
+                  )
+                })
+              ) : (
+                <View style={{marginTop: 5, borderColor: 'red', borderWidth: 1, borderRadius: 10, paddingVertical: 5, paddingHorizontal: 10}}>
+                  <Text style={{color: 'red', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14}}>
+                    # Belum Ada Kategori
+                  </Text>
+                </View>
+              ) }
             </ScrollView>
           ) }
           <View style={{ flexDirection: 'row', paddingTop: 10 }}>

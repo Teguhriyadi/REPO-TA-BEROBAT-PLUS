@@ -42,6 +42,7 @@ export default {
   ALL_ANTRIAN: "AllAntrian",
   OBAT_RESEP: "ObatResep",
   DETAIL_OBAT_RESEP: "DetailObatResep",
+  INVOICE: "Invoice",
 
   // Dokter
   DASHBOARD_DOKTER: 'DashboardDokter',

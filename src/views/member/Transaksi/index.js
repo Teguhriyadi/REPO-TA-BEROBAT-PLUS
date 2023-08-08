@@ -330,6 +330,14 @@ const Transaksi = ({ navigation }) => {
                                                             </Text>
                                                         </View>
                                                     </View>
+                                                    <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                                                        <Text style={{ color: 'black', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}> Status Pembayaran : </Text>
+                                                        <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                                                            <Text style={{ color: 'green', fontFamily: 'Poppins-Medium', fontWeight: 'bold', fontSize: 14 }}>
+                                                                {item.notification.status}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
                                                     <TouchableOpacity style={{ backgroundColor: 'green', marginLeft: 3, marginVertical: 10, borderRadius: 5, paddingHorizontal: 10, paddingVertical: 7 }} onPress={() => {
                                                         navigation.navigate(Navigasi.DETAIL_TRANSAKSI_BUAT_JANJI, {
                                                             data: item
