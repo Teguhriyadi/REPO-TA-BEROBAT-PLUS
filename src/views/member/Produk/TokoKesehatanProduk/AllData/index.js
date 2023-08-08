@@ -1,11 +1,13 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView, Image} from 'react-native';
-import {baseUrl, colors, getData, showSuccess} from '../../../../../utils';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView, Image } from 'react-native';
+import { baseUrl, colors, getData, showSuccess } from '../../../../../utils';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Navigasi from '../../../../../partials/navigasi';
 import axios from 'axios';
+import StatusBarComponent from '../../../../../components/StatusBar/StatusBarComponent';
+import Heading from "../../../../../components/Heading";
 
-const AllDataProduk = ({navigation}) => {
+const AllDataProduk = ({ navigation }) => {
   const [dataPribadi, setDataPribadi] = useState({});
   const [produk, setProduk] = useState(null);
 
@@ -41,61 +43,25 @@ const AllDataProduk = ({navigation}) => {
     })
   };
 
-  const tambahKeranjang = async product => {
-    const productIndex = produk.findIndex(p => p.id === product);
-    const newProductList = [...produk];
-    newProductList[productIndex].count += 1;
-    setProduk(newProductList);
-
+  const tambahKeranjang = async (id_product) => {
     try {
-      const jsonValue = await AsyncStorage.getItem(`produk_${dataPribadi.idx}`);
-      if (jsonValue !== null) {
-        const oldProductList = JSON.parse(jsonValue);
-        const existingProductIndex = oldProductList.findIndex(
-          p => p.id === newProductList[productIndex].id,
-        );
-        if (existingProductIndex >= 0) {
-          oldProductList[existingProductIndex].count += 1;
-          await AsyncStorage.setItem(
-            `produk_${dataPribadi.idx}`,
-            JSON.stringify(oldProductList),
-          );
-        } else {
-          const mergedProductList = [
-            ...oldProductList,
-            newProductList[productIndex],
-          ];
-          await AsyncStorage.setItem(
-            `produk_${dataPribadi.idx}`,
-            JSON.stringify(mergedProductList),
-          );
+      const keranjang = await axios({
+        url: `${baseUrl.url}/keranjang`,
+        headers: {
+          Authorization: 'Bearer ' + dataPribadi.token
+        },
+        method: "POST",
+        data: {
+          produk_id: id_product
         }
-      } else {
-        await AsyncStorage.setItem(
-          `produk_${dataPribadi.idx}`,
-          JSON.stringify([newProductList[productIndex]]),
-        );
-      }
+      });
 
-      const produkKeys = Object.keys(produk);
-      for (const key of produkKeys) {
-        const jsonValue = await AsyncStorage.getItem(
-          `produk_${dataPribadi.idx}_${key}`,
-        );
-        const oldProduct = JSON.parse(jsonValue);
-        const newProduct = newProductList.find(p => p.id === product);
-        await AsyncStorage.setItem(
-          `produk_${dataPribadi.idx}_${key}`,
-          JSON.stringify(newProduct),
-        );
-      }
-
-      showSuccess('Berhasil', 'Data Produk Berhasil Masuk Ke Keranjang');
-
+      showSuccess("Berhasil", "Data Produk Berhasil Masuk Ke Keranjang");
+      getProduk();
     } catch (error) {
       console.log(error);
     }
-  };
+  }
 
   const incrementProduct = product => {
     const productIndex = produk.findIndex(p => p.id === product);
@@ -119,15 +85,10 @@ const AllDataProduk = ({navigation}) => {
 
   return (
     <View style={styles.backgroundBelakang}>
-      <View style={styles.heading}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate(Navigasi.TOKO_KESEHATAN_PRODUK);
-          }}>
-          <Icon name="arrow-back" style={styles.icon} />
-        </TouchableOpacity>
-        <Text style={styles.textHeading}>Semua Data Produk</Text>
-      </View>
+      <StatusBarComponent />
+      <Heading textHeading={"Semua Data Produk"} navigasi={() => {
+        navigation.goBack();
+      }} />
 
       {produk == null ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -182,7 +143,7 @@ const AllDataProduk = ({navigation}) => {
                             fontSize: 18,
                             fontWeight: 'bold',
                           }}>
-                            {item.count}
+                          {item.count}
                         </Text>
                       </View>
                       <TouchableOpacity onPress={() => decrementProduct(item.id)}>

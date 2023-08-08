@@ -101,6 +101,11 @@ const Invoice = ({ navigation, route }) => {
                     </View>
                 </View>
             </View>
+            <View style={{backgroundColor: 'green', marginHorizontal: 10, marginVertical: 10, borderRadius: 10, paddingVertical: 10, paddingHorizontal: 10}}>
+                <Text style={{color: 'white', textAlign: 'center', fontFamily: 'Poppins-Medium', fontSize: 12, fontWeight: 'bold'}}>
+                    Silahkan Lakukan Pembayaran Ke Tempat Terdekat
+                </Text>
+            </View>
         </View>
     )
 }

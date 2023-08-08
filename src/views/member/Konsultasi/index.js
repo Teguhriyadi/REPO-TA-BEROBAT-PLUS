@@ -68,7 +68,7 @@ const Konsultasi = ({navigation}) => {
       <View style={styles.heading}>
         <Text style={styles.textHeading}>Konsultasi Ahli</Text>
       </View>
-      <View style={{marginTop: 3, backgroundColor:  '#F6F1F1', elevation: 5}}>
+      {/* <View style={{marginTop: 3, backgroundColor:  '#F6F1F1', elevation: 5}}>
         <View
           style={{
             flexDirection: 'row',
@@ -84,7 +84,7 @@ const Konsultasi = ({navigation}) => {
             <Text style={{color: 'purple', fontWeight: 'bold'}}>Ganti</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </View> */}
 
           
       {/* {historyChat.length ? (
@@ -157,7 +157,7 @@ const Konsultasi = ({navigation}) => {
                     TANGGAL :
                   </Text>
                   <Text style={{color: 'white', fontSize: 16}}>
-                    08 September 2023
+                    08 Agustus 2023
                   </Text>
                 </View>
                 <View
@@ -175,7 +175,7 @@ const Konsultasi = ({navigation}) => {
                         fontSize: 16,
                         fontWeight: 'bold',
                       }}>
-                      SELESAI
+                      SEDANG KONSULTASI
                     </Text>
                   </View>
                   <View style={{flexDirection: 'row', marginVertical: 10}}>

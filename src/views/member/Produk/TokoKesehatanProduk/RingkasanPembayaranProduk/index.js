@@ -7,11 +7,14 @@ import {
   useWindowDimensions,
   ActivityIndicator,
   Image,
+  Alert,
 } from 'react-native';
 import { baseUrl, colors, getData, showSuccess } from '../../../../../utils';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Navigasi from '../../../../../partials/navigasi';
 import axios from 'axios';
+import Heading from '../../../../../components/Heading';
+import { useDispatch } from 'react-redux';
 
 const RingkasanPembayaranProduk = ({ navigation, route }) => {
   const [dataPribadi, setDataPribadi] = useState({});
@@ -20,6 +23,8 @@ const RingkasanPembayaranProduk = ({ navigation, route }) => {
   const [cart, setcart] = useState(null);
 
   const getTotal = route.params;
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const debounceTimeout = setTimeout(() => {
@@ -54,44 +59,55 @@ const RingkasanPembayaranProduk = ({ navigation, route }) => {
   }
 
   const bayar = async (id_keranjang) => {
-
-    try {
-
-      const response = await axios({
-        url: `${baseUrl.url}/master/pembelian/transaksi`,
-        headers: {
-          Authorization: 'Bearer ' + dataPribadi.token
+    Alert.alert(
+      'Konfirmasi',
+      'Lanjutkan ke Pembayaran ?',
+      [
+        {
+          text: 'Batal',
+          style: 'cancel'
         },
-        method: 'POST',
-        data: {
-          payment_method: "bank_transfer",
-          bank: "bca",
-          id_keranjang: id_keranjang,
-          id_keranjang_detail: cart.map((item) => item.id_keranjang_detail)
-        },
-      });
+        {
+          text: 'Setuju',
+          onPress: async () => {
+            try {
+              dispatch({ type: "SET_LOADING", value: true });
 
-      showSuccess("Berhasil", "Pembayaran Anda Sudah Berhasil");
-      navigation.navigate(Navigasi.INVOICE, {
-        data: response.data
-      })
+              const response = await axios({
+                url: `${baseUrl.url}/master/pembelian/transaksi`,
+                headers: {
+                  Authorization: 'Bearer ' + dataPribadi.token
+                },
+                method: 'POST',
+                data: {
+                  payment_method: "bank_transfer",
+                  bank: "bca",
+                  id_keranjang: id_keranjang,
+                  id_keranjang_detail: cart.map((item) => item.id_keranjang_detail)
+                },
+              });
 
-    } catch (error) {
-      console.log(error);
-    }
+              dispatch({ type: "SET_LOADING", value: false });
+
+              showSuccess("Berhasil", "Pembayaran Anda Sudah Berhasil");
+              navigation.navigate(Navigasi.INVOICE, {
+                data: response.data
+              })
+
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        }
+      ]
+    )
   };
 
   return (
     <View style={styles.backgroundBelakang}>
-      <View style={styles.heading}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate(Navigasi.KERANJANG);
-          }}>
-          <Icon name="arrow-back" style={styles.icon} />
-        </TouchableOpacity>
-        <Text style={styles.textHeading}>Ringkasan Pembayaran</Text>
-      </View>
+      <Heading textHeading={"Ringkasan Pembayaran"} navigasi={() => {
+        navigation.goBack();
+      }} />
       <View style={{ flex: 7 }}>
         <View style={styles.content}>
           <View style={{ flexDirection: 'row' }}>
@@ -101,7 +117,7 @@ const RingkasanPembayaranProduk = ({ navigation, route }) => {
                 {dataPribadi.nama}
               </Text>
             </View>
-            <View
+            {/* <View
               style={{
                 flex: 1,
                 alignItems: 'flex-end',
@@ -110,7 +126,7 @@ const RingkasanPembayaranProduk = ({ navigation, route }) => {
               <TouchableOpacity>
                 <Text style={{ color: 'purple', fontWeight: 'bold' }}>Ganti</Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
           </View>
         </View>
         <View style={[styles.content]}>
@@ -151,14 +167,14 @@ const RingkasanPembayaranProduk = ({ navigation, route }) => {
               return (
                 <View key={item.id_keranjang_detail} style={{ flexDirection: 'row', marginVertical: 10 }}>
                   <View style={{ borderColor: 'gray', borderWidth: 1, borderRadius: 10, marginRight: 10, justifyContent: 'center' }}>
-                    <Image source={require("../../../../../assets/images/group-satu-new.png")} style={{ width: 50, height: 50 }} />
+                    <Image source={item.produk.foto_produk == null ? (require("../../../../../assets/images/obat.png")) : {uri: item.produk.foto_produk} } style={{ width: 50, height: 50 }} />
                   </View>
                   <View style={styles.barang}>
                     <Text style={{ color: 'black', fontSize: 16 }}>
                       {item.produk.nama_produk}
                     </Text>
                     <Text style={{ color: 'gray', fontSize: 12 }}>
-                      Per Strip
+                      {item.produk.kode_produk}
                     </Text>
                   </View>
                   <View style={{ flex: 1, alignItems: 'flex-end' }}>
@@ -200,7 +216,7 @@ const RingkasanPembayaranProduk = ({ navigation, route }) => {
 
         <TouchableOpacity
           style={{
-            backgroundColor: 'purple',
+            backgroundColor: '#051f84',
             paddingVertical: 10,
             marginVertical: 5,
             borderRadius: 5,
@@ -220,22 +236,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.backgroundDasarBelakang,
   },
-  heading: {
-    height: 50,
-    padding: 10,
-    elevation: 5,
-    backgroundColor: colors.backgroundPutih,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   icon: {
     fontSize: 20,
     color: 'black',
-  },
-  textHeading: {
-    color: 'black',
-    fontSize: 14,
-    marginLeft: 10,
   },
   content: {
     marginTop: 3,

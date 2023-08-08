@@ -6,6 +6,7 @@ import { baseUrl, colors, getData } from '../../../../utils'
 import axios from 'axios'
 import { ActivityIndicator } from 'react-native'
 import Navigasi from "../../../../partials/navigasi";
+import Icon from 'react-native-vector-icons/Ionicons'
 
 const ListResepObat = ({ navigation }) => {
 

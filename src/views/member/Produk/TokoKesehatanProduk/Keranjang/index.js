@@ -190,15 +190,15 @@ const Keranjang = ({ navigation, route }) => {
     return (
       <>
         <View style={{ marginTop: 10, marginHorizontal: 10 }}>
-          <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
+          {/* <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold', fontFamily: 'Poppins-Medium' }}>
             Tujuan Barang
           </Text>
           <Text style={{ marginTop: 10, color: 'black', fontSize: 14, fontFamily: 'Poppins-Medium' }}>
             Posisi Anda Sekarang
           </Text>
-          <TextInput placeholder='Masukkan Lokasi Anda' placeholderTextColor={"grey"} style={{ borderColor: 'grey', borderWidth: 1, borderRadius: 10, fontSize: 14, color: 'grey', fontFamily: 'Poppins-Medium', fontWeight: 'bold', paddingHorizontal: 10, height: 40 }} />
+          <TextInput placeholder='Masukkan Lokasi Anda' placeholderTextColor={"grey"} style={{ borderColor: 'grey', borderWidth: 1, borderRadius: 10, fontSize: 14, color: 'grey', fontFamily: 'Poppins-Medium', fontWeight: 'bold', paddingHorizontal: 10, height: 40 }} /> */}
 
-          <Text style={{ marginTop: 10, color: 'black', fontSize: 14, fontFamily: 'Poppins-Medium' }}>
+          <Text style={{ color: 'black', fontSize: 14, fontFamily: 'Poppins-Medium' }}>
             Kontak Penerima
           </Text>
 
@@ -228,7 +228,7 @@ const Keranjang = ({ navigation, route }) => {
           onPress={() => {
             navigation.navigate(Navigasi.TOKO_KESEHATAN_PRODUK);
           }}>
-          <Icon name="arrow-back" style={{ color: 'black', fontSize: 20 }} />
+          <Icon name="arrow-back" style={{ color: 'white', fontSize: 20 }} />
         </TouchableOpacity>
         <Text style={[styles.textHeading, { paddingLeft: 15 }]}>Keranjang Belanja Anda</Text>
         {cart == null ? (
@@ -240,7 +240,7 @@ const Keranjang = ({ navigation, route }) => {
               onPress={() => {
                 hapusSemuaData();
               }}>
-              <Icon name="trash" style={{ color: 'red', fontSize: 20 }} />
+              <Icon name="trash" style={{ color: 'white', fontSize: 20 }} />
             </TouchableOpacity>
           ) : (
             <View />
@@ -268,7 +268,7 @@ const Keranjang = ({ navigation, route }) => {
                         {item.produk.nama_produk}
                       </Text>
                       <Text style={{ color: 'gray', fontSize: 12 }}>
-                        Per Strip
+                        {item.produk.kode_produk}
                       </Text>
                     </View>
                     <View style={{ flex: 1, alignItems: 'flex-end' }}>
@@ -403,7 +403,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundPutih,
   },
   heading: {
-    backgroundColor: colors.background,
+    backgroundColor: '#051f84',
     padding: 10,
     height: 50,
     elevation: 5,
@@ -412,7 +412,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textHeading: {
-    color: 'black',
+    color: 'white',
+    fontFamily: 'Poppins-Medium',
+    fontSize: 14,
+    fontWeight: 'bold'
   },
   content: {
     marginTop: 3,
